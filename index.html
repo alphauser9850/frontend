@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon1-32x32.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="white"/>
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a27"/>
+    <meta name="color-scheme" content="dark light"/>
+    <title>Deshmukh Systems</title>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-K4SHC6PC');</script>
+    <!-- End Google Tag Manager -->
+    <script>
+      // This script runs before React loads to ensure dark mode is applied immediately
+      (function() {
+        try {
+          var d = document.documentElement, c = d.classList;
+          c.remove('light', 'dark');
+          var e = localStorage.getItem('theme') || localStorage.getItem('darkMode');
+          
+          // Default to dark mode if no theme is set
+          if (!e || e === 'system') {
+            d.style.colorScheme = 'dark';
+            c.add('dark');
+            localStorage.setItem('theme', 'dark');
+            localStorage.setItem('darkMode', 'true');
+          } else if (e === 'system') {
+            var t = '(prefers-color-scheme: dark)', m = window.matchMedia(t);
+            if (m.media !== t || m.matches) {
+              d.style.colorScheme = 'dark';
+              c.add('dark');
+              localStorage.setItem('darkMode', 'true');
+            } else {
+              d.style.colorScheme = 'light';
+              c.add('light');
+              localStorage.setItem('darkMode', 'false');
+            }
+          } else if (e === 'true' || e === 'dark') {
+            d.style.colorScheme = 'dark';
+            c.add('dark');
+            localStorage.setItem('darkMode', 'true');
+          } else {
+            d.style.colorScheme = 'light';
+            c.add('light');
+            localStorage.setItem('darkMode', 'false');
+          }
+        } catch(e) {
+          console.error('Theme initialization error:', e);
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-background text-foreground">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4SHC6PC"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
