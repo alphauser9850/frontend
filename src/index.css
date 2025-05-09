@@ -1,0 +1,384 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode variables */
+    --background: #ffffff;
+    --foreground: #1f2937;
+    --card: #ffffff;
+    --card-foreground: #1f2937;
+    --popover: #ffffff;
+    --popover-foreground: #1f2937;
+    --primary: #6d28d9;
+    --primary-foreground: #f9fafb;
+    --secondary: #4338ca;
+    --secondary-foreground: #f9fafb;
+    --muted: #f3f4f6;
+    --muted-foreground: #6b7280;
+    --accent: #f3f4f6;
+    --accent-foreground: #1f2937;
+    --destructive: #ef4444;
+    --destructive-foreground: #f9fafb;
+    --border: #e5e7eb;
+    --input: #e5e7eb;
+    --ring: #6d28d9;
+    --radius: 0.5rem;
+    --color-1: 0 100% 63%;
+    --color-2: 270 100% 63%;
+    --color-3: 210 100% 63%;
+    --color-4: 195 100% 63%;
+    --color-5: 90 100% 63%;
+  }
+
+  .dark {
+    /* Dark mode variables */
+    --background: #1a1a27;
+    --foreground: #f9fafb;
+    --card: #1e1e2d;
+    --card-foreground: #f9fafb;
+    --popover: #1e1e2d;
+    --popover-foreground: #f9fafb;
+    --primary: #8b5cf6;
+    --primary-foreground: #f9fafb;
+    --secondary: #6366f1;
+    --secondary-foreground: #f9fafb;
+    --muted: #151521;
+    --muted-foreground: #9ca3af;
+    --accent: #151521;
+    --accent-foreground: #f9fafb;
+    --destructive: #f87171;
+    --destructive-foreground: #f9fafb;
+    --border: #13131f;
+    --input: #13131f;
+    --ring: #8b5cf6;
+    --color-1: 0 100% 63%;
+    --color-2: 270 100% 63%;
+    --color-3: 210 100% 63%;
+    --color-4: 195 100% 63%;
+    --color-5: 90 100% 63%;
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    transition-property: color, background-color, border-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  /* Ensure dark mode is properly applied */
+  .dark body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  /* Force dark mode for authenticated users */
+  html[data-authenticated="true"],
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+  
+  html[data-authenticated="true"] body,
+  html[data-theme="dark"] body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  /* Ensure admin panel uses dark theme */
+  .admin-panel,
+  [class*="admin-"] {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+  
+  /* Ensure tables in admin panel use dark theme */
+  .admin-panel table,
+  [class*="admin-"] table {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border-color: var(--border);
+  }
+  
+  .admin-panel th,
+  .admin-panel td,
+  [class*="admin-"] th,
+  [class*="admin-"] td {
+    border-color: var(--border);
+  }
+  
+  /* Ensure cards in admin panel use dark theme */
+  .admin-panel .card,
+  [class*="admin-"] .card {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border-color: var(--border);
+  }
+  
+  /* Ensure inputs in admin panel use dark theme */
+  .admin-panel input,
+  .admin-panel select,
+  .admin-panel textarea,
+  [class*="admin-"] input,
+  [class*="admin-"] select,
+  [class*="admin-"] textarea {
+    background-color: var(--background);
+    color: var(--foreground);
+    border-color: var(--border);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+  
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+  
+  .btn-secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+  }
+  
+  .btn-secondary:hover {
+    opacity: 0.9;
+  }
+  
+  .btn-outline {
+    border: 1px solid var(--input);
+    background-color: var(--background);
+  }
+  
+  .btn-outline:hover {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+  
+  .card {
+    background-color: var(--card);
+    color: var(--card-foreground);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: all 300ms;
+  }
+  
+  .card-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .form-input {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--input);
+    background-color: var(--background);
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 0.75rem;
+    transition: colors 200ms;
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--ring);
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: var(--foreground);
+  }
+  
+  .badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: rgb(6, 95, 70);
+  }
+  
+  .dark .badge-success {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: rgb(110, 231, 183);
+  }
+  
+  .badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: rgb(146, 64, 14);
+  }
+  
+  .dark .badge-warning {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: rgb(252, 211, 77);
+  }
+  
+  .badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: rgb(153, 27, 27);
+  }
+  
+  .dark .badge-danger {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: rgb(248, 113, 113);
+  }
+  
+  .badge-info {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: rgb(30, 64, 175);
+  }
+  
+  .dark .badge-info {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: rgb(147, 197, 253);
+  }
+  
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    transition: colors 200ms;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .dark .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .nav-link-active {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark .nav-link-active {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .tab-button {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: colors 200ms;
+  }
+  
+  .tab-button-active {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--muted-foreground);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary);
+}
+
+/* Rainbow button animation */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 3s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Marquee animations */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-vertical {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 40s) linear infinite;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
