@@ -90,7 +90,7 @@ const Header: React.FC = () => {
       title: "CCIE Enterprise Infrastructure", 
       icon: <Sparkles className="h-5 w-5" />, 
       description: "Cisco Certified Internetwork Expert - Enterprise Infrastructure", 
-      path: "/courses/ccie" 
+      path: "/courses/ccie"
     },
     { 
       title: "CCIE Wireless", 
