@@ -9,6 +9,8 @@ import { CheckCircle2 } from 'lucide-react';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';
 
+
+
 // Sample lab topologies data
 const labTopologies = [
   {
@@ -330,6 +332,8 @@ const CCIEPage: React.FC = () => {
 
   return (
   
+
+    
       <div className="min-h-screen bg-background">
     
       {/* Hero Section */}
@@ -666,11 +670,11 @@ const CCIEPage: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-2 mb-2">
                       <Clock className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-medium">9-day intensive training</span>
+                      <span className="text-sm font-medium">2-Week intensive training</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Lightbulb className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm font-medium">100+ rack hours</span>
+                      <span className="text-sm font-medium">200+ rack hours</span>
                     </div>
                   </div>
                 </div>
@@ -837,7 +841,7 @@ const CCIEPage: React.FC = () => {
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Comprehensive Curriculum
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Complete CCIE Enterprise Syllabus</AuroraText></h2>
+            <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Enterprise Infrastructure Syllabus Overview</AuroraText></h2>
             <p className="text-muted-foreground">
               Our curriculum covers all exam domains with in-depth practical labs and theory.
             </p>
@@ -942,6 +946,119 @@ const CCIEPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Success Stories Section */}
+<section className="py-20 bg-muted/30">
+  <div className="container mx-auto px-4">
+    <div className="max-w-3xl mx-auto text-center mb-16">
+      <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+        Success Stories
+      </span>
+      <h2 className="text-3xl font-bold mb-4">
+        <AuroraText>Our Students' Achievements</AuroraText>
+      </h2>
+      <p className="text-muted-foreground">
+        Hear from our successful CCIE candidates who have achieved their goals with our training program.
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-2 gap-8">
+      {successStories.map((story, index) => (
+        <div key={index} className="bg-background border border-border rounded-xl p-6 shadow-md">
+          <div className="flex items-center gap-4 mb-4">
+            <img
+              src={story.image}
+              alt={story.name}
+              className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
+            />
+            <div>
+              <h3 className="text-lg font-bold">{story.name}</h3>
+              <p className="text-sm text-muted-foreground">{story.role}</p>
+            </div>
+          </div>
+          <p className="text-muted-foreground italic">"{story.quote}"</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+{/* FAQ Section */}
+<section className="py-20 bg-muted/30">
+  <div className="container mx-auto px-4">
+    <div className="max-w-3xl mx-auto text-center mb-16">
+      <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+       Have Questions? We’ve Got Answers 
+      </span>
+      <h2 className="text-3xl font-bold mb-4">
+        <AuroraText> Frequently Asked Questions</AuroraText>
+      </h2>
+      <p className="text-muted-foreground">
+        Find answers to the most common questions about our CCIE Enterprise Infrastructure program.
+      </p>
+    </div>
+
+    <div className="max-w-4xl mx-auto">
+      <Accordion>
+        <Accordion.Item title="What is the duration of the CCIE training program?" defaultOpen={true}>
+          <p className="text-muted-foreground">
+            The training program typically lasts for 90 days, with daily 60-90 Minutes lab sessions and additional self-paced learning resources.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="Do I need prior experience to enroll in the CCIE program?">
+          <p className="text-muted-foreground">
+            we offer beginner to expert-level training paths. You can start where you are and grow with us.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What kind of support is provided during the training?">
+          <p className="text-muted-foreground">
+            You will have access to instructor-led sessions, a private study group, and a ticketing system for resolving queries.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="Is the lab environment accessible remotely?">
+          <p className="text-muted-foreground">
+            Yes, the lab environment is accessible 24/7 from anywhere, allowing you to practice at your convenience.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What happens if I miss a session?">
+          <p className="text-muted-foreground">
+            All sessions are recorded, and you will have access to the recordings to catch up on missed content.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What topics are covered in the CCIE EI course curriculum?">
+          <p className="text-muted-foreground">
+            The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SD-WAN, network automation, security, and troubleshooting real-world enterprise scenarios.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="How is the CCIE EI lab exam structured, and what does it test?">
+          <p className="text-muted-foreground">
+           The 8-hour lab exam has two modules: Design (3 hours) and Deploy, Operate, Optimize (5 hours), testing your ability to plan and manage complex networks hands-on.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What study materials and resources do you provide for exam preparation?">
+          <p className="text-muted-foreground">
+            We provide video tutorials, workbooks, 24/7 virtual lab access, and mock exams aligned with the latest CCIE EI exam blueprint.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="Do you offer practice labs or mock exams for hands-on experience?">
+          <p className="text-muted-foreground">
+            Yes, you get unlimited access to virtual labs and mock exams that replicate the real lab environment to build your skills and confidence.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What is the difference between the CCIE EI written exam and the lab exam?">
+          <p className="text-muted-foreground">
+           The written exam (ENCOR 350-401) tests theoretical knowledge, while the lab exam evaluates practical skills in configuring and troubleshooting networks.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What are the career benefits of obtaining the CCIE EI certification?">
+          <p className="text-muted-foreground">
+            The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SDt qualifies you for senior roles like Network Architect or Engineer, boosting your credibility and earning potential in the networking field.
+          </p>
+        </Accordion.Item>
+      </Accordion>
+    </div>
+  </div>
+</section>
       
       {/* Contact Form Section */}
       <section className="py-24 relative overflow-hidden">

@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from 'react';
+import { StrictMode, useEffect } from 'react';  
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
@@ -12,6 +12,8 @@ const applyDarkMode = () => {
     document.documentElement.classList.remove('dark');
   }
 };
+
+
 
 // Apply dark mode immediately
 applyDarkMode();

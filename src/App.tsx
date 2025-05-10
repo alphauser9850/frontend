@@ -5,6 +5,7 @@ import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
 import { checkSupabaseConnection } from './lib/supabase';
 
+
 // Components
 import AuthGuard from './components/AuthGuard';
 import Header from './components/Header';
@@ -206,11 +207,12 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/servers" element={<ServersPage />} />
+            <Route path="/courses/:courseId" element={<CourseDetailPage />} /> {/*change */}
             
             {/* Course Pages */}
             <Route path="/courses/ccna" element={<CCNAPage />} />
             <Route path="/courses/ccnp" element={<CCNPPage />} />
-            <Route path="/courses/ccie" element={<CCIEPage />} />
+            <Route path="/courses/ccie" element={<CCIEPage />}/>   
             <Route path="/courses/ccie-wireless" element={<CCIEWirelessPage />} />
             <Route path="/courses/sd-wan" element={<SDWANPage />} />
             <Route path="/courses/sd-access" element={<SDAccessPage />} />
@@ -219,13 +221,16 @@ function App() {
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/refund" element={<RefundPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+        
+       {/*}     <Route path="/courses/ccie" element={<Navigate to="/courses/ccie-enterprise-infrastructure" replace />} />  
+*/}
           </Route>
           
           {/* Protected routes */}
           <Route element={<AuthGuard requireAuth />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/lab/:serverId" element={<LabPage />} />
-            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses" element={<CoursesPage />} />  
             <Route path="/courses/:courseId" element={<CourseDetailPage />} />
             <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPage />} />
           </Route>
@@ -233,7 +238,7 @@ function App() {
           {/* Admin routes */}
           <Route element={<AuthGuard requireAuth requireAdmin />}>
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/admin/courses" element={<Navigate to="/admin?tab=courses" replace />} />
+           <Route path="/admin/courses" element={<Navigate to="/admin?tab=courses" replace />} /> 
             <Route path="/admin/courses/new" element={<CourseEditorPage />} />
             <Route path="/admin/courses/:courseId/edit" element={<CourseEditorPage />} />
             <Route path="/time-management" element={<TimeManagementPage />} />
