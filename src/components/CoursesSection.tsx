@@ -47,12 +47,12 @@ const CoursesSection: React.FC = () => {
     {
       title: "CCNA R&S",
       image: "/ccna.jpg",
-      link: "/courses/ccna"
+      link: "/courses"
     },
     {
       title: "CCNP",
       image: "/ccnp.jpg",
-      link: "/courses/ccnp"
+      link: "/courses"
     },
     {
       title: "CCIE Enterprise Infrastructure",
@@ -89,7 +89,7 @@ const CoursesSection: React.FC = () => {
             "text-3xl md:text-4xl font-bold mb-4",
             isDarkMode ? "text-white" : "text-gray-900"
           )}>
-            Our <AuroraText>Certification</AuroraText> Courses
+            Our <AuroraText>Cisco Certification</AuroraText> Courses
           </h2>
           <p className={cn(
             "text-lg max-w-2xl mx-auto",

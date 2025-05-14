@@ -98,6 +98,7 @@ const Header: React.FC = () => {
       description: "Cisco Certified Internetwork Expert - Wireless", 
       path: "/courses/ccie-wireless" 
     },
+  
   ];
 
   return (
@@ -106,7 +107,7 @@ const Header: React.FC = () => {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled 
           ? "bg-background/80 backdrop-blur-md border-b border-border shadow-sm py-3" 
-          : "bg-transparent py-5"
+          : "bg-transparent py-8"
       )}
     >
       {/* Animated dot pattern for the header background when scrolled */}

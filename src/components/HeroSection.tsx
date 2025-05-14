@@ -32,10 +32,12 @@ const HeroSection: React.FC = () => {
                       
             <div className="flex-1">
           <h1 className={cn(
-            "text-4xl font-bold tracking-tighter md:text-5xl lg:text-7xl mb-6 text-center",
+            "text-3xl font-bold tracking-tighter md:text-4xl lg:text-5xl mb-6 text-center",
             isDarkMode ? "text-white" : "text-gray-900"
           )}>
-            The premier <AuroraText>CCIE</AuroraText> Certification platform
+            100% Practical  <AuroraText>CCIE</AuroraText> Training & Certification <br />
+            <AuroraText>Unlimited</AuroraText> Real Time Lab Practices
+             
           </h1>
            </div>
          </div>

@@ -10,7 +10,6 @@ import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';
 
 
-
 // Sample lab topologies data
 const labTopologies = [
   {
@@ -1193,5 +1192,6 @@ const CCIEPage: React.FC = () => {
     </div>
   );
 };
+
 
 export default CCIEPage; 

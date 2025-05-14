@@ -59,8 +59,9 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
         </div>
         
         <div className="relative mb-4">
-          <Quote className="h-8 w-8 text-primary/20 absolute -top-1 -left-2" />
-          <p className={isDarkMode ? "text-white/80 text-sm flex-grow pl-4" : "text-gray-600 text-sm flex-grow pl-4"}>{content}</p>
+          <p className={isDarkMode ? "text-white/80 text-sm flex-grow pl-4" : "text-gray-600 text-sm flex-grow pl-4"}>
+            {content}
+          </p>
         </div>
         
         <div className="mt-auto">
@@ -174,7 +175,7 @@ const TestimonialsSection: React.FC = () => {
           <Marquee pauseOnHover={true} className="py-4" speed={30}>
             {testimonials.slice(0, 4).map((testimonial, index) => (
               <TestimonialCard 
-                key={index}
+                key={index}dear
                 name={testimonial.name}
                 role={testimonial.role}
                 company={testimonial.company}
@@ -247,4 +248,4 @@ const TestimonialsSection: React.FC = () => {
   );
 };
 
-export { TestimonialsSection }; 
+export { TestimonialsSection };

@@ -382,3 +382,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*change*/
+@keyframes neon-border {
+  0% { border-color: #1e1e2d; }
+  25% { border-color: #000000; }
+  50% { border-color: #010102; }
+  75% { border-color: #5f5f5f; }
+  100% { border-color: #ffffff; }
+}
+
+.animate-border-glow {
+  animation: neon-border 4s linear infinite;
+}
