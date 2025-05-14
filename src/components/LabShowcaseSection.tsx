@@ -9,7 +9,7 @@ const LabShowcaseSection: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Hands-on <AuroraText>Lab Environment</AuroraText>
+            Hands-on <AuroraText>Cisco Lab Environment</AuroraText>
           </h2>
           <p className="text-lg text-white/70 max-w-2xl mx-auto">
             Practice with real-world network topologies in our Cisco Modeling Labs environment
