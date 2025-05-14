@@ -485,7 +485,7 @@ const CCIEPage: React.FC = () => {
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Lab Demonstration
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>See Our Lab Environment in Action</AuroraText></h2>
+            <h2 className="text-3xl font-bold mb-4"><AuroraText>See Our CCIE Lab Environment in  Action</AuroraText></h2>
             <p className="text-muted-foreground">
               Watch this video to get a glimpse of our state-of-the-art CCIE Enterprise Infrastructure lab environment.
             </p>
@@ -547,9 +547,9 @@ const CCIEPage: React.FC = () => {
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Course Highlights
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive Learning Experience</AuroraText></h2>
+            <h2 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive CCIE Enterprise Training Experience</AuroraText></h2>
             <p className="text-muted-foreground">
-              Everything you need to master enterprise networking and pass your CCIE certification.
+              Everything you need to master enterprise networking and pass your CCIE Enterprise Infrastructure Exam.
             </p>
           </div>
           
@@ -588,10 +588,10 @@ const CCIEPage: React.FC = () => {
             </span>
             <div className="flex items-center justify-center gap-3 mb-4">
               <img src="/ent_golden_icon.png" alt="CCIE Enterprise Logo" className="h-10 w-auto" />
-              <h2 className="text-3xl font-bold"><AuroraText>Your CCIE Enterprise Journey</AuroraText></h2>
+              <h2 className="text-3xl font-bold"><AuroraText>Your CCIE Enterprise Infrastructure Journey</AuroraText></h2>
             </div>
             <p className="text-muted-foreground">
-              Follow this structured path to achieve your CCIE Enterprise Infrastructure certification.
+              Follow this structured path to achieve your CCIE EI certification.
             </p>
           </div>
           
@@ -606,9 +606,9 @@ const CCIEPage: React.FC = () => {
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Training Program
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive CCIE Training</AuroraText></h2>
+            <h2 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive CCIE Enterprise Infrastructure Training</AuroraText></h2>
             <p className="text-muted-foreground">
-              Our structured training program is designed to prepare you for success in the CCIE Enterprise Infrastructure certification.
+              Our structured training program is designed to prepare you for success in the CCIE EI certification.
             </p>
           </div>
           
@@ -758,7 +758,7 @@ const CCIEPage: React.FC = () => {
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Sample Topologies
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our Lab Topologies</AuroraText></h2>
+            <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
             <p className="text-muted-foreground">
               Get familiar with the diverse network topologies you'll work with during your CCIE Enterprise Infrastructure training.
             </p>
