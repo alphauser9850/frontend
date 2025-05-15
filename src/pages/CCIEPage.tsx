@@ -359,7 +359,7 @@ const CCIEPage: React.FC = () => {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                CCIE Enterprise Infrastructure Training
+                CCIE Enterprise Infrastructure Training v1.1
               </h1>
               
               <p className="text-xl text-white/80 mb-8 max-w-xl">
