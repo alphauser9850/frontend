@@ -7,7 +7,7 @@ const RefundPolicyPage: React.FC = () => {
         <div className="max-w-4xl mx-auto bg-card rounded-lg shadow-sm border border-border p-8">
           <h1 className="text-4xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50">Refund & Cancellation Policy</h1>
           <div className="space-y-6 text-foreground">
-            <p className="text-lg text-muted-foreground">At Deshmukh Systems, we are committed to delivering top-quality education and training services. To maintain transparency and fairness, this refund and cancellation policy outlines the terms under which refunds are issued for our programs and services.</p>
+            <p className="text-lg text-muted-foreground">At CCIE LAB, we are committed to delivering top-quality education and training services. To maintain transparency and fairness, this refund and cancellation policy outlines the terms under which refunds may be granted.</p>
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Refund Eligibility</h2>
@@ -21,7 +21,7 @@ const RefundPolicyPage: React.FC = () => {
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Refund Process</h2>
               <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                <li><strong className="text-foreground">Request Submission:</strong> Email your refund request to sales@deshmukhsystems.com with the reason, proof of purchase, and any relevant details.</li>
+                <li><strong className="text-foreground">Request Submission:</strong> Email your refund request to support@ccielab.net with the reason, proof of purchase, and any relevant details.</li>
                 <li><strong className="text-foreground">Review:</strong> Our support team will assess your request within 7 business days.</li>
                 <li><strong className="text-foreground">Resolution:</strong> If approved, the refund will be processed within 30 business days via the original payment method. If declined, an explanation will be provided.</li>
               </ul>
@@ -54,7 +54,7 @@ const RefundPolicyPage: React.FC = () => {
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Governing Law</h2>
-              <p className="text-muted-foreground">This policy is governed by the laws of the jurisdiction where Deshmukh Systems is registered.</p>
+              <p className="text-muted-foreground">This policy is governed by the laws of the jurisdiction where CCIE LAB is registered.</p>
             </section>
 
             <section className="space-y-4">
@@ -64,13 +64,13 @@ const RefundPolicyPage: React.FC = () => {
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Policy Updates</h2>
-              <p className="text-muted-foreground">Deshmukh Systems reserves the right to amend this policy at any time. Updates will be posted on our website to ensure transparency.</p>
+              <p className="text-muted-foreground">CCIE LAB reserves the right to amend this policy at any time. Updates will be posted on our website to ensure transparency.</p>
             </section>
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Contact Us</h2>
               <p>If you have any questions regarding this policy:</p>
-              <p className="text-primary">Email: sales@deshmukhsystems.com</p>
+              <p className="text-primary">Email: support@ccielab.net</p>
               <p className="text-primary">Website: www.deshmukhsystems.com</p>
             </section>
           </div>

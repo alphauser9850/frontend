@@ -138,7 +138,7 @@ const AboutPage: React.FC = () => {
         <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-              <AuroraText>About Deshmukh Systems</AuroraText>
+              <AuroraText>About CCIE LAB</AuroraText>
             </h1>
             
             <p className="text-xl text-white/80 mb-8">
@@ -162,13 +162,13 @@ const AboutPage: React.FC = () => {
               
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  Deshmukh Systems was founded in 2015 by Saif Deshmukh, a CCIE-certified network engineer with a passion for teaching and mentoring. What began as informal training sessions for colleagues quickly evolved into a comprehensive training program for network professionals worldwide.
+                  CCIE LAB was founded in 2015 by a team of CCIE-certified network engineers with a passion for teaching and mentoring. What began as informal training sessions for colleagues quickly evolved into a comprehensive training program.
                 </p>
                 <p>
                   Our journey started with a simple mission: to make high-quality Cisco certification training accessible, engaging, and effective. Over the years, we've expanded our offerings while maintaining our commitment to excellence and student success.
                 </p>
                 <p>
-                  Today, Deshmukh Systems is recognized as a premier provider of CCIE Enterprise Infrastructure training, with thousands of successful students across the globe. Our innovative approach combines rigorous technical content with practical, hands-on lab experience to prepare candidates for both certification exams and real-world challenges.
+                  Today, CCIE LAB is recognized as a premier provider of CCIE Enterprise Infrastructure training, with thousands of successful students across the globe. Our innovative approach combines rigorous technical training with practical hands-on experience.
                 </p>
               </div>
             </div>
@@ -306,7 +306,7 @@ const AboutPage: React.FC = () => {
                     </div>
                     <div>
                       <h3 className="font-medium mb-1">Email Us</h3>
-                      <p className="text-muted-foreground">sales@deshmukhsystems.com</p>
+                      <p className="text-muted-foreground">support@ccielab.net</p>
                     </div>
                   </div>
                   

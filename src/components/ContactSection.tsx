@@ -206,10 +206,9 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                             isDarkMode 
-                              ? `bg-white/5 border ${formErrors.name ? 'border-red-400' : 'border-white/10'} text-white placeholder-white/30` 
-                              : `bg-white border ${formErrors.name ? 'border-red-400' : 'border-gray-200'} text-gray-900 placeholder-gray-400`
+                              ? `bg-white/5 border ${formErrors.name ? 'border-red-400' : 'border-white/10'} text-white` 
+                              : `bg-white border ${formErrors.name ? 'border-red-400' : 'border-gray-200'} text-gray-900`
                           )}
-                          placeholder="John Doe"
                         />
                         {formErrors.name && (
                           <p className="mt-1 text-sm text-red-400">{formErrors.name}</p>
@@ -238,10 +237,9 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                             isDarkMode 
-                              ? `bg-white/5 border ${formErrors.email ? 'border-red-400' : 'border-white/10'} text-white placeholder-white/30` 
-                              : `bg-white border ${formErrors.email ? 'border-red-400' : 'border-gray-200'} text-gray-900 placeholder-gray-400`
+                              ? `bg-white/5 border ${formErrors.email ? 'border-red-400' : 'border-white/10'} text-white` 
+                              : `bg-white border ${formErrors.email ? 'border-red-400' : 'border-gray-200'} text-gray-900`
                           )}
-                          placeholder="john@example.com"
                         />
                         {formErrors.email && (
                           <p className="mt-1 text-sm text-red-400">{formErrors.email}</p>
@@ -272,7 +270,6 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                               ? "bg-white/5 border border-white/10 text-white" 
                               : "bg-white border border-gray-200 text-gray-900"
                           )}
-                          placeholder="+91 7972852821"
                         />
                       </div>
                     </div>
@@ -300,7 +297,6 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                               ? "bg-white/5 border border-white/10 text-white" 
                               : "bg-white border border-gray-200 text-gray-900"
                           )}
-                          placeholder="Your Company"
                         />
                       </div>
                     </div>
@@ -329,7 +325,15 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                               ? "bg-white/5 border border-white/10 text-white" 
                               : "bg-white border border-gray-200 text-gray-900"
                           )}
-                          style={{ backgroundImage: "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\")", backgroundPosition: "right 0.5rem center", backgroundRepeat: "no-repeat", backgroundSize: "1.5em 1.5em", paddingRight: "2.5rem" }}
+                          style={{ 
+                            backgroundImage: isDarkMode 
+                              ? "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\")" 
+                              : "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23374151' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\")",
+                            backgroundPosition: "right 0.5rem center", 
+                            backgroundRepeat: "no-repeat", 
+                            backgroundSize: "1.5em 1.5em", 
+                            paddingRight: "2.5rem" 
+                          }}
                         >
                           <option value="CCNA">CCNA R&S Certification</option>
                           <option value="CCNP">CCNP Certification</option>
@@ -361,8 +365,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                             isDarkMode 
-                              ? "bg-white/5 border border-white/10 text-white" 
-                              : "bg-white border border-gray-200 text-gray-900"
+                              ? "bg-white/5 border border-white/10 text-white [color-scheme:dark]" 
+                              : "bg-white border border-gray-200 text-gray-900 [color-scheme:light]"
                           )}
                         />
                       </div>
@@ -386,10 +390,9 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                       className={cn(
                         "rounded-lg block w-full p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                         isDarkMode 
-                          ? `bg-white/5 border ${formErrors.message ? 'border-red-400' : 'border-white/10'} text-white placeholder-white/30` 
-                          : `bg-white border ${formErrors.message ? 'border-red-400' : 'border-gray-200'} text-gray-900 placeholder-gray-400`
+                          ? `bg-white/5 border ${formErrors.message ? 'border-red-400' : 'border-white/10'} text-white` 
+                          : `bg-white border ${formErrors.message ? 'border-red-400' : 'border-gray-200'} text-gray-900`
                       )}
-                      placeholder="Your message..."
                     ></textarea>
                     {formErrors.message && (
                       <p className="mt-1 text-sm text-red-400">{formErrors.message}</p>
@@ -467,7 +470,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                   "text-gray-700",
                   isDarkMode ? "text-white/70" : "text-gray-600"
                 )}>
-                    sales@deshmukhsystems.com
+                    support@ccielab.net
                   </p>
               </div>
             </div><br/>

@@ -51,7 +51,7 @@ const faqs = [
   },
   {
     question: "How can I register for the training?",
-    answer: "Feel free to reach out to us at +91 7972852821 or sales@deshmukhsystems.com. You can also share your details through our contact form — we’ll get back to you shortly with all the information you need."
+    answer: "Feel free to reach out to us at +91 7972852821 or support@ccielab.net. You can also share your details through our contact form — we'll get back to you shortly with all the information you need."
   },
   {
     question: "Are there any installment options for the payment? In that case, what are the late fee charges?",

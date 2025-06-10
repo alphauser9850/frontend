@@ -52,7 +52,7 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
-          Sign in to Deshmukh Systems
+          Sign in to CCIE LAB
         </h2>
         <p className="mt-2 text-center text-sm text-white/70">
           Or{' '}

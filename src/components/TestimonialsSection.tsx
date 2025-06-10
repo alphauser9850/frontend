@@ -98,7 +98,7 @@ const TestimonialsSection: React.FC = () => {
       content: "I enrolled my entire team in the CCNP program, and the results have been outstanding. The lab environment is top-notch, and the support is excellent.",
       rating: 4,
       imageSrc: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
-    }/*,
+    },
     {
       name: "Neha Gupta",
       role: "Systems Engineer",
@@ -119,7 +119,7 @@ const TestimonialsSection: React.FC = () => {
       name: "Ananya Reddy",
       role: "IT Consultant",
       company: "Tech Advisors",
-      content: "I've taken courses from several providers, but Deshmukh Systems stands out for their quality of instruction and hands-on approach to learning.",
+      content: "I've taken courses from several providers, but CCIE LAB stands out for their quality of instruction and hands-on approach to learning.",
       rating: 4,
       imageSrc: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
     },
@@ -135,10 +135,10 @@ const TestimonialsSection: React.FC = () => {
       name: "Sanjay Mehta",
       role: "Infrastructure Manager",
       company: "Enterprise Solutions",
-      content: "Our company has been sending employees to Deshmukh Systems for years. The ROI on their training programs is exceptional.",
+      content: "Our company has been sending employees to CCIE LAB for years. The ROI on their training programs is exceptional.",
       rating: 5,
       imageSrc: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
-    }*/
+    }
   ];
 
   return (

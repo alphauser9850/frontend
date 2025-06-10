@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
               <span className="font-bold text-xl">
-                <AuroraText>Deshmukh Systems</AuroraText>
+                <AuroraText>CCIE LAB</AuroraText>
               </span>
             </Link>
             <p className="text-muted-foreground mb-6">
@@ -101,8 +101,8 @@ const Footer: React.FC = () => {
           <div>
             <div className="space-y-2">
               <h3 className="font-medium">Contact Us</h3>
-              <a href="mailto:sales@deshmukhsystems.com" className="text-muted-foreground hover:text-primary transition-colors">
-                sales@deshmukhsystems.com
+              <a href="mailto:support@ccielab.net" className="text-muted-foreground hover:text-primary transition-colors">
+                support@ccielab.net
               </a>
               <p className="text-muted-foreground">
                 +91 7972852821
@@ -113,7 +113,7 @@ const Footer: React.FC = () => {
         
         <div className="mt-12 pt-8 border-t border-border text-center">
           <p className="text-muted-foreground">
-            &copy; {new Date().getFullYear()} Deshmukh Systems. All rights reserved.
+            &copy; {new Date().getFullYear()} CCIE LAB. All rights reserved.
           </p>
         </div>
       </div>

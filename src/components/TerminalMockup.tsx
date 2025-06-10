@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const TerminalMockup: React.FC = () => {
   const [text, setText] = useState('');
   const [cursorVisible, setCursorVisible] = useState(true);
-  const fullText = `$ ssh admin@cml.deshmukhsystems.com
+  const fullText = `$ ssh admin@cml.ccielab.net
 Password: ********
 Welcome to Cisco Modeling Labs - Personal
 Last login: Tue May 23 09:15:22 2023 from 192.168.1.10
