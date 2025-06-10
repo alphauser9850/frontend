@@ -49,7 +49,7 @@ const ChatBubble: React.FC = () => {
         showWelcomeScreen: true,
         i18n: {
           en: {
-            title: 'Deshmukh Systems Support',
+            title: 'CCIE LAB Support',
             subtitle: 'Ask us anything about our services',
             inputPlaceholder: 'Type your message...',
             closeButtonTooltip: 'Close chat',

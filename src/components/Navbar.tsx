@@ -202,7 +202,7 @@ const Navbar: React.FC = () => {
               "font-bold text-xl transition-colors",
               scrolled ? "text-foreground" : "text-white"
             )}>
-              <AuroraText>NetLab</AuroraText>
+              <AuroraText>CCIE LAB</AuroraText>
             </span>
           </Link>
 

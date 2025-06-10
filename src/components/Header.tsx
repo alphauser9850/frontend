@@ -25,7 +25,12 @@ import {
   Server,
   Layers,
   Globe,
-  Workflow
+  Workflow,
+  Shield,
+  Target,
+  Users,
+  Briefcase,
+  Heart
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { RainbowButton } from './ui/RainbowButton';
@@ -124,12 +129,20 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <img 
-              src="/deshmukh-logo.png" 
-              alt="Deshmukh Systems logo" 
-              className="h-28 w-28"
-            />
+          <Link to="/" className="flex items-center gap-3">
+            <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+              <Network className="h-7 w-7 text-white" />
+              <div className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-white/20 flex items-center justify-center">
+                <Sparkles className="h-3 w-3 text-white" />
+              </div>
+            </div>
+            <span className={cn(
+              "font-bold text-xl transition-colors",
+              scrolled ? "text-foreground" : "text-white"
+            )}>
+              <AuroraText>CCIE LAB</AuroraText>
+            </span>
           </Link> 
 
           {/* Desktop Navigation */}

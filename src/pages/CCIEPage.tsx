@@ -987,7 +987,7 @@ const CCIEPage: React.FC = () => {
   <div className="container mx-auto px-4">
     <div className="max-w-3xl mx-auto text-center mb-16">
       <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
-       Have Questions? We’ve Got Answers 
+       Have Questions? We've Got Answers 
       </span>
       <h2 className="text-3xl font-bold mb-4">
         <AuroraText> Frequently Asked Questions</AuroraText>
@@ -1089,11 +1089,11 @@ const CCIEPage: React.FC = () => {
             
             <div className="flex flex-wrap justify-center gap-6 mb-8">
               <a 
-                href="mailto:sales@deshmukhsystems.com" 
+                href="mailto:support@ccielab.net" 
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
               >
                 <Mail className="h-4 w-4" />
-                sales@deshmukhsystems.com
+                support@ccielab.net
               </a>
               <a 
                 href="tel:+917972852821" 

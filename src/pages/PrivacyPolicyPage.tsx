@@ -7,7 +7,7 @@ const PrivacyPolicyPage: React.FC = () => {
         <div className="max-w-4xl mx-auto bg-card rounded-lg shadow-sm border border-border p-8">
           <h1 className="text-4xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50">Privacy Policy</h1>
           <div className="space-y-6 text-foreground">
-            <p className="text-lg text-muted-foreground">Welcome to Deshmukh Systems. Your privacy is extremely important to us. This Privacy Policy explains how we collect, use, and protect your information when you visit or interact with our website www.deshmukhsystems.com.</p>
+            <p className="text-lg text-muted-foreground">Welcome to CCIE LAB. Your privacy is extremely important to us. This Privacy Policy explains how we collect, use, and protect your information when you visit or interact with our website www.ccielab.com</p>
             <p className="text-muted-foreground">By using our website, you agree to the terms outlined here.</p>
 
             <section className="space-y-4">
@@ -71,7 +71,7 @@ const PrivacyPolicyPage: React.FC = () => {
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">8. Contact Us</h2>
               <p>If you have any questions or concerns about this Privacy Policy, please contact us at:</p>
-              <p className="text-primary">📩 Email: sales@deshmukhsystems.com</p>
+              <p className="text-primary">📩 Email: support@ccielab.net</p>
               <p className="text-primary">🌐 Website: www.deshmukhsystems.com</p>
             </section>
           </div>

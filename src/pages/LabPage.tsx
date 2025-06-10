@@ -953,7 +953,7 @@ const LabPage: React.FC = () => {
               </p>
               {hasAccess && hasTimeBalance && (
                 <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Secure access via Deshmukh Systems proxy
+                  Secure access via CCIE LAB proxy
                 </div>
               )}
             </div>

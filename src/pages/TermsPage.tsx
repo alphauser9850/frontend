@@ -7,7 +7,7 @@ const TermsPage: React.FC = () => {
         <div className="max-w-4xl mx-auto bg-card rounded-lg shadow-sm border border-border p-8">
           <h1 className="text-4xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/50">Terms and Conditions</h1>
           <div className="space-y-6 text-foreground">
-            <p className="text-lg text-muted-foreground">These Terms and Conditions govern the use of services provided by Deshmukh Systems. By enrolling in our courses and using our website, you agree to comply with these terms.</p>
+            <p className="text-lg text-muted-foreground">These Terms and Conditions govern the use of services provided by CCIE LAB. By enrolling in our courses and using our website, you agree to comply with these terms.</p>
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Enrollment and Payment</h2>
@@ -26,12 +26,12 @@ const TermsPage: React.FC = () => {
                 <li>If the student has attended two days of classes in a weekday batch and is genuinely dissatisfied with the training program, along with providing valid and reasonable feedback.</li>
                 <li>Any other refund requests will be reviewed on a case-by-case basis by our team, and approved only if found valid.</li>
               </ul>
-              <p className="mt-4"><strong className="text-foreground">Procedure:</strong> To request a refund, email us at sales@deshmukhsystems.com with your payment details and reason for the refund. Eligible refunds will be processed within 30 business days.</p>
+              <p className="mt-4"><strong className="text-foreground">Procedure:</strong> To request a refund, email us at support@ccielab.net with your payment details and reason for the refund. Eligible refunds will be processed within 30 business days.</p>
             </section>
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Intellectual Property</h2>
-              <p className="text-muted-foreground">All content, including videos, documents, and software, provided by Deshmukh Systems is protected by intellectual property laws. These materials are intended solely for personal educational use and may not be copied, shared, or modified without prior written permission.</p>
+              <p className="text-muted-foreground">All content, including videos, documents, and software, provided by CCIE LAB is protected by intellectual property laws. These materials are intended solely for personal educational use and may not be copied, shared, or modified without prior written permission.</p>
             </section>
 
             <section className="space-y-4">
@@ -41,7 +41,7 @@ const TermsPage: React.FC = () => {
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Liability</h2>
-              <p className="text-muted-foreground">Deshmukh Systems is not responsible for any direct, indirect, incidental, or consequential damages resulting from the use of our services. This includes data loss or interruptions to your learning experience.</p>
+              <p className="text-muted-foreground">CCIE LAB is not responsible for any direct, indirect, incidental, or consequential damages resulting from the use of our services. This includes data loss or interruptions to your learning experience.</p>
             </section>
 
             <section className="space-y-4">
@@ -51,19 +51,19 @@ const TermsPage: React.FC = () => {
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Governing Law</h2>
-              <p className="text-muted-foreground">These Terms and Conditions are governed by the laws applicable in the jurisdiction where Deshmukh Systems is registered. Any disputes will be resolved under the exclusive jurisdiction of the courts in this jurisdiction.</p>
+              <p className="text-muted-foreground">These terms are governed by the laws applicable in the jurisdiction where CCIE LAB is registered. Any disputes will be resolved under the exclusive jurisdiction of the courts in this jurisdiction.</p>
             </section>
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Contact Information</h2>
               <p>For any queries regarding these Terms and Conditions, please contact us:</p>
-              <p className="text-primary">Email: sales@deshmukhsystems.com</p>
+              <p className="text-primary">Email: support@ccielab.net</p>
               <p className="text-primary">Phone: +917972852821</p>
             </section>
 
             <div className="mt-8 space-y-4 text-muted-foreground">
               <p>By proceeding with your enrollment or purchase, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.</p>
-              <p>Thank you for choosing Deshmukh Systems for your learning journey.</p>
+              <p>Thank you for choosing CCIE LAB for your learning journey.</p>
             </div>
           </div>
         </div>
