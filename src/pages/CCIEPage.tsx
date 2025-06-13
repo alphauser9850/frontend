@@ -1059,6 +1059,33 @@ const CCIEPage: React.FC = () => {
   </div>
 </section>
       
+      {/* PayPal Payment Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+              Get Started Today
+            </span>
+            <h2 className="text-3xl font-bold mb-4">
+              <AuroraText>Purchase CCIE Enterprise Lab Access</AuroraText>
+            </h2>
+            <p className="text-muted-foreground mb-8">
+              Secure your spot in our CCIE Enterprise Infrastructure training program with instant access to our lab environment.
+            </p>
+            <div className="flex justify-center">
+              <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_s-xclick" />
+                <input type="hidden" name="hosted_button_id" value="QFMPV6AJEZH42" />
+                <input type="hidden" name="currency_code" value="USD" />
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Buy Now" />
+                <input type="hidden" name="return" value="https://lab.dev.berkut.cloud" />
+                <input type="hidden" name="notify_url" value="https://lab.dev.berkut.cloud/lab-purchase" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Contact Form Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-black z-0"></div>
