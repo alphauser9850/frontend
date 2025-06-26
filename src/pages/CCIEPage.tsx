@@ -407,7 +407,7 @@ const CCIEPage: React.FC = () => {
                 <li>Access to Community</li>
                 <li>Email Support</li>
               </ul>
-              <button className="mt-auto btn-primary w-full">Buy Basic</button>
+              <a href="https://ent.ccielab.net/lab-purchase" target="_blank" rel="noopener noreferrer" className="mt-auto btn-primary w-full block text-center">Buy Basic</a>
             </div>
             {/* Standard Tier */}
             <div className="card-feature flex flex-col items-center border-2 border-primary">
@@ -419,7 +419,7 @@ const CCIEPage: React.FC = () => {
                 <li>Practice Exams</li>
                 <li>Direct Instructor Q&A</li>
               </ul>
-              <button className="mt-auto btn-primary w-full">Buy Standard</button>
+              <a href="https://ent.ccielab.net/lab-purchase" target="_blank" rel="noopener noreferrer" className="mt-auto btn-primary w-full block text-center">Buy Standard</a>
             </div>
             {/* Premium Tier */}
             <div className="card-feature flex flex-col items-center">
@@ -431,7 +431,7 @@ const CCIEPage: React.FC = () => {
                 <li>Personalized Study Plan</li>
                 <li>Priority Support</li>
               </ul>
-              <button className="mt-auto btn-primary w-full">Buy Premium</button>
+              <a href="https://ent.ccielab.net/lab-purchase" target="_blank" rel="noopener noreferrer" className="mt-auto btn-primary w-full block text-center">Buy Premium</a>
             </div>
           </div>
         </div>
