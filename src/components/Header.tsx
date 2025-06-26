@@ -208,25 +208,22 @@ const Header: React.FC = () => {
             </button>
             {!user && (
               <>
-                <button 
-                  onClick={handleLoginClick}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-lg font-bold transition-colors text-text-primary hover:bg-surface-variant"
-                  )}
-                >
+                <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className={cn(
+                  "px-4 py-2 rounded-full text-lg font-bold transition-colors text-text-primary hover:bg-surface-variant"
+                )}>
                   <span className="flex items-center gap-1.5">
                     <LogIn className="h-4 w-4" />
                     Login
                   </span>
-                </button>
-                <button onClick={handleRegisterClick} className="contents">
+                </a>
+                <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="contents">
                   <RainbowButton asChild={true}>
                     <span className="flex items-center gap-1.5">
                       <UserPlus className="h-4 w-4" />
                       Register
                     </span>
                   </RainbowButton>
-                </button>
+                </a>
               </>
             )}
           </div>
@@ -303,24 +300,18 @@ const Header: React.FC = () => {
               {/* Auth Buttons (Mobile) */}
               {!user && (
                 <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-border-subtle">
-                  <button 
-                    onClick={handleLoginClick}
-                    className="px-4 py-3 rounded-md text-lg font-bold hover:bg-surface-variant transition-colors text-text-primary"
-                  >
+                  <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md text-lg font-bold hover:bg-surface-variant transition-colors text-text-primary">
                     <span className="flex items-center gap-1.5">
                       <LogIn className="h-4 w-4" />
                       Login
                     </span>
-                  </button>
-                  <button 
-                    onClick={handleRegisterClick}
-                    className="px-4 py-3 rounded-md text-lg font-bold bg-design-primary-accent text-white hover:bg-accent-hover transition-colors"
-                  >
+                  </a>
+                  <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md text-lg font-bold bg-design-primary-accent text-white hover:bg-accent-hover transition-colors">
                     <span className="flex items-center gap-1.5">
                       <UserPlus className="h-4 w-4" />
                       Register
                     </span>
-                  </button>
+                  </a>
                 </div>
               )}
             </nav>
