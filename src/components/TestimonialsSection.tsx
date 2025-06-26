@@ -27,25 +27,20 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
   return (
     <div className="relative group">
       <ShineBorder className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className={cn(
-        "rounded-xl p-6 border w-80 mx-4 flex flex-col h-full relative z-10 transition-all duration-300 group-hover:border-transparent group-hover:transform group-hover:-translate-y-1",
-        isDarkMode 
-          ? "bg-white/5 backdrop-blur-sm border-white/10" 
-          : "bg-white shadow-lg border-gray-100"
-      )}>
+      <div className="card-feature w-80 mx-4 flex flex-col h-full relative z-10 transition-all duration-300 group-hover:transform group-hover:-translate-y-1">
         <div className="flex items-center mb-4">
           {imageSrc ? (
-            <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-primary/30">
+            <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-design-primary-accent/30">
               <img src={imageSrc} alt={name} className="h-full w-full object-cover" />
             </div>
           ) : (
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/30">
-              <User className="h-6 w-6 text-primary" />
+            <div className="h-12 w-12 rounded-full bg-design-primary-accent/10 flex items-center justify-center border-2 border-design-primary-accent/30">
+              <User className="h-6 w-6 text-design-primary-accent" />
             </div>
           )}
           <div className="ml-3">
-            <h3 className={isDarkMode ? "text-white font-semibold" : "text-gray-900 font-semibold"}>{name}</h3>
-            <p className={isDarkMode ? "text-white/60 text-sm" : "text-gray-500 text-sm"}>{role}, {company}</p>
+            <h3 className="text-text-primary font-semibold">{name}</h3>
+            <p className="text-text-secondary text-sm">{role}, {company}</p>
           </div>
         </div>
         
@@ -53,19 +48,19 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           {Array(5).fill(0).map((_, i) => (
             <Star 
               key={i} 
-              className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} 
+              className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-text-muted'}`} 
             />
           ))}
         </div>
         
         <div className="relative mb-4">
-          <p className={isDarkMode ? "text-white/80 text-sm flex-grow pl-4" : "text-gray-600 text-sm flex-grow pl-4"}>
+          <p className="text-text-secondary text-sm flex-grow pl-4">
             {content}
           </p>
         </div>
         
         <div className="mt-auto">
-          <div className="h-1 w-16 bg-gradient-to-r from-primary/50 to-indigo-500/50 rounded-full"></div>
+          <div className="h-1 w-16 bg-gradient-to-r from-design-primary-accent/50 to-design-text-accent/50 rounded-full"></div>
         </div>
       </div>
     </div>
@@ -142,30 +137,19 @@ const TestimonialsSection: React.FC = () => {
   ];
 
   return (
-    <section className={cn(
-      "py-24 relative overflow-hidden",
-      isDarkMode 
-        ? "bg-gradient-to-b from-indigo-950/30 to-black" 
-        : "bg-gradient-to-b from-gray-50 to-white"
-    )}>
+    <section className="bg-gradient-section py-24 relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden opacity-10">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-design-primary-accent/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-design-text-accent/20 rounded-full blur-3xl"></div>
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
-          <h2 className={cn(
-            "text-3xl md:text-4xl font-bold mb-4",
-            isDarkMode ? "text-white" : "text-gray-900"
-          )}>
+          <h2 className="text-heading-1 font-bold text-text-primary mb-4">
             What Our <AuroraText>Students</AuroraText> Say
           </h2>
-          <p className={cn(
-            "text-lg max-w-2xl mx-auto",
-            isDarkMode ? "text-white/70" : "text-gray-600"
-          )}>
+          <p className="text-body text-text-secondary max-w-2xl mx-auto">
             Hear from professionals who have transformed their careers with our certification programs
           </p>
         </div>
@@ -199,7 +183,7 @@ const TestimonialsSection: React.FC = () => {
               />
             ))}
           </Marquee>
-        </div>*/
+        </div>*/}
 
         /*changes*/
         <div className="hidden md:block">
@@ -232,19 +216,14 @@ const TestimonialsSection: React.FC = () => {
           </div>  }*/}
           {/*changes ended */}
           <div className="mt-16 text-center">
-              <div className={cn(
-                "inline-block rounded-full px-6 py-3",
-                isDarkMode
-                  ? "bg-white/5 backdrop-blur-sm border border-white/10"
-                  : "bg-white shadow-md border border-gray-100"
-              )}>
-                <p className={isDarkMode ? "text-white/80 text-sm" : "text-gray-700 text-sm"}>
-                  Join over <span className="text-primary font-semibold">2,500+</span> professionals who have advanced their careers with our certification programs
+              <div className="card-announcement inline-block rounded-full px-6 py-3">
+                <p className="text-text-secondary text-sm">
+                  Join over <span className="text-design-primary-accent font-semibold">2,500+</span> professionals who have advanced their careers with our certification programs
                 </p>
               </div>
             </div>{/*</>*/}
       </div>
-};</section>
+    </section>
   );
 };
 

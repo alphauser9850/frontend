@@ -107,24 +107,13 @@ const LabShowcaseSection: React.FC = () => {
   };
 
   return (
-    <section className={cn(
-      "py-24",
-      isDarkMode 
-        ? "bg-gradient-to-b from-black to-indigo-950/30" 
-        : "bg-gradient-to-b from-gray-50 to-white"
-    )}>
+    <section className="bg-gradient-section py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className={cn(
-            "text-3xl md:text-4xl font-bold mb-4",
-            isDarkMode ? "text-white" : "text-gray-900"
-          )}>
+          <h2 className="text-heading-1 font-bold text-text-primary mb-4">
             Hands-on <AuroraText>Cisco Lab Environment</AuroraText>
           </h2>
-          <p className={cn(
-            "text-lg max-w-2xl mx-auto",
-            isDarkMode ? "text-white/70" : "text-gray-600"
-          )}>
+          <p className="text-body text-text-secondary max-w-2xl mx-auto">
             Practice with real-world network topologies in our Cisco Modeling Labs environment
           </p>
         </div>
@@ -133,7 +122,7 @@ const LabShowcaseSection: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="relative">
             {/* Main carousel container */}
-            <div className="relative h-[500px] rounded-2xl overflow-hidden">
+            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-large">
               <div 
                 className="flex transition-transform duration-700 ease-in-out h-full" 
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -148,20 +137,15 @@ const LabShowcaseSection: React.FC = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
                     <div className="absolute bottom-0 left-0 right-0 p-8">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className={cn(
-                          "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium",
-                          isDarkMode 
-                            ? "bg-primary/20 text-primary-foreground" 
-                            : "bg-primary/10 text-primary"
-                        )}>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-design-primary-accent/20 text-design-primary-accent">
                           {getCategoryIcon(topology.category)}
                           {topology.category}
                         </span>
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                      <h3 className="text-heading-2 font-bold text-text-primary mb-3">
                         {topology.title}
                       </h3>
-                      <p className="text-white/90 text-lg max-w-2xl">
+                      <p className="text-body text-text-secondary max-w-2xl">
                         {topology.description}
                       </p>
                     </div>
@@ -173,24 +157,14 @@ const LabShowcaseSection: React.FC = () => {
             {/* Navigation buttons */}
             <button 
               onClick={prevSlide}
-              className={cn(
-                "absolute top-1/2 left-4 -translate-y-1/2 h-12 w-12 rounded-full flex items-center justify-center transition-all duration-300 z-10",
-                isDarkMode 
-                  ? "bg-black/50 backdrop-blur-sm text-white hover:bg-black/70" 
-                  : "bg-white/80 backdrop-blur-sm text-gray-900 hover:bg-white"
-              )}
+              className="absolute top-1/2 left-4 -translate-y-1/2 h-12 w-12 rounded-full flex items-center justify-center transition-all duration-300 z-10 bg-surface/80 backdrop-blur-sm text-text-primary hover:bg-surface border border-border-subtle"
             >
               <ChevronLeft className="h-6 w-6" />
             </button>
             
             <button 
               onClick={nextSlide}
-              className={cn(
-                "absolute top-1/2 right-4 -translate-y-1/2 h-12 w-12 rounded-full flex items-center justify-center transition-all duration-300 z-10",
-                isDarkMode 
-                  ? "bg-black/50 backdrop-blur-sm text-white hover:bg-black/70" 
-                  : "bg-white/80 backdrop-blur-sm text-gray-900 hover:bg-white"
-              )}
+              className="absolute top-1/2 right-4 -translate-y-1/2 h-12 w-12 rounded-full flex items-center justify-center transition-all duration-300 z-10 bg-surface/80 backdrop-blur-sm text-text-primary hover:bg-surface border border-border-subtle"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
@@ -204,8 +178,8 @@ const LabShowcaseSection: React.FC = () => {
                   className={cn(
                     "h-2 rounded-full transition-all duration-300",
                     currentSlide === index 
-                      ? "w-8 bg-primary" 
-                      : "w-2 bg-primary/30 hover:bg-primary/50"
+                      ? "w-8 bg-design-primary-accent" 
+                      : "w-2 bg-design-primary-accent/30 hover:bg-design-primary-accent/50"
                   )}
                 ></button>
               ))}
@@ -214,76 +188,31 @@ const LabShowcaseSection: React.FC = () => {
           
           {/* Additional info */}
           <div className="mt-12 text-center">
-            <p className={cn(
-              "text-lg mb-6",
-              isDarkMode ? "text-white/70" : "text-gray-600"
-            )}>
+            <p className="text-body text-text-secondary mb-6">
               These are just a few examples of the lab topologies you'll work with. Our curriculum includes over 50 different lab scenarios covering all aspects of enterprise networking.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <div className={cn(
-                "p-6 rounded-xl border transition-all duration-300",
-                isDarkMode 
-                  ? "bg-white/5 backdrop-blur-sm border-white/10 hover:border-primary/50" 
-                  : "bg-white shadow-lg border-gray-100 hover:border-primary/50"
-              )}>
-                <Network className={cn(
-                  "h-8 w-8 mb-4 mx-auto",
-                  isDarkMode ? "text-primary" : "text-primary"
-                )} />
-                <h3 className={cn(
-                  "text-lg font-semibold mb-2",
-                  isDarkMode ? "text-white" : "text-gray-900"
-                )}>Real Cisco Equipment</h3>
-                <p className={cn(
-                  "text-sm",
-                  isDarkMode ? "text-white/70" : "text-gray-600"
-                )}>
+              <div className="card-feature text-center">
+                <Network className="h-8 w-8 mb-4 mx-auto text-design-primary-accent" />
+                <h3 className="text-heading-2 font-semibold mb-2 text-text-primary">Real Cisco Equipment</h3>
+                <p className="text-body-small text-text-secondary">
                   Practice with actual Cisco IOS images and virtual instances
                 </p>
               </div>
               
-              <div className={cn(
-                "p-6 rounded-xl border transition-all duration-300",
-                isDarkMode 
-                  ? "bg-white/5 backdrop-blur-sm border-white/10 hover:border-primary/50" 
-                  : "bg-white shadow-lg border-gray-100 hover:border-primary/50"
-              )}>
-                <Globe className={cn(
-                  "h-8 w-8 mb-4 mx-auto",
-                  isDarkMode ? "text-primary" : "text-primary"
-                )} />
-                <h3 className={cn(
-                  "text-lg font-semibold mb-2",
-                  isDarkMode ? "text-white" : "text-gray-900"
-                )}>24/7 Remote Access</h3>
-                <p className={cn(
-                  "text-sm",
-                  isDarkMode ? "text-white/70" : "text-gray-600"
-                )}>
+              <div className="card-feature text-center">
+                <Globe className="h-8 w-8 mb-4 mx-auto text-design-primary-accent" />
+                <h3 className="text-heading-2 font-semibold mb-2 text-text-primary">24/7 Remote Access</h3>
+                <p className="text-body-small text-text-secondary">
                   Access your lab environment anytime, anywhere
                 </p>
               </div>
               
-              <div className={cn(
-                "p-6 rounded-xl border transition-all duration-300",
-                isDarkMode 
-                  ? "bg-white/5 backdrop-blur-sm border-white/10 hover:border-primary/50" 
-                  : "bg-white shadow-lg border-gray-100 hover:border-primary/50"
-              )}>
-                <Layers className={cn(
-                  "h-8 w-8 mb-4 mx-auto",
-                  isDarkMode ? "text-primary" : "text-primary"
-                )} />
-                <h3 className={cn(
-                  "text-lg font-semibold mb-2",
-                  isDarkMode ? "text-white" : "text-gray-900"
-                )}>Guided Learning</h3>
-                <p className={cn(
-                  "text-sm",
-                  isDarkMode ? "text-white/70" : "text-gray-600"
-                )}>
+              <div className="card-feature text-center">
+                <Layers className="h-8 w-8 mb-4 mx-auto text-design-primary-accent" />
+                <h3 className="text-heading-2 font-semibold mb-2 text-text-primary">Guided Learning</h3>
+                <p className="text-body-small text-text-secondary">
                   Step-by-step instructions and expert mentorship
                 </p>
               </div>

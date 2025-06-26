@@ -66,29 +66,25 @@ const faqs = [
 
 const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isDarkMode } = useThemeStore();
 
   return (
     <div
-      className={cn(
-        "border-b py-4 cursor-pointer transition-all",
-        isDarkMode ? "border-white/10" : "border-gray-200"
-      )}
+      className="border-b border-border-subtle py-4 cursor-pointer transition-all hover:bg-surface-variant/50 rounded-lg px-2"
       onClick={() => setIsOpen(!isOpen)}
     >
       <div className="flex items-center justify-between">
-        <h3 className={cn("font-medium", isDarkMode ? "text-white" : "text-gray-800")}>
+        <h3 className="font-medium text-text-primary">
           {question}
         </h3>
         <ChevronDown
           className={cn(
-            "h-5 w-5 transform transition-transform duration-300",
+            "h-5 w-5 transform transition-transform duration-300 text-text-secondary",
             isOpen ? "rotate-180" : ""
           )}
         />
       </div>
       {isOpen && (
-        <p className={cn("mt-2 text-sm", isDarkMode ? "text-white/70" : "text-gray-600")}>
+        <p className="mt-2 text-sm text-text-secondary">
           {answer}
         </p>
       )}
@@ -97,27 +93,24 @@ const FAQItem = ({ question, answer }: { question: string; answer: string }) => 
 };
 
 const FAQSection: React.FC = () => {
-  const { isDarkMode } = useThemeStore();
-
   return (
-    <section className={cn(
-      "py-24",
-      isDarkMode ? "bg-black" : "bg-white"
-    )}>
+    <section className="bg-gradient-section py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className={cn("text-3xl md:text-4xl font-bold", isDarkMode ? "text-white" : "text-gray-900")}>
+          <h2 className="text-heading-1 font-bold text-text-primary">
             Frequently Asked <AuroraText>Questions</AuroraText>
           </h2>
-          <p className={cn("mt-4 text-lg", isDarkMode ? "text-white/70" : "text-gray-600")}>
+          <p className="mt-4 text-body text-text-secondary">
             Get answers to the most common questions about our certification programs.
           </p>
         </div>
 
         <div className="max-w-3xl mx-auto">
-          {faqs.map((faq, index) => (
-            <FAQItem key={index} question={faq.question} answer={faq.answer} />
-          ))}
+          <div className="card p-8">
+            {faqs.map((faq, index) => (
+              <FAQItem key={index} question={faq.question} answer={faq.answer} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
