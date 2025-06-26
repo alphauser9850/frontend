@@ -9,6 +9,15 @@ import { CheckCircle2 } from 'lucide-react';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';
 
+declare global {
+  interface Window {
+    paypal?: {
+      HostedButtons: (config: { hostedButtonId: string }) => {
+        render: (selector: string) => void;
+      };
+    };
+  }
+}
 
 // Sample lab topologies data
 const labTopologies = [
@@ -98,6 +107,31 @@ const securityTopics = [
   "JSON/XML for Data Representation",
   "Ansible/Puppet for Configuration Management"
 ];
+
+// Add PayPal script to the head
+const PayPalScript = () => {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = "https://www.paypal.com/sdk/js?client-id=BAAdToKbFkJbyWK-JAV7_bvAgJ7mUr0sekMHjXwbLbdzY6HM-suhGKGr0wUcR5e8EvmGk5h2bwRp7VTiE0&components=hosted-buttons&enable-funding=venmo&currency=USD";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Initialize PayPal button after script loads
+    script.onload = () => {
+      if (window.paypal) {
+        window.paypal.HostedButtons({
+          hostedButtonId: "QFMPV6AJEZH42",
+        }).render("#paypal-container-QFMPV6AJEZH42");
+      }
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  return null;
+};
 
 const CCIEPage: React.FC = () => {
   // State for carousel
@@ -330,212 +364,75 @@ const CCIEPage: React.FC = () => {
   ];
 
   return (
-  
-
-    
-      <div className="min-h-screen bg-background">
-    
+    <div className="min-h-screen bg-background">
+      {/* Add PayPal script component */}
+      <PayPalScript />
+      
       {/* Hero Section */}
-      <section className="relative pt-32 pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-black z-0"></div>
-        
-        <Particles
-          className="absolute inset-0 z-10"
-          quantity={50}
-          staticity={50}
-          color="#6366f1"
-          size={0.5}
-        />
-        
-        <div className="container mx-auto px-4 relative z-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <img 
-                  src="/ent_golden_icon.png" 
-                  alt=" CCIE Enterprise Infrastructure " 
-                  className="h-16 object-contain"
-                />
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                CCIE Enterprise Infrastructure Training v1.1
-              </h1>
-              
-              <p className="text-xl text-white/80 mb-8 max-w-xl">
-                Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive training program.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <ShineBorder>
-                  <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-medium text-lg">
-                    Join Waitlist
-                  </button>
-                </ShineBorder>
-                
-                <button className="px-8 py-3 rounded-full font-medium text-lg border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
-                  Learn More
-                </button>
-              </div>
-            </div>
-            
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-              <h3 className="text-xl font-semibold mb-4 text-white">Request Information</h3>
-              {formSubmitted ? (
-                <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-6 text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 text-green-400 mb-4">
-                    <CheckCircle className="h-8 w-8" />
-                  </div>
-                  <h4 className="text-xl font-semibold text-white mb-2">Request Submitted!</h4>
-                  <p className="text-white/80 mb-4">
-                    Thank you for your interest in our CCIE program. Our team will contact you shortly with more information.
-                  </p>
-                </div>
-              ) : (
-                <form className="space-y-4" onSubmit={handleSubmit}>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-white/80 mb-1">First Name</label>
-                      <input 
-                        type="text" 
-                        id="firstName" 
-                        className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                        placeholder="John"
-                        required
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-white/80 mb-1">Last Name</label>
-                      <input 
-                        type="text" 
-                        id="lastName" 
-                        className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                        placeholder="Doe"
-                        required
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-1">Email Address</label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                      placeholder="john.doe@example.com"
-                      required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-white/80 mb-1">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      id="phone" 
-                      className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                      placeholder="+91 7972852821"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-1">Your Message</label>
-                    <textarea 
-                      id="message" 
-                      rows={3}
-                      className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                      placeholder="I'm interested in learning more about the CCIE program..."
-                      required
-                      value={formData.message}
-                      onChange={handleInputChange}
-                    ></textarea>
-                  </div>
-                  <button 
-                    type="submit" 
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-                    disabled={isFormSubmitting}
-                  >
-                    {isFormSubmitting ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Submitting...
-                      </>
-                    ) : (
-                      "Submit Request"
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
+      <section className="relative pt-32 pb-32 min-h-[60vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/ccie-ei.jpg)' }}>
+        <div className="absolute inset-0 bg-surface/90"></div>
+        <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center text-center">
+          <div className="flex items-center gap-2 mb-6 justify-center">
+            <img 
+              src="/ent_golden_icon.png" 
+              alt="CCIE Enterprise Infrastructure" 
+              className="h-16 object-contain"
+            />
+          </div>
+          <h1 className="text-hero font-bold mb-6 text-text-primary">
+            CCIE Enterprise Infrastructure Training v1.1
+          </h1>
+          <p className="text-xl text-text-secondary mb-8 max-w-xl mx-auto">
+            Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive training program.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
+            <button className="btn-primary px-8 py-3 text-lg">
+              Join Waitlist
+            </button>
           </div>
         </div>
       </section>
-      
-      {/* Lab Video Section - Moved right after hero section */}
-      <section className="py-16">
+
+      {/* Pricing Section */}
+      <section className="py-20 bg-surface-variant">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
-              Lab Demonstration
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>See Our CCIE Lab Environment in  Action</AuroraText></h2>
-            <p className="text-muted-foreground">
-              Watch this video to get a glimpse of our state-of-the-art CCIE Enterprise Infrastructure lab environment.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <BorderBeamWrapper beamColor="blue" duration={8}>
-              <div className="rounded-xl shadow-lg">
-                <div className="relative pb-[56.25%] h-0 overflow-hidden">
-                  <iframe 
-                    className="absolute top-0 left-0 w-full h-full"
-                    src="https://www.youtube.com/embed/kYpiyjWV3cY" 
-                    title="CCIE Enterprise Infrastructure Lab Demonstration"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              </div>
-            </BorderBeamWrapper>
-            
-            <BorderBeamWrapper beamColor="purple" duration={7}>
-              <div className="bg-background border border-border rounded-xl p-6">
-                <h3 className="text-xl font-bold mb-3 flex items-center gap-2">
-                  <Server className="h-5 w-5 text-primary" />
-                  About Our Lab Environment
-                </h3>
-                <p className="text-muted-foreground mb-4">
-                  Our state-of-the-art lab environment provides you with hands-on experience using the latest Cisco equipment and software.
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
-                    <span className="text-sm">Real Cisco hardware and virtual instances</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
-                    <span className="text-sm">Remote access 24/7 from anywhere</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
-                    <span className="text-sm">Preconfigured topologies for practice</span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
-                    <span className="text-sm">Automated saving and loading of configs</span>
-                  </div>
-                </div>
-              </div>
-            </BorderBeamWrapper>
+          <h2 className="text-heading-1 font-bold text-center mb-12 text-text-primary">Choose Your Plan</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Basic Tier */}
+            <div className="card-feature flex flex-col items-center">
+              <h3 className="text-heading-2 font-bold mb-2 text-text-primary">Basic</h3>
+              <div className="text-4xl font-extrabold mb-4 text-text-primary">$299</div>
+              <ul className="mb-6 space-y-2 text-text-secondary text-center">
+                <li>Video Lectures</li>
+                <li>Access to Community</li>
+                <li>Email Support</li>
+              </ul>
+              <button className="mt-auto btn-primary w-full">Buy Basic</button>
+            </div>
+            {/* Standard Tier */}
+            <div className="card-feature flex flex-col items-center border-2 border-primary">
+              <h3 className="text-heading-2 font-bold mb-2 text-primary">Standard</h3>
+              <div className="text-4xl font-extrabold mb-4 text-primary">$599</div>
+              <ul className="mb-6 space-y-2 text-text-secondary text-center">
+                <li>Everything in Basic</li>
+                <li>24/7 Lab Access</li>
+                <li>Practice Exams</li>
+                <li>Direct Instructor Q&A</li>
+              </ul>
+              <button className="mt-auto btn-primary w-full">Buy Standard</button>
+            </div>
+            {/* Premium Tier */}
+            <div className="card-feature flex flex-col items-center">
+              <h3 className="text-heading-2 font-bold mb-2 text-text-primary">Premium</h3>
+              <div className="text-4xl font-extrabold mb-4 text-text-primary">$999</div>
+              <ul className="mb-6 space-y-2 text-text-secondary text-center">
+                <li>Everything in Standard</li>
+                <li>1-on-1 Mentorship</li>
+                <li>Personalized Study Plan</li>
+                <li>Priority Support</li>
+              </ul>
+              <button className="mt-auto btn-primary w-full">Buy Premium</button>
+            </div>
           </div>
         </div>
       </section>
@@ -547,8 +444,8 @@ const CCIEPage: React.FC = () => {
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Course Highlights
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive CCIE Enterprise Training Experience</AuroraText></h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-heading-1 font-bold mb-4 text-text-primary"><AuroraText>Comprehensive CCIE Enterprise Training Experience</AuroraText></h2>
+            <p className="text-text-secondary">
               Everything you need to master enterprise networking and pass your CCIE Enterprise Infrastructure Exam.
             </p>
           </div>
@@ -556,7 +453,7 @@ const CCIEPage: React.FC = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <div key={index} className="relative overflow-hidden">
-                <Card className="h-full relative overflow-hidden" withBeam={true}>
+                <Card className="h-full relative overflow-hidden card-feature" withBeam={true}>
                   <CardHeader>
                     <CardTitle>
                       <div className="flex items-center gap-3">
@@ -568,7 +465,7 @@ const CCIEPage: React.FC = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">
+                    <p className="text-text-secondary">
                       {feature.description}
                     </p>
                   </CardContent>
@@ -588,9 +485,9 @@ const CCIEPage: React.FC = () => {
             </span>
             <div className="flex items-center justify-center gap-3 mb-4">
               <img src="/ent_golden_icon.png" alt="CCIE Enterprise Logo" className="h-10 w-auto" />
-              <h2 className="text-3xl font-bold"><AuroraText>Your CCIE Enterprise Infrastructure Journey</AuroraText></h2>
+              <h2 className="text-heading-1 font-bold text-text-primary"><AuroraText>Your CCIE Enterprise Infrastructure Journey</AuroraText></h2>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-text-secondary">
               Follow this structured path to achieve your CCIE EI certification.
             </p>
           </div>
@@ -600,14 +497,14 @@ const CCIEPage: React.FC = () => {
       </section>
       
       {/* Training Program Details */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-surface-variant">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Training Program
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive CCIE Enterprise Infrastructure Training</AuroraText></h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-heading-1 font-bold mb-4 text-text-primary"><AuroraText>Comprehensive CCIE Enterprise Infrastructure Training</AuroraText></h2>
+            <p className="text-text-secondary">
               Our structured training program is designed to prepare you for success in the CCIE EI certification.
             </p>
           </div>
@@ -752,14 +649,14 @@ const CCIEPage: React.FC = () => {
       </section>
       
       {/* Lab Topologies Carousel */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-surface-variant">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Sample Topologies
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-heading-1 font-bold mb-4 text-text-primary"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
+            <p className="text-text-secondary">
               Get familiar with the diverse network topologies you'll work with during your CCIE Enterprise Infrastructure training.
             </p>
           </div>
@@ -782,7 +679,7 @@ const CCIEPage: React.FC = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                         <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h3 className="text-2xl font-bold mb-2">{topology.title}</h3>
+                          <h3 className="text-heading-2 font-bold mb-2">{topology.title}</h3>
                           <p className="text-white/80">{topology.description}</p>
                         </div>
                       </div>
@@ -794,14 +691,14 @@ const CCIEPage: React.FC = () => {
               {/* Navigation buttons */}
               <button 
                 onClick={prevSlide}
-                className="absolute top-1/2 left-4 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors z-10"
+                className="absolute top-1/2 left-4 -translate-y-1/2 h-10 w-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-text-primary hover:bg-surface-variant transition-colors z-10"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
               
               <button 
                 onClick={nextSlide}
-                className="absolute top-1/2 right-4 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors z-10"
+                className="absolute top-1/2 right-4 -translate-y-1/2 h-10 w-10 rounded-full bg-surface/80 backdrop-blur-sm flex items-center justify-center text-text-primary hover:bg-surface-variant transition-colors z-10"
               >
                 <ArrowRight className="h-5 w-5" />
               </button>
@@ -821,7 +718,7 @@ const CCIEPage: React.FC = () => {
             </div>
             
             <div className="mt-8 text-center">
-              <p className="text-muted-foreground mb-4">
+              <p className="text-text-secondary mb-4">
                 These are just a few examples of the lab topologies you'll work with. Our curriculum includes over 50 different lab scenarios covering all aspects of the CCIE Enterprise Infrastructure exam.
               </p>
               <button className="inline-flex items-center gap-2 text-primary hover:underline">
@@ -834,14 +731,14 @@ const CCIEPage: React.FC = () => {
       </section>
       
       {/* Complete CCIE Enterprise Syllabus */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-surface-variant">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Comprehensive Curriculum
             </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Enterprise Infrastructure Syllabus Overview</AuroraText></h2>
-            <p className="text-muted-foreground">
+            <h2 className="text-heading-1 font-bold mb-4 text-text-primary"><AuroraText>CCIE Enterprise Infrastructure Syllabus Overview</AuroraText></h2>
+            <p className="text-text-secondary">
               Our curriculum covers all exam domains with in-depth practical labs and theory.
             </p>
           </div>
@@ -896,196 +793,117 @@ const CCIEPage: React.FC = () => {
         </div>
       </section>
       
-      {/* Instructors */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
-              Meet Your Instructor
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Learn from Industry Expert</AuroraText></h2>
-            <p className="text-muted-foreground">
-              Your instructor is an active CCIE professional with years of real-world experience.
-            </p>
-          </div>
-          
-          <div className="max-w-3xl mx-auto">
-            <BorderBeamWrapper beamColor="blue" duration={8}>
-              <div className="flex flex-col md:flex-row gap-6 items-center bg-background border border-border rounded-xl p-6 transition-all hover:shadow-md">
-                <img 
-                  src={instructors[0].image}
-                  alt={instructors[0].name}
-                  className="w-32 h-32 rounded-full object-cover border-4 border-primary/20"
-                />
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-1">{instructors[0].name}</h3>
-                  <p className="text-primary font-medium mb-2">{instructors[0].role}</p>
-                  <div className="space-y-1 text-sm text-muted-foreground mb-4">
-                    <p className="flex items-center gap-2">
-                      <Award className="h-4 w-4" />
-                      {instructors[0].certification}
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      {instructors[0].experience} industry experience
-                    </p>
-                  </div>
-                  <a 
-                    href={instructors[0].linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer" 
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                    Connect on LinkedIn
-                  </a>
-                </div>
-              </div>
-            </BorderBeamWrapper>
-          </div>
-        </div>
-      </section>
-
       {/* Success Stories Section */}
-<section className="py-20 bg-muted/30">
-  <div className="container mx-auto px-4">
-    <div className="max-w-3xl mx-auto text-center mb-16">
-      <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
-        Success Stories
-      </span>
-      <h2 className="text-3xl font-bold mb-4">
-        <AuroraText>Our Students' Achievements</AuroraText>
-      </h2>
-      <p className="text-muted-foreground">
-        Hear from our successful CCIE candidates who have achieved their goals with our training program.
-      </p>
-    </div>
-
-    <div className="grid md:grid-cols-2 gap-8">
-      {successStories.map((story, index) => (
-        <div key={index} className="bg-background border border-border rounded-xl p-6 shadow-md">
-          <div className="flex items-center gap-4 mb-4">
-            <img
-              src={story.image}
-              alt={story.name}
-              className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
-            />
-            <div>
-              <h3 className="text-lg font-bold">{story.name}</h3>
-              <p className="text-sm text-muted-foreground">{story.role}</p>
-            </div>
-          </div>
-          <p className="text-muted-foreground italic">"{story.quote}"</p>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-
-{/* FAQ Section */}
-<section className="py-20 bg-muted/30">
-  <div className="container mx-auto px-4">
-    <div className="max-w-3xl mx-auto text-center mb-16">
-      <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
-       Have Questions? We've Got Answers 
-      </span>
-      <h2 className="text-3xl font-bold mb-4">
-        <AuroraText> Frequently Asked Questions</AuroraText>
-      </h2>
-      <p className="text-muted-foreground">
-        Find answers to the most common questions about our CCIE Enterprise Infrastructure program.
-      </p>
-    </div>
-
-    <div className="max-w-4xl mx-auto">
-      <Accordion>
-        <Accordion.Item title="What is the duration of the CCIE training program?" defaultOpen={true}>
-          <p className="text-muted-foreground">
-            The training program typically lasts for 90 days, with daily 60-90 Minutes lab sessions and additional self-paced learning resources.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="Do I need prior experience to enroll in the CCIE program?">
-          <p className="text-muted-foreground">
-            we offer beginner to expert-level training paths. You can start where you are and grow with us.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="What kind of support is provided during the training?">
-          <p className="text-muted-foreground">
-            You will have access to instructor-led sessions, a private study group, and a ticketing system for resolving queries.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="Is the lab environment accessible remotely?">
-          <p className="text-muted-foreground">
-            Yes, the lab environment is accessible 24/7 from anywhere, allowing you to practice at your convenience.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="What happens if I miss a session?">
-          <p className="text-muted-foreground">
-            All sessions are recorded, and you will have access to the recordings to catch up on missed content.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="What topics are covered in the CCIE EI course curriculum?">
-          <p className="text-muted-foreground">
-            The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SD-WAN, network automation, security, and troubleshooting real-world enterprise scenarios.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="How is the CCIE EI lab exam structured, and what does it test?">
-          <p className="text-muted-foreground">
-           The 8-hour lab exam has two modules: Design (3 hours) and Deploy, Operate, Optimize (5 hours), testing your ability to plan and manage complex networks hands-on.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="What study materials and resources do you provide for exam preparation?">
-          <p className="text-muted-foreground">
-            We provide video tutorials, workbooks, 24/7 virtual lab access, and mock exams aligned with the latest CCIE EI exam blueprint.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="Do you offer practice labs or mock exams for hands-on experience?">
-          <p className="text-muted-foreground">
-            Yes, you get unlimited access to virtual labs and mock exams that replicate the real lab environment to build your skills and confidence.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="What is the difference between the CCIE EI written exam and the lab exam?">
-          <p className="text-muted-foreground">
-           The written exam (ENCOR 350-401) tests theoretical knowledge, while the lab exam evaluates practical skills in configuring and troubleshooting networks.
-          </p>
-        </Accordion.Item>
-        <Accordion.Item title="What are the career benefits of obtaining the CCIE EI certification?">
-          <p className="text-muted-foreground">
-            The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SDt qualifies you for senior roles like Network Architect or Engineer, boosting your credibility and earning potential in the networking field.
-          </p>
-        </Accordion.Item>
-      </Accordion>
-    </div>
-  </div>
-</section>
-      
-      {/* PayPal Payment Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-surface-variant">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
-              Get Started Today
+              Success Stories
             </span>
-            <h2 className="text-3xl font-bold mb-4">
-              <AuroraText>Purchase CCIE Enterprise Lab Access</AuroraText>
+            <h2 className="text-heading-1 font-bold mb-4 text-text-primary">
+              <AuroraText>Our Students' Achievements</AuroraText>
             </h2>
-            <p className="text-muted-foreground mb-8">
-              Secure your spot in our CCIE Enterprise Infrastructure training program with instant access to our lab environment.
+            <p className="text-text-secondary">
+              Hear from our successful CCIE candidates who have achieved their goals with our training program.
             </p>
-            <div className="flex justify-center">
-              <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_s-xclick" />
-                <input type="hidden" name="hosted_button_id" value="QFMPV6AJEZH42" />
-                <input type="hidden" name="currency_code" value="USD" />
-                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Buy Now" />
-                <input type="hidden" name="return" value="https://lab.dev.berkut.cloud" />
-                <input type="hidden" name="notify_url" value="https://lab.dev.berkut.cloud/lab-purchase" />
-              </form>
-            </div>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {successStories.map((story, index) => (
+              <div key={index} className="bg-surface border border-border rounded-xl p-6 shadow-md">
+                <div className="flex items-center gap-4 mb-4">
+                  <img
+                    src={story.image}
+                    alt={story.name}
+                    className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
+                  />
+                  <div>
+                    <h3 className="text-lg font-bold text-text-primary">{story.name}</h3>
+                    <p className="text-sm text-text-secondary">{story.role}</p>
+                  </div>
+                </div>
+                <p className="text-text-secondary italic">"{story.quote}"</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
-
+      
+      {/* FAQ Section */}
+      <section className="py-20 bg-surface-variant">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+              Frequently Asked Questions
+            </span>
+            <h2 className="text-heading-1 font-bold mb-4 text-text-primary">
+              <AuroraText>CCIE Enterprise FAQ</AuroraText>
+            </h2>
+            <p className="text-text-secondary">
+              Find answers to common questions about the CCIE Enterprise Infrastructure program.
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <Accordion>
+              <Accordion.Item title="What is the duration of the CCIE training program?" defaultOpen={true}>
+                <p className="text-text-secondary">
+                  The training program typically lasts for 90 days, with daily 60-90 Minutes lab sessions and additional self-paced learning resources.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="Do I need prior experience to enroll in the CCIE program?">
+                <p className="text-text-secondary">
+                  we offer beginner to expert-level training paths. You can start where you are and grow with us.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="What kind of support is provided during the training?">
+                <p className="text-text-secondary">
+                  You will have access to instructor-led sessions, a private study group, and a ticketing system for resolving queries.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="Is the lab environment accessible remotely?">
+                <p className="text-text-secondary">
+                  Yes, the lab environment is accessible 24/7 from anywhere, allowing you to practice at your convenience.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="What happens if I miss a session?">
+                <p className="text-text-secondary">
+                  All sessions are recorded, and you will have access to the recordings to catch up on missed content.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="What topics are covered in the CCIE EI course curriculum?">
+                <p className="text-text-secondary">
+                  The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SD-WAN, network automation, security, and troubleshooting real-world enterprise scenarios.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="How is the CCIE EI lab exam structured, and what does it test?">
+                <p className="text-text-secondary">
+                 The 8-hour lab exam has two modules: Design (3 hours) and Deploy, Operate, Optimize (5 hours), testing your ability to plan and manage complex networks hands-on.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="What study materials and resources do you provide for exam preparation?">
+                <p className="text-text-secondary">
+                  We provide video tutorials, workbooks, 24/7 virtual lab access, and mock exams aligned with the latest CCIE EI exam blueprint.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="Do you offer practice labs or mock exams for hands-on experience?">
+                <p className="text-text-secondary">
+                  Yes, you get unlimited access to virtual labs and mock exams that replicate the real lab environment to build your skills and confidence.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="What is the difference between the CCIE EI written exam and the lab exam?">
+                <p className="text-text-secondary">
+                 The written exam (ENCOR 350-401) tests theoretical knowledge, while the lab exam evaluates practical skills in configuring and troubleshooting networks.
+                </p>
+              </Accordion.Item>
+              <Accordion.Item title="What are the career benefits of obtaining the CCIE EI certification?">
+                <p className="text-text-secondary">
+                  The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SDt qualifies you for senior roles like Network Architect or Engineer, boosting your credibility and earning potential in the networking field.
+                </p>
+              </Accordion.Item>
+            </Accordion>
+          </div>
+        </div>
+      </section>
+      
       {/* Contact Form Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-black z-0"></div>
@@ -1219,6 +1037,5 @@ const CCIEPage: React.FC = () => {
     </div>
   );
 };
-
 
 export default CCIEPage; 

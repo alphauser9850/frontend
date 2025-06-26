@@ -6,6 +6,7 @@ import { useTimeStore } from '../store/timeStore';
 import { useThemeStore } from '../store/themeStore';
 import { AnimatedDotPattern, AuroraText } from './magicui';
 import { cn } from '../lib/utils';
+import { COURSE_NAMES, COURSE_DESCRIPTIONS, COURSE_PATHS } from '../lib/constants';
 import { 
   Bell, LogOut, Menu, X, Server, User, Users, BookOpen, 
   Layers, Home, Moon, Sun, Laptop, Settings, Sparkles, 
@@ -156,13 +157,27 @@ const Navbar: React.FC = () => {
     debugNotificationSound();
   };
 
-  const courseItems = [
-    { title: "CCNA R&S", icon: <Server className="h-5 w-5" />, description: "Cisco Certified Network Associate", path: "/courses/ccna" },
-    { title: "CCNP", icon: <Server className="h-5 w-5" />, description: "Cisco Certified Network Professional", path: "/courses/ccnp" },
-    { title: "CCIE", icon: <Sparkles className="h-5 w-5" />, description: "Cisco Certified Internetwork Expert", path: "/courses/ccie" },
-    { title: "SD-WAN", icon: <Layers className="h-5 w-5" />, description: "Software-Defined Wide Area Network", path: "/courses/sd-wan" },
-    { title: "SD-ACCESS", icon: <Layers className="h-5 w-5" />, description: "Software-Defined Access Network", path: "/courses/sd-access" }
-  ];
+  // Helper function to render course icons
+  const renderCourseIcon = (iconType: string) => {
+    switch (iconType) {
+      case "Server":
+        return <Server className="h-5 w-5" />;
+      case "Sparkles":
+        return <Sparkles className="h-5 w-5" />;
+      case "Layers":
+        return <Layers className="h-5 w-5" />;
+      default:
+        return <BookOpen className="h-5 w-5" />;
+    }
+  };
+
+  // Only show CCIE Enterprise in the courses menu
+  const ccieCourseItem = {
+    title: COURSE_NAMES.CCIE,
+    description: COURSE_DESCRIPTIONS.CCIE,
+    path: COURSE_PATHS.CCIE,
+    iconType: "Sparkles"
+  };
 
   return (
     <header 
@@ -188,16 +203,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="relative h-9 w-9 overflow-hidden rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <AnimatedDotPattern 
-                glow={true}
-                width={8}
-                height={8}
-                cr={0.5}
-                className="absolute inset-0 text-primary/40"
-              />
-            </div>
+            <img src="/deshmukh-logo.png" alt="CCIE Lab Logo" className="h-9 w-9 rounded-full object-contain bg-white p-1 shadow" />
             <span className={cn(
               "font-bold text-xl transition-colors",
               scrolled ? "text-foreground" : "text-white"
@@ -271,14 +277,14 @@ const Navbar: React.FC = () => {
                       onMouseLeave={() => setShowCoursesMenu(false)}
                     >
                       <div className="w-[600px] grid grid-cols-2 gap-2">
-                        {courseItems.map((item, index) => (
+                        {[ccieCourseItem].map((item, index) => (
                           <Link 
                             key={index}
                             to={item.path}
                             className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted transition-colors"
                           >
                             <div className="p-2 rounded-full bg-primary/10 text-primary">
-                              {item.icon}
+                              {renderCourseIcon(item.iconType)}
                             </div>
                             <div>
                               <h3 className="font-medium">{item.title}</h3>
@@ -578,14 +584,14 @@ const Navbar: React.FC = () => {
                     
                     {showCoursesMenu && (
                       <div className="pl-4 mt-1 space-y-1">
-                        {courseItems.map((item, index) => (
+                        {[ccieCourseItem].map((item, index) => (
                           <Link 
                             key={index}
                             to={item.path}
                             className="flex items-center gap-2 px-4 py-2 rounded-md text-sm hover:bg-muted transition-colors"
                           >
                             <div className="p-1 rounded-full bg-primary/10 text-primary">
-                              {item.icon}
+                              {renderCourseIcon(item.iconType)}
                             </div>
                             <span>{item.title}</span>
                           </Link>

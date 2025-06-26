@@ -4,6 +4,7 @@ import { ShineBorder } from './magicui';
 import { AuroraText } from './magicui';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
+import { COURSE_NAMES, COURSE_PATHS } from '../lib/constants';
 
 interface CourseCardProps {
   title: string;
@@ -61,35 +62,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, image, link, className, 
 
 const CoursesSection: React.FC = () => {
   const { isDarkMode } = useThemeStore();
-  const courses = [
-    {
-      title: "CCNA R&S",
-      image: "/course-logos/ccna_600.png",
-      link: "/courses"
-    },
-    {
-      title: "CCNP",
-      image: "/course-logos/CCNP_Enterprise_large.png",
-      link: "/courses"
-    },
-    {
-      title: "CCIE Enterprise Infrastructure",
-      image: "/course-logos/CCIE_Enterprise.png",
-      link: "/courses/ccie",
-      featured: true
-    },
-    {
-      title: "CCIE Wireless",
-      image: "/course-logos/CCNP_Enterprise Wireless.png",
-      link: "/courses/ccie-wireless",
-      featured: true
-    },
-    {
-      title: "SDN (SD-WAN & SD-ACCESS)",
-      image: "/course-logos/SDN.png",
-      link: "/courses/sdn"
-    }
-  ];
+  const ccieCourse = {
+    title: COURSE_NAMES.CCIE,
+    image: "/course-logos/CCIE_Enterprise.png",
+    link: COURSE_PATHS.CCIE,
+    description: "Master the world of enterprise networking with our comprehensive CCIE EI resources. Gain a deep understanding of complex enterprise infrastructure technologies and stay ahead in your career."
+  };
 
   return (
     <section className={cn(
@@ -104,60 +82,20 @@ const CoursesSection: React.FC = () => {
             "text-3xl md:text-4xl font-bold mb-4",
             isDarkMode ? "text-white" : "text-gray-900"
           )}>
-            Our <AuroraText>Cisco Certification</AuroraText> Courses
+            Our Cisco Certification Courses
           </h2>
-          <p className={cn(
-            "text-lg max-w-2xl mx-auto",
-            isDarkMode ? "text-white/70" : "text-gray-600"
-          )}>
-            Comprehensive training programs designed to help you achieve Cisco certifications and advance your networking career.
-          </p>
         </div>
-        
-        {/* Bento Grid Layout - Focused on EI and Wireless */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4 auto-rows-[280px]">
-            {/* CCIE Enterprise Infrastructure - Large Featured Card (Left) */}
-            <CourseCard 
-              title={courses[2].title}
-              image={courses[2].image}
-              link={courses[2].link}
-              className="md:col-span-3 md:row-span-2"
-              featured={true}
-            />
-            
-            {/* CCIE Wireless - Large Featured Card (Right) */}
-            <CourseCard 
-              title={courses[3].title}
-              image={courses[3].image}
-              link={courses[3].link}
-              className="md:col-span-3 md:row-span-2"
-              featured={true}
-            />
-            
-            {/* CCNA R&S - Small Card (Bottom Left) */}
-            <CourseCard 
-              title={courses[0].title}
-              image={courses[0].image}
-              link={courses[0].link}
-              className="md:col-span-2"
-            />
-            
-            {/* CCNP - Small Card (Bottom Center) */}
-            <CourseCard 
-              title={courses[1].title}
-              image={courses[1].image}
-              link={courses[1].link}
-              className="md:col-span-2"
-            />
-            
-            {/* SDN (SD-WAN & SD-ACCESS) - Small Card (Bottom Right) */}
-            <CourseCard 
-              title={courses[4].title}
-              image={courses[4].image}
-              link={courses[4].link}
-              className="md:col-span-2"
-            />
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className={cn(
+              "rounded-xl bg-white shadow-lg border border-gray-200 flex flex-col items-center p-6 transition-all duration-300 hover:scale-105",
+              isDarkMode && "bg-white/5 border-white/10 shadow-none"
+            )}>
+              <img src={ccieCourse.image} alt={ccieCourse.title} className="h-28 w-auto mb-4 object-contain" />
+              <h3 className={cn("font-bold text-lg mb-2 text-center", isDarkMode ? "text-white" : "text-gray-900")}>{ccieCourse.title}</h3>
+              <p className={cn("text-sm text-center mb-6", isDarkMode ? "text-white/70" : "text-gray-700")}>{ccieCourse.description}</p>
+              <Link to={ccieCourse.link} className="mt-auto px-6 py-2 rounded-full bg-yellow-400 text-gray-900 font-semibold shadow hover:bg-yellow-500 transition-colors">Know More</Link>
+            </div>
           </div>
         </div>
       </div>

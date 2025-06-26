@@ -14,7 +14,7 @@ const getSystemPreference = (): 'dark' | 'light' => {
   if (typeof window !== 'undefined') {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
-  return 'dark'; // Default to dark if window is not available
+  return 'light'; // Default to light if window is not available
 };
 
 // Helper function to apply theme to document
@@ -49,7 +49,7 @@ const applyTheme = (theme: Theme) => {
 
 // Function to ensure dark mode is applied
 const ensureDarkMode = () => {
-  const storedTheme = localStorage.getItem('theme') as Theme || 'dark';
+  const storedTheme = localStorage.getItem('theme') as Theme || 'light';
   const isDark = storedTheme === 'dark' || 
     (storedTheme === 'system' && getSystemPreference() === 'dark');
   
@@ -61,9 +61,9 @@ const ensureDarkMode = () => {
 };
 
 export const useThemeStore = create<ThemeState>((set) => {
-  // Get stored theme or default to dark
+  // Get stored theme or default to light
   const storedTheme = typeof localStorage !== 'undefined' ? 
-    (localStorage.getItem('theme') as Theme || 'dark') : 'dark';
+    (localStorage.getItem('theme') as Theme || 'light') : 'light';
   
   // Initialize theme
   const systemPreference = getSystemPreference();

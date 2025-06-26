@@ -138,12 +138,12 @@ function App() {
     loadUser();
     addNotificationSound();
     
-    // Ensure theme is applied - default to dark mode
+    // Ensure theme is applied - default to dark mode as per design system
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme) {
       setTheme(storedTheme as 'dark' | 'light' | 'system');
     } else {
-      // Set dark mode as default if no theme is stored
+      // Set dark mode as default if no theme is stored (per design system)
       setTheme('dark');
     }
     
@@ -207,7 +207,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/servers" element={<ServersPage />} />
-            <Route path="/courses/:courseId" element={<CourseDetailPage />} /> {/*change */}
             
             {/* Course Pages */}
             <Route path="/courses/ccna" element={<CCNAPage />} />
@@ -249,9 +248,10 @@ function App() {
         </Routes>
       </NavigationWrapper>
       <Toaster position="top-right" toastOptions={{
+        duration: 4000,
         style: {
-          background: isDarkMode ? 'var(--card)' : 'var(--background)',
-          color: isDarkMode ? 'var(--card-foreground)' : 'var(--foreground)',
+          background: 'var(--card)',
+          color: 'var(--card-foreground)',
           border: '1px solid var(--border)',
         },
       }} />
