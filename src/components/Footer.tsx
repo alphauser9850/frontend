@@ -106,7 +106,10 @@ const Footer: React.FC = () => {
                 support@ccielab.net
               </a>
               <p className="text-muted-foreground">
-                +91 7972852821
+                +1 760 858 0505
+              </p>
+              <p className="text-muted-foreground">
+                2175 Goodyear Ave. Ste 110 Ventura CA 93003
               </p>
             </div>
           </div>

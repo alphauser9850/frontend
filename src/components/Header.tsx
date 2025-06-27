@@ -104,93 +104,109 @@ const Header: React.FC = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled 
-          ? "bg-surface/90 backdrop-blur-md border-b border-border-subtle shadow-subtle py-3" 
-          : "bg-surface/70 py-8"
+          ? "bg-surface border-b border-border-subtle shadow-subtle py-3" 
+          : "bg-surface py-8"
       )}
     >
-      {/* Animated dot pattern for the header background when scrolled */}
-      {scrolled && (
-        <AnimatedDotPattern 
-          glow={true}
-          width={40}
-          height={40}
-          cr={1}
-          className="absolute inset-0 text-design-primary-accent/10 opacity-50"
-        />
-      )}
+      {/* Remove animated dot pattern for solid background */}
       
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
-            <img src="/new-logo-1.png" alt="CCIE Lab Logo" className="h-16 w-16 rounded-xl object-contain bg-surface p-1 shadow-medium" />
-            <span className={cn(
-              "font-bold text-xl transition-colors text-text-primary"
-            )}>
-              <AuroraText>CCIE LAB</AuroraText>
-            </span>
-          </Link> 
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            <div className="relative">
-              <button 
-                onClick={() => setShowCoursesMenu(!showCoursesMenu)}
-                onMouseEnter={() => setShowCoursesMenu(true)}
+          {/* Left: Logo and Navigation */}
+          <div className="flex items-center gap-8 flex-shrink-0">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-3">
+              <img src="/new-logo-1.png" alt="CCIE Lab Logo" className="h-16 w-16 rounded-xl object-contain bg-surface p-1 shadow-medium" />
+              <span className={cn(
+                "font-bold text-xl transition-colors text-text-primary"
+              )}>
+                <AuroraText>CCIE LAB</AuroraText>
+              </span>
+            </Link>
+            {/* Navigation (left, next to logo) */}
+            <nav className="hidden md:flex items-center gap-6 ml-6 text-[1.375rem] font-roboto" style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
+              <div className="relative">
+                <button 
+                  onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                  onMouseEnter={() => setShowCoursesMenu(true)}
+                  className={cn(
+                    "px-4 py-2 rounded-full font-bold transition-colors flex items-center gap-1.5 text-[1.375rem]",
+                    location.pathname.includes('/courses') 
+                      ? "bg-design-primary-accent text-white" 
+                      : "text-text-primary hover:bg-surface-variant"
+                  )}
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Courses
+                  <ChevronDown className={cn("h-4 w-4 transition-transform", showCoursesMenu ? "rotate-180" : "")} />
+                </button>
+                {/* Mega Menu */}
+                {showCoursesMenu && (
+                  <div 
+                    className="absolute top-full left-0 mt-2 w-[600px] bg-surface border border-border-subtle rounded-xl shadow-large p-4 grid grid-cols-2 gap-2 z-50"
+                    onMouseLeave={() => setShowCoursesMenu(false)}
+                  >
+                    {[ccieCourseItem].map((item, index) => (
+                      <Link 
+                        key={index}
+                        to={item.path}
+                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface-variant transition-colors"
+                      >
+                        <div className="p-2 rounded-full bg-design-primary-accent/10 text-design-primary-accent">
+                          {item.icon}
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-text-primary">{item.title}</h3>
+                          <p className="text-sm text-text-secondary">{item.description}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <Link 
+                to="/about" 
                 className={cn(
-                  "px-4 py-2 rounded-full text-lg font-bold transition-colors flex items-center gap-1.5",
-                  location.pathname.includes('/courses') 
+                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem]",
+                  isActive('/about') 
                     ? "bg-design-primary-accent text-white" 
                     : "text-text-primary hover:bg-surface-variant"
                 )}
               >
-                <BookOpen className="h-4 w-4" />
-                Courses
-                <ChevronDown className={cn("h-4 w-4 transition-transform", showCoursesMenu ? "rotate-180" : "")} />
-              </button>
-              
-              {/* Mega Menu */}
-              {showCoursesMenu && (
-                <div 
-                  className="absolute top-full left-0 mt-2 w-[600px] bg-surface border border-border-subtle rounded-xl shadow-large p-4 grid grid-cols-2 gap-2 z-50"
-                  onMouseLeave={() => setShowCoursesMenu(false)}
-                >
-                  {[ccieCourseItem].map((item, index) => (
-                    <Link 
-                      key={index}
-                      to={item.path}
-                      className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface-variant transition-colors"
-                    >
-                      <div className="p-2 rounded-full bg-design-primary-accent/10 text-design-primary-accent">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-text-primary">{item.title}</h3>
-                        <p className="text-sm text-text-secondary">{item.description}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-            
-            <Link 
-              to="/about" 
-              className={cn(
-                "px-4 py-2 rounded-full text-lg font-bold transition-colors",
-                isActive('/about') 
-                  ? "bg-design-primary-accent text-white" 
-                  : "text-text-primary hover:bg-surface-variant"
-              )}
-            >
-              <span className="flex items-center gap-1.5">
-                <Info className="h-4 w-4" />
-                About Us
-              </span>
-            </Link>
-          </nav>
-
-          {/* Auth Buttons & Theme Toggle (Desktop) */}
+                <span className="flex items-center gap-1.5">
+                  <Info className="h-4 w-4" />
+                  About Us
+                </span>
+              </Link>
+              <Link 
+                to="/contact" 
+                className={cn(
+                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem]",
+                  isActive('/contact') 
+                    ? "bg-design-primary-accent text-white" 
+                    : "text-text-primary hover:bg-surface-variant"
+                )}
+              >
+                <span className="flex items-center gap-1.5">
+                  Contact Us
+                </span>
+              </Link>
+              <Link 
+                to="/blog" 
+                className={cn(
+                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem]",
+                  isActive('/blog') 
+                    ? "bg-design-primary-accent text-white" 
+                    : "text-text-primary hover:bg-surface-variant"
+                )}
+              >
+                <span className="flex items-center gap-1.5">
+                  Blog
+                </span>
+              </Link>
+            </nav>
+          </div>
+          {/* Right: Theme Toggle, Login, Register */}
           <div className="hidden md:flex items-center gap-3">
             {/* Theme Toggle */}
             <button 
@@ -209,7 +225,7 @@ const Header: React.FC = () => {
             {!user && (
               <>
                 <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className={cn(
-                  "px-4 py-2 rounded-full text-lg font-bold transition-colors text-text-primary hover:bg-surface-variant"
+                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem] text-text-primary hover:bg-surface-variant"
                 )}>
                   <span className="flex items-center gap-1.5">
                     <LogIn className="h-4 w-4" />
@@ -227,7 +243,6 @@ const Header: React.FC = () => {
               </>
             )}
           </div>
-
           {/* Mobile Menu Button */}
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -254,7 +269,7 @@ const Header: React.FC = () => {
                 <button
                   onClick={() => setShowCoursesMenu(!showCoursesMenu)}
                   className={cn(
-                    "px-4 py-3 rounded-md text-lg font-bold flex items-center justify-between text-text-primary hover:bg-surface-variant",
+                    "px-4 py-3 rounded-md font-bold flex items-center justify-between text-text-primary hover:bg-surface-variant text-[1.375rem]",
                     location.pathname.includes('/courses') 
                       ? "bg-design-primary-accent/10 text-design-primary-accent" 
                       : ""
@@ -286,7 +301,7 @@ const Header: React.FC = () => {
               <Link 
                 to="/about" 
                 className={cn(
-                  "px-4 py-3 rounded-md text-lg font-bold text-text-primary hover:bg-surface-variant",
+                  "px-4 py-3 rounded-md font-bold text-text-primary hover:bg-surface-variant text-[1.375rem]",
                   isActive('/about') 
                     ? "bg-design-primary-accent/10 text-design-primary-accent" 
                     : ""
@@ -300,13 +315,13 @@ const Header: React.FC = () => {
               {/* Auth Buttons (Mobile) */}
               {!user && (
                 <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-border-subtle">
-                  <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md text-lg font-bold hover:bg-surface-variant transition-colors text-text-primary">
+                  <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md font-bold hover:bg-surface-variant transition-colors text-text-primary text-[1.375rem]">
                     <span className="flex items-center gap-1.5">
                       <LogIn className="h-4 w-4" />
                       Login
                     </span>
                   </a>
-                  <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md text-lg font-bold bg-design-primary-accent text-white hover:bg-accent-hover transition-colors">
+                  <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md bg-design-primary-accent text-white hover:bg-accent-hover transition-colors text-[1.375rem]">
                     <span className="flex items-center gap-1.5">
                       <UserPlus className="h-4 w-4" />
                       Register
