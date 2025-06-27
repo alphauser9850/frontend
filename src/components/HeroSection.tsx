@@ -17,18 +17,18 @@ const HeroSection: React.FC = () => {
         {/* Left: Text Content (no card) */}
         <div className="flex-1 flex flex-col items-start justify-center md:pr-12 max-w-5xl z-30">
           <h1 className="text-hero font-extrabold text-text-primary leading-tight mb-8">
-            <AuroraText>Advanced CCIE Training & Certification</AuroraText>
-          </h1>
+              <AuroraText>Advanced CCIE Training & Certification</AuroraText>
+            </h1>
           <p className="text-body text-text-secondary font-medium mb-10 max-w-2xl">
-            Master Network Engineering Excellence
-          </p>
+              Master Network Engineering Excellence
+            </p>
           <a
             href={COURSE_PATHS.CCIE}
             className="btn-primary text-lg font-bold shadow-large hover:shadow-medium transition-all duration-200 animate-fade-in-up"
           >
             Explore CCIE Enterprise
           </a>
-        </div>
+            </div>
         {/* Right: Full-height, left-fading Hero Image with soft right corners */}
         <div className="flex-1 h-full w-full flex items-stretch justify-end relative z-10">
           <div className="relative h-full w-full flex items-stretch justify-end">

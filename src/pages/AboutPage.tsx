@@ -316,7 +316,7 @@ const AboutPage: React.FC = () => {
                     </div>
                     <div>
                       <h3 className="font-medium mb-1">Call Us</h3>
-                      <p className="text-muted-foreground">+91 7972852821</p>
+                      <p className="text-muted-foreground">+1 760 858 0505</p>
                     </div>
                   </div>
                   
@@ -327,9 +327,7 @@ const AboutPage: React.FC = () => {
                     <div>
                       <h3 className="font-medium mb-1">Visit Us</h3>
                       <p className="text-muted-foreground">
-                        123 Networking Avenue<br />
-                        San Jose, CA 95134<br />
-                        United States
+                        2175 Goodyear Ave. Ste 110 Ventura CA 93003<br />
                       </p>
                     </div>
                   </div>

@@ -414,8 +414,8 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-  
+}
+
   /* Hero background gradient */
   .hero-bg {
     background: var(--gradient-hero);
@@ -534,7 +534,7 @@
 *:focus {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
-}
+  }
 
 /* Print styles */
 @media print {

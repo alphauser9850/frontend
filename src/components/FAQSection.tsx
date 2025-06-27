@@ -107,9 +107,9 @@ const FAQSection: React.FC = () => {
 
         <div className="max-w-3xl mx-auto">
           <div className="card p-8">
-            {faqs.map((faq, index) => (
-              <FAQItem key={index} question={faq.question} answer={faq.answer} />
-            ))}
+          {faqs.map((faq, index) => (
+            <FAQItem key={index} question={faq.question} answer={faq.answer} />
+          ))}
           </div>
         </div>
       </div>
