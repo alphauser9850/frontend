@@ -72,7 +72,7 @@ const PrivacyPolicyPage: React.FC = () => {
               <h2 className="text-2xl font-semibold text-foreground">8. Contact Us</h2>
               <p>If you have any questions or concerns about this Privacy Policy, please contact us at:</p>
               <p className="text-primary">📩 Email: support@ccielab.net</p>
-              <p className="text-primary">🌐 Website: www.deshmukhsystems.com</p>
+              <p className="text-primary">🌐 Website: 2175 Goodyear Ave. Ste 110 Ventura CA 93003</p>
             </section>
           </div>
         </div>

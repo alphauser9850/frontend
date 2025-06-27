@@ -46,7 +46,7 @@ const ServiceSection: React.FC = () => (
           >
             <div className="flex flex-col items-center">
               <div className="p-4 rounded-full bg-design-primary-accent/10 mb-6">
-                {service.icon}
+            {service.icon}
               </div>
               <h3 className="text-heading-2 font-bold mb-4 text-text-primary">{service.title}</h3>
               <p className="text-body-small text-text-secondary">{service.description}</p>

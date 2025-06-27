@@ -451,9 +451,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                   "text-gray-700",
                   isDarkMode ? "text-white/70" : "text-gray-600"
                 )}> 
-                  India 
-                    
-                  </p>
+                  2175 Goodyear Ave. Ste 110 Ventura CA 93003
+                </p>
               </div>
             </div><br/>
             
@@ -488,8 +487,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page'
                   "text-gray-700",
                   isDarkMode ? "text-white/70" : "text-gray-600"
                 )}>
-                    +91 7972852821
-                  </p>
+                    +1 760 858 0505
+                </p>
               </div>
             </div>
             

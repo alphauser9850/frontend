@@ -58,7 +58,7 @@ const TermsPage: React.FC = () => {
               <h2 className="text-2xl font-semibold text-foreground">Contact Information</h2>
               <p>For any queries regarding these Terms and Conditions, please contact us:</p>
               <p className="text-primary">Email: support@ccielab.net</p>
-              <p className="text-primary">Phone: +917972852821</p>
+              <p className="text-primary">Phone: +1 760 858 0505</p>
             </section>
 
             <div className="mt-8 space-y-4 text-muted-foreground">

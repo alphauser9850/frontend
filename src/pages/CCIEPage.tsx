@@ -792,118 +792,118 @@ const CCIEPage: React.FC = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Success Stories Section */}
       <section className="py-20 bg-surface-variant">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
-              Success Stories
-            </span>
+  <div className="container mx-auto px-4">
+    <div className="max-w-3xl mx-auto text-center mb-16">
+      <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+        Success Stories
+      </span>
             <h2 className="text-heading-1 font-bold mb-4 text-text-primary">
-              <AuroraText>Our Students' Achievements</AuroraText>
-            </h2>
+        <AuroraText>Our Students' Achievements</AuroraText>
+      </h2>
             <p className="text-text-secondary">
-              Hear from our successful CCIE candidates who have achieved their goals with our training program.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {successStories.map((story, index) => (
+        Hear from our successful CCIE candidates who have achieved their goals with our training program.
+      </p>
+    </div>
+    <div className="grid md:grid-cols-2 gap-8">
+      {successStories.map((story, index) => (
               <div key={index} className="bg-surface border border-border rounded-xl p-6 shadow-md">
-                <div className="flex items-center gap-4 mb-4">
-                  <img
-                    src={story.image}
-                    alt={story.name}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
-                  />
-                  <div>
+          <div className="flex items-center gap-4 mb-4">
+            <img
+              src={story.image}
+              alt={story.name}
+              className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
+            />
+            <div>
                     <h3 className="text-lg font-bold text-text-primary">{story.name}</h3>
                     <p className="text-sm text-text-secondary">{story.role}</p>
-                  </div>
-                </div>
-                <p className="text-text-secondary italic">"{story.quote}"</p>
-              </div>
-            ))}
+            </div>
           </div>
+                <p className="text-text-secondary italic">"{story.quote}"</p>
         </div>
-      </section>
-      
-      {/* FAQ Section */}
+      ))}
+    </div>
+  </div>
+</section>
+
+{/* FAQ Section */}
       <section className="py-20 bg-surface-variant">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+  <div className="container mx-auto px-4">
+    <div className="max-w-3xl mx-auto text-center mb-16">
+      <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
               Frequently Asked Questions
-            </span>
+      </span>
             <h2 className="text-heading-1 font-bold mb-4 text-text-primary">
               <AuroraText>CCIE Enterprise FAQ</AuroraText>
-            </h2>
+      </h2>
             <p className="text-text-secondary">
               Find answers to common questions about the CCIE Enterprise Infrastructure program.
-            </p>
-          </div>
-          <div className="max-w-4xl mx-auto">
-            <Accordion>
-              <Accordion.Item title="What is the duration of the CCIE training program?" defaultOpen={true}>
+      </p>
+    </div>
+    <div className="max-w-4xl mx-auto">
+      <Accordion>
+        <Accordion.Item title="What is the duration of the CCIE training program?" defaultOpen={true}>
                 <p className="text-text-secondary">
-                  The training program typically lasts for 90 days, with daily 60-90 Minutes lab sessions and additional self-paced learning resources.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="Do I need prior experience to enroll in the CCIE program?">
+            The training program typically lasts for 90 days, with daily 60-90 Minutes lab sessions and additional self-paced learning resources.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="Do I need prior experience to enroll in the CCIE program?">
                 <p className="text-text-secondary">
-                  we offer beginner to expert-level training paths. You can start where you are and grow with us.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="What kind of support is provided during the training?">
+            we offer beginner to expert-level training paths. You can start where you are and grow with us.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What kind of support is provided during the training?">
                 <p className="text-text-secondary">
-                  You will have access to instructor-led sessions, a private study group, and a ticketing system for resolving queries.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="Is the lab environment accessible remotely?">
+            You will have access to instructor-led sessions, a private study group, and a ticketing system for resolving queries.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="Is the lab environment accessible remotely?">
                 <p className="text-text-secondary">
-                  Yes, the lab environment is accessible 24/7 from anywhere, allowing you to practice at your convenience.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="What happens if I miss a session?">
+            Yes, the lab environment is accessible 24/7 from anywhere, allowing you to practice at your convenience.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What happens if I miss a session?">
                 <p className="text-text-secondary">
-                  All sessions are recorded, and you will have access to the recordings to catch up on missed content.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="What topics are covered in the CCIE EI course curriculum?">
+            All sessions are recorded, and you will have access to the recordings to catch up on missed content.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What topics are covered in the CCIE EI course curriculum?">
                 <p className="text-text-secondary">
-                  The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SD-WAN, network automation, security, and troubleshooting real-world enterprise scenarios.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="How is the CCIE EI lab exam structured, and what does it test?">
+            The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SD-WAN, network automation, security, and troubleshooting real-world enterprise scenarios.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="How is the CCIE EI lab exam structured, and what does it test?">
                 <p className="text-text-secondary">
-                 The 8-hour lab exam has two modules: Design (3 hours) and Deploy, Operate, Optimize (5 hours), testing your ability to plan and manage complex networks hands-on.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="What study materials and resources do you provide for exam preparation?">
+           The 8-hour lab exam has two modules: Design (3 hours) and Deploy, Operate, Optimize (5 hours), testing your ability to plan and manage complex networks hands-on.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What study materials and resources do you provide for exam preparation?">
                 <p className="text-text-secondary">
-                  We provide video tutorials, workbooks, 24/7 virtual lab access, and mock exams aligned with the latest CCIE EI exam blueprint.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="Do you offer practice labs or mock exams for hands-on experience?">
+            We provide video tutorials, workbooks, 24/7 virtual lab access, and mock exams aligned with the latest CCIE EI exam blueprint.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="Do you offer practice labs or mock exams for hands-on experience?">
                 <p className="text-text-secondary">
-                  Yes, you get unlimited access to virtual labs and mock exams that replicate the real lab environment to build your skills and confidence.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="What is the difference between the CCIE EI written exam and the lab exam?">
+            Yes, you get unlimited access to virtual labs and mock exams that replicate the real lab environment to build your skills and confidence.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What is the difference between the CCIE EI written exam and the lab exam?">
                 <p className="text-text-secondary">
-                 The written exam (ENCOR 350-401) tests theoretical knowledge, while the lab exam evaluates practical skills in configuring and troubleshooting networks.
-                </p>
-              </Accordion.Item>
-              <Accordion.Item title="What are the career benefits of obtaining the CCIE EI certification?">
+           The written exam (ENCOR 350-401) tests theoretical knowledge, while the lab exam evaluates practical skills in configuring and troubleshooting networks.
+          </p>
+        </Accordion.Item>
+        <Accordion.Item title="What are the career benefits of obtaining the CCIE EI certification?">
                 <p className="text-text-secondary">
-                  The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SDt qualifies you for senior roles like Network Architect or Engineer, boosting your credibility and earning potential in the networking field.
-                </p>
-              </Accordion.Item>
-            </Accordion>
+            The curriculum includes Layer 2/3 technologies, routing (OSPF, BGP), MPLS, SDt qualifies you for senior roles like Network Architect or Engineer, boosting your credibility and earning potential in the networking field.
+          </p>
+        </Accordion.Item>
+      </Accordion>
           </div>
         </div>
       </section>
-      
+
       {/* Contact Form Section */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-black z-0"></div>
@@ -945,7 +945,7 @@ const CCIEPage: React.FC = () => {
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors"
               >
                 <Phone className="h-4 w-4" />
-                +91 7972852821
+                +1 760 858 0505
               </a>
             </div>
           </div>
@@ -996,7 +996,7 @@ const CCIEPage: React.FC = () => {
                   type="tel" 
                   id="contactPhone" 
                   className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                  placeholder="+91 7972852821"
+                  placeholder="+1 760 858 0505"
                   value={contactFormData.phone}
                   onChange={handleContactInputChange}
                 />
