@@ -41,7 +41,7 @@ export interface AboutFormData {
 export type FormData = CCIEFormData | ContactFormData | AboutFormData;
 
 // The URLs of your n8n webhooks
-const UNIVERSAL_WEBHOOK_URL = 'http://3.238.201.29:5678/webhook/d38ef99e-3a07-44cc-8c9d-833c17391f05';
+const UNIVERSAL_WEBHOOK_URL = 'http://n8n.ccielab.net/webhook/d38ef99e-3a07-44cc-8c9d-833c17391f05';
 
 /**
  * Submits form data to n8n webhook
@@ -56,6 +56,8 @@ export const submitFormToN8n = async (data: FormData): Promise<{ success: boolea
       timestamp: new Date().toISOString(),
     };
 
+    // All forms now use the same webhook URL
+    const webhookUrl = UNIVERSAL_WEBHOOK_URL;
     // All forms now use the same webhook URL
     const webhookUrl = UNIVERSAL_WEBHOOK_URL;
 
@@ -137,6 +139,9 @@ const sendConfirmationEmail = async (email: string): Promise<void> => {
  * @param webhookType The type of webhook to test ('ccie', 'contact', or 'home')
  */
 export const testWebhookConnectivity = async (webhookType: 'ccie' | 'contact' | 'home'): Promise<void> => {
+  // All tests now use the same webhook URL
+  const webhookUrl = UNIVERSAL_WEBHOOK_URL;
+  console.log(`Testing connectivity to universal webhook: ${webhookUrl}`);
   // All tests now use the same webhook URL
   const webhookUrl = UNIVERSAL_WEBHOOK_URL;
   console.log(`Testing connectivity to universal webhook: ${webhookUrl}`);
