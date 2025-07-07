@@ -41,9 +41,7 @@ export interface AboutFormData {
 export type FormData = CCIEFormData | ContactFormData | AboutFormData;
 
 // The URLs of your n8n webhooks
-const HOMEPAGE_WEBHOOK_URL = 'https://n8n.deshmukhsystems.com/webhook/982fe651-4109-429a-8534-424a4476b337';
-const CONTACT_WEBHOOK_URL = 'https://n8n.deshmukhsystems.com/webhook/f5573dfa-7a9a-4d47-9243-8e7e1f4a3e70';
-const CCIE_WEBHOOK_URL = 'https://n8n.deshmukhsystems.com/webhook-test/54434800-608e-4842-ba92-e99c8d2f520b';
+const UNIVERSAL_WEBHOOK_URL = 'http://3.238.201.29:5678/webhook/d38ef99e-3a07-44cc-8c9d-833c17391f05';
 
 /**
  * Submits form data to n8n webhook
@@ -58,26 +56,8 @@ export const submitFormToN8n = async (data: FormData): Promise<{ success: boolea
       timestamp: new Date().toISOString(),
     };
 
-    // Determine which webhook URL to use based on the form source
-    let webhookUrl;
-    
-    // Use CCIE webhook for CCIE-related forms
-    if (data.source === 'ccie-page' || data.source === 'ccie-page-contact') {
-      webhookUrl = CCIE_WEBHOOK_URL;
-    }
-    // Use Homepage webhook for home-page source
-    else if (data.source === 'home-page') {
-      webhookUrl = HOMEPAGE_WEBHOOK_URL;
-    }
-    // Use Contact webhook for about-page and contact-page sources
-    else if (data.source === 'about-page' || data.source === 'contact-page') {
-      webhookUrl = CONTACT_WEBHOOK_URL;
-    }
-    // Default to Homepage webhook if source is not recognized
-    else {
-      webhookUrl = HOMEPAGE_WEBHOOK_URL;
-      console.warn(`Unknown form source: ${data.source}, defaulting to homepage webhook`);
-    }
+    // All forms now use the same webhook URL
+    const webhookUrl = UNIVERSAL_WEBHOOK_URL;
 
     // Add debugging logs
     console.log('Form submission details:');
@@ -157,21 +137,9 @@ const sendConfirmationEmail = async (email: string): Promise<void> => {
  * @param webhookType The type of webhook to test ('ccie', 'contact', or 'home')
  */
 export const testWebhookConnectivity = async (webhookType: 'ccie' | 'contact' | 'home'): Promise<void> => {
-  let webhookUrl;
-  
-  switch (webhookType) {
-    case 'ccie':
-      webhookUrl = CCIE_WEBHOOK_URL;
-      break;
-    case 'contact':
-      webhookUrl = CONTACT_WEBHOOK_URL;
-      break;
-    case 'home':
-      webhookUrl = HOMEPAGE_WEBHOOK_URL;
-      break;
-  }
-  
-  console.log(`Testing connectivity to ${webhookType} webhook: ${webhookUrl}`);
+  // All tests now use the same webhook URL
+  const webhookUrl = UNIVERSAL_WEBHOOK_URL;
+  console.log(`Testing connectivity to universal webhook: ${webhookUrl}`);
   
   try {
     const testData = {
