@@ -16,7 +16,7 @@ export interface CCIEFormData {
   email: string;
   phone: string;
   message: string;
-  source: 'ccie-page' | 'ccie-page-contact';
+  source: 'ccie-page' | 'ccie-page-contact' | 'course-page';
 }
 
 // Contact form data
