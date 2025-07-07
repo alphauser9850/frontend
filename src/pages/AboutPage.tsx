@@ -5,6 +5,7 @@ import { cn } from '../lib/utils';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { submitFormToN8n, AboutFormData } from '../services/formService';
+import { ContactSection } from '../components/ContactSection';
 
 const AboutPage: React.FC = () => {
   // Form state
@@ -424,6 +425,7 @@ const AboutPage: React.FC = () => {
           </div>
         </div>
       </section>
+      <ContactSection source="home-page" />
     </div>
   );
 };

@@ -192,7 +192,7 @@ const CCIEPage: React.FC = () => {
         email: formData.email,
         phone: formData.phone,
         message: formData.message,
-        source: 'ccie-page'
+        source: 'course-page'
       };
       
       // Submit to n8n
@@ -233,7 +233,7 @@ const CCIEPage: React.FC = () => {
         email: contactFormData.email,
         phone: contactFormData.phone,
         message: contactFormData.message,
-        source: 'ccie-page-contact'
+        source: 'course-page'
       };
       
       // Submit to n8n

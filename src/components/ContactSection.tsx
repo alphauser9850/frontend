@@ -6,7 +6,7 @@ import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
 
 interface ContactSectionProps {
-  source?: 'home-page' | 'contact-page';
+  source?: 'home-page';
 }
 
 const countryOptions = [
@@ -253,7 +253,7 @@ const countryOptions = [
   { code: '+263', name: 'Zimbabwe' }
 ];
 
-const ContactSection: React.FC<ContactSectionProps> = ({ source = 'contact-page' }) => {
+const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' }) => {
   const { isDarkMode } = useThemeStore();
   const [formData, setFormData] = useState({
     name: '',
