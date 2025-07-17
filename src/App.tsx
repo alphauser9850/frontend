@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { HelmetProvider } from 'react-helmet-async';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
 import { checkSupabaseConnection } from './lib/supabase';
@@ -36,9 +37,11 @@ import CCIEWirelessPage from './pages/CCIEWirelessPage';
 import SDWANPage from './pages/SDWANPage';
 import SDAccessPage from './pages/SDAccessPage';
 import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
 import TermsPage from './pages/TermsPage';
+import BlogPage from './pages/BlogPage';
 
 // Add notification sound
 const addNotificationSound = () => {
@@ -197,66 +200,70 @@ function App() {
   }, [isAuthenticated, isDarkMode]);
 
   return (
-    <Router>
-      <NavigationWrapper>
-        <Routes>
-          {/* Public routes */}
-          <Route element={<AuthGuard requireAuth={false} />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/servers" element={<ServersPage />} />
+    <HelmetProvider>
+      <Router>
+        <NavigationWrapper>
+          <Routes>
+            {/* Public routes */}
+            <Route element={<AuthGuard requireAuth={false} />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/servers" element={<ServersPage />} />
+              
+              {/* Course Pages */}
+              <Route path="/courses/ccna" element={<CCNAPage />} />
+              <Route path="/courses/ccnp" element={<CCNPPage />} />
+              <Route path="/courses/ccie" element={<CCIEPage />}/>   
+              <Route path="/courses/ccie-wireless" element={<CCIEWirelessPage />} />
+              <Route path="/courses/sd-wan" element={<SDWANPage />} />
+              <Route path="/courses/sd-access" element={<SDAccessPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/test" element={<TestPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/refund" element={<RefundPolicyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+          
+         {/*}     <Route path="/courses/ccie" element={<Navigate to="/courses/ccie-enterprise-infrastructure" replace />} />  
+  */}
+            </Route>
             
-            {/* Course Pages */}
-            <Route path="/courses/ccna" element={<CCNAPage />} />
-            <Route path="/courses/ccnp" element={<CCNPPage />} />
-            <Route path="/courses/ccie" element={<CCIEPage />}/>   
-            <Route path="/courses/ccie-wireless" element={<CCIEWirelessPage />} />
-            <Route path="/courses/sd-wan" element={<SDWANPage />} />
-            <Route path="/courses/sd-access" element={<SDAccessPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/test" element={<TestPage />} />
-            <Route path="/privacy" element={<PrivacyPolicyPage />} />
-            <Route path="/refund" element={<RefundPolicyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-        
-       {/*}     <Route path="/courses/ccie" element={<Navigate to="/courses/ccie-enterprise-infrastructure" replace />} />  
-*/}
-          </Route>
-          
-          {/* Protected routes */}
-          <Route element={<AuthGuard requireAuth />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/lab/:serverId" element={<LabPage />} />
-            <Route path="/courses" element={<CoursesPage />} />  
-            <Route path="/courses/:courseId" element={<CourseDetailPage />} />
-            <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPage />} />
-          </Route>
-          
-          {/* Admin routes */}
-          <Route element={<AuthGuard requireAuth requireAdmin />}>
-            <Route path="/admin" element={<AdminPage />} />
-           <Route path="/admin/courses" element={<Navigate to="/admin?tab=courses" replace />} /> 
-            <Route path="/admin/courses/new" element={<CourseEditorPage />} />
-            <Route path="/admin/courses/:courseId/edit" element={<CourseEditorPage />} />
-            <Route path="/time-management" element={<TimeManagementPage />} />
-          </Route>
-          
-          {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </NavigationWrapper>
-      <Toaster position="top-right" toastOptions={{
-        duration: 4000,
-        style: {
-          background: 'var(--card)',
-          color: 'var(--card-foreground)',
-          border: '1px solid var(--border)',
-        },
-      }} />
-      <FooterWrapper />
-    </Router>
+            {/* Protected routes */}
+            <Route element={<AuthGuard requireAuth />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/lab/:serverId" element={<LabPage />} />
+              <Route path="/courses" element={<CoursesPage />} />  
+              <Route path="/courses/:courseId" element={<CourseDetailPage />} />
+              <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPage />} />
+            </Route>
+            
+            {/* Admin routes */}
+            <Route element={<AuthGuard requireAuth requireAdmin />}>
+              <Route path="/admin" element={<AdminPage />} />
+             <Route path="/admin/courses" element={<Navigate to="/admin?tab=courses" replace />} /> 
+              <Route path="/admin/courses/new" element={<CourseEditorPage />} />
+              <Route path="/admin/courses/:courseId/edit" element={<CourseEditorPage />} />
+              <Route path="/time-management" element={<TimeManagementPage />} />
+            </Route>
+            
+            {/* Fallback route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </NavigationWrapper>
+        <Toaster position="top-right" toastOptions={{
+          duration: 4000,
+          style: {
+            background: 'var(--card)',
+            color: 'var(--card-foreground)',
+            border: '1px solid var(--border)',
+          },
+        }} />
+        <FooterWrapper />
+      </Router>
+    </HelmetProvider>
   );
 }
 

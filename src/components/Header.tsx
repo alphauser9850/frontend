@@ -118,19 +118,19 @@ const Header: React.FC = () => {
             <Link to="/" className="flex items-center gap-3">
               <img src="/new-logo-1.png" alt="CCIE Lab Logo" className="h-16 w-16 rounded-xl object-contain bg-surface p-1 shadow-medium" />
               <span className={cn(
-                "font-bold text-xl transition-colors text-text-primary"
+                "font-bold text-2xl transition-colors text-text-primary"
               )}>
                 <AuroraText>CCIE LAB</AuroraText>
               </span>
             </Link>
             {/* Navigation (left, next to logo) */}
-            <nav className="hidden md:flex items-center gap-6 ml-6 text-[1.375rem] font-roboto" style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
+            <nav className="hidden md:flex items-center gap-6 ml-6 text-base font-roboto" style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
               <div className="relative">
                 <button 
                   onClick={() => setShowCoursesMenu(!showCoursesMenu)}
                   onMouseEnter={() => setShowCoursesMenu(true)}
                   className={cn(
-                    "px-4 py-2 rounded-full font-bold transition-colors flex items-center gap-1.5 text-[1.375rem]",
+                    "px-4 py-2 rounded-full font-bold transition-colors flex items-center gap-1.5 text-base",
                     location.pathname.includes('/courses') 
                       ? "bg-design-primary-accent text-white" 
                       : "text-text-primary hover:bg-surface-variant"
@@ -167,7 +167,7 @@ const Header: React.FC = () => {
               <Link 
                 to="/about" 
                 className={cn(
-                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem]",
+                  "px-4 py-2 rounded-full font-bold transition-colors text-base",
                   isActive('/about') 
                     ? "bg-design-primary-accent text-white" 
                     : "text-text-primary hover:bg-surface-variant"
@@ -181,7 +181,7 @@ const Header: React.FC = () => {
               <Link 
                 to="/contact" 
                 className={cn(
-                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem]",
+                  "px-4 py-2 rounded-full font-bold transition-colors text-base",
                   isActive('/contact') 
                     ? "bg-design-primary-accent text-white" 
                     : "text-text-primary hover:bg-surface-variant"
@@ -194,7 +194,7 @@ const Header: React.FC = () => {
               <Link 
                 to="/blog" 
                 className={cn(
-                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem]",
+                  "px-4 py-2 rounded-full font-bold transition-colors text-base",
                   isActive('/blog') 
                     ? "bg-design-primary-accent text-white" 
                     : "text-text-primary hover:bg-surface-variant"
@@ -225,7 +225,7 @@ const Header: React.FC = () => {
             {!user && (
               <>
                 <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className={cn(
-                  "px-4 py-2 rounded-full font-bold transition-colors text-[1.375rem] text-text-primary hover:bg-surface-variant"
+                  "px-4 py-2 rounded-full font-bold transition-colors text-base text-text-primary hover:bg-surface-variant"
                 )}>
                   <span className="flex items-center gap-1.5">
                     <LogIn className="h-4 w-4" />
@@ -269,7 +269,7 @@ const Header: React.FC = () => {
                 <button
                   onClick={() => setShowCoursesMenu(!showCoursesMenu)}
                   className={cn(
-                    "px-4 py-3 rounded-md font-bold flex items-center justify-between text-text-primary hover:bg-surface-variant text-[1.375rem]",
+                    "px-4 py-3 rounded-md font-bold flex items-center justify-between text-text-primary hover:bg-surface-variant text-base",
                     location.pathname.includes('/courses') 
                       ? "bg-design-primary-accent/10 text-design-primary-accent" 
                       : ""
@@ -301,7 +301,7 @@ const Header: React.FC = () => {
               <Link 
                 to="/about" 
                 className={cn(
-                  "px-4 py-3 rounded-md font-bold text-text-primary hover:bg-surface-variant text-[1.375rem]",
+                  "px-4 py-3 rounded-md font-bold text-text-primary hover:bg-surface-variant text-base",
                   isActive('/about') 
                     ? "bg-design-primary-accent/10 text-design-primary-accent" 
                     : ""
@@ -315,13 +315,13 @@ const Header: React.FC = () => {
               {/* Auth Buttons (Mobile) */}
               {!user && (
                 <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-border-subtle">
-                  <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md font-bold hover:bg-surface-variant transition-colors text-text-primary text-[1.375rem]">
+                  <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md font-bold hover:bg-surface-variant transition-colors text-text-primary text-base">
                     <span className="flex items-center gap-1.5">
                       <LogIn className="h-4 w-4" />
                       Login
                     </span>
                   </a>
-                  <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md bg-design-primary-accent text-white hover:bg-accent-hover transition-colors text-[1.375rem]">
+                  <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md bg-design-primary-accent text-white hover:bg-accent-hover transition-colors text-base">
                     <span className="flex items-center gap-1.5">
                       <UserPlus className="h-4 w-4" />
                       Register
