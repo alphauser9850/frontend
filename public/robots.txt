@@ -1,17 +1,36 @@
 User-agent: *
-Disallow: /terms
-Disallow: /terms-and-conditions
-Disallow: /privacy
-Disallow: /privacy-policy
-Disallow: /refund-policy
-Disallow: /cookie-policy
-Disallow: /policies
-Disallow: /policy
-
+# Allow essential pages
 Allow: /$
-Allow: /courses
+Allow: /courses/
+Allow: /courses/*
+Allow: /blog/
+Allow: /blog/*
+Allow: /about-us
 Allow: /about
-Allow: /blog
-Allow: /contact
+Allow: /home
+Allow: /index.html
 
-Sitemap: https://deshmukhsystems.com/sitemap.xml
+# Disallow non-essential pages
+Disallow: /privacy-policy
+Disallow: /terms-and-conditions
+Disallow: /refund-policy
+Disallow: /shipping-policy
+Disallow: /cookie-policy
+Disallow: /login
+Disallow: /signup
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /user
+Disallow: /account
+Disallow: /checkout
+Disallow: /cart
+Disallow: /order
+Disallow: /404
+Disallow: /error
+Disallow: /track-order
+
+# Block all query parameter versions of URLs (optional, if you want clean URLs indexed)
+Disallow: /*?
+
+# Sitemap location
+Sitemap: https://www.ccielab.net/sitemap.xml
