@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
-              <img src="/deshmukh-logo.png" alt="CCIE Lab Logo" className="h-10 w-10 rounded-xl object-contain bg-white p-1 shadow" />
+         
               <span className="font-bold text-xl">
                 <AuroraText>CCIE LAB</AuroraText>
               </span>
@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex space-x-3">
               <a 
-                href="https://www.youtube.com/@deshmukhsystems" 
+                href="https://www.youtube.com/@ccielab" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"

@@ -71,7 +71,7 @@ const RefundPolicyPage: React.FC = () => {
               <h2 className="text-2xl font-semibold text-foreground">Contact Us</h2>
               <p>If you have any questions regarding this policy:</p>
               <p className="text-primary">Email: support@ccielab.net</p>
-              <p className="text-primary">Website: www.deshmukhsystems.com</p>
+              <p className="text-primary">Website: www.ccielab.net</p>
             </section>
           </div>
         </div>

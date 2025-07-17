@@ -103,7 +103,7 @@ const AboutPage: React.FC = () => {
       name: "Saif Deshmukh",
       role: "Founder & Lead Instructor",
       bio: "CCIE Enterprise Infrastructure expert with over 10 years of experience in network design, implementation, and training.",
-      image: "/saif_deshmukh.png",
+      image: "/ccielab.png",
       linkedin: "https://www.linkedin.com/in/deshmukh-saif/"
     },
     {
