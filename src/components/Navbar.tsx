@@ -203,7 +203,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/dashboard" className="flex items-center gap-2">
-            <img src="/deshmukh-logo.png" alt="CCIE Lab Logo" className="h-9 w-9 rounded-full object-contain bg-white p-1 shadow" />
+         
             <span className={cn(
               "font-bold text-xl transition-colors",
               scrolled ? "text-foreground" : "text-white"
