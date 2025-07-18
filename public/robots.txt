@@ -11,6 +11,8 @@ Allow: /home
 Allow: /index.html
 
 # Disallow non-essential pages
+Disallow: /courses/ccie
+Disallow: /about
 Disallow: /privacy-policy
 Disallow: /terms-and-conditions
 Disallow: /refund-policy

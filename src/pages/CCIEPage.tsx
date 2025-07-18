@@ -8,6 +8,8 @@ import Accordion from '../components/ui/Accordion';
 import { CheckCircle2 } from 'lucide-react';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';
+import { Helmet } from 'react-helmet-async';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 declare global {
   interface Window {
@@ -365,74 +367,68 @@ const CCIEPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>CCIE Enterprise Infrastructure v1.1 Training</title>
+        <meta name="description" content="https://www.ccielab.net/training/ccie-enterprise-infrastructure" />
+        <link rel="canonical" href="https://www.ccielab.net/training/ccie-enterprise-infrastructure" />
+      </Helmet>
       {/* Add PayPal script component */}
       <PayPalScript />
       
       {/* Hero Section */}
-      <section className="relative pt-32 pb-32 min-h-[60vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/ccie-ei.jpg)' }}>
-        <div className="absolute inset-0 bg-surface/90"></div>
-        <div className="container mx-auto px-4 relative z-10 flex flex-col items-center justify-center text-center">
-          <div className="flex items-center gap-2 mb-6 justify-center">
-            <img 
-              src="/ent_golden_icon.png" 
-              alt="CCIE Enterprise Infrastructure" 
-              className="h-16 object-contain"
-            />
+      <section className="container mx-auto px-4">
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: 'Courses', href: '/courses' },
+          { label: 'CCIE Enterprise Infrastructure' }
+        ]} />
+        <section className="relative pt-32 pb-32 min-h-[60vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/ccie-ei.jpg)' }}>
+          <div className="absolute inset-0 bg-surface/90"></div>
+          <div className="container mx-auto px-4 relative z-20 flex flex-col items-center justify-center text-center">
+            <h1 className="text-hero font-bold mb-6 text-text-primary">
+              CCIE Enterprise Infrastructure Training v1.1
+            </h1>
+            <p className="text-xl text-text-secondary mb-8 max-w-xl mx-auto">
+              Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive training program.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
+              <button className="btn-primary px-8 py-3 text-lg">
+                Join Waitlist
+              </button>
+            </div>
           </div>
-          <h1 className="text-hero font-bold mb-6 text-text-primary">
-            CCIE Enterprise Infrastructure Training v1.1
-          </h1>
-          <p className="text-xl text-text-secondary mb-8 max-w-xl mx-auto">
-            Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive training program.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
-            <button className="btn-primary px-8 py-3 text-lg">
-              Join Waitlist
-            </button>
-          </div>
-        </div>
+        </section>
       </section>
 
       {/* Pricing Section */}
       <section className="py-20 bg-surface-variant">
         <div className="container mx-auto px-4">
-          <h2 className="text-heading-1 font-bold text-center mb-12 text-text-primary">Choose Your Plan</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Basic Tier */}
-            <div className="card-feature flex flex-col items-center">
-              <h3 className="text-heading-2 font-bold mb-2 text-text-primary">Basic</h3>
-              <div className="text-4xl font-extrabold mb-4 text-text-primary">$299</div>
-              <ul className="mb-6 space-y-2 text-text-secondary text-center">
-                <li>Video Lectures</li>
-                <li>Access to Community</li>
-                <li>Email Support</li>
-              </ul>
-              <a href="https://ent.ccielab.net/lab-purchase" target="_blank" rel="noopener noreferrer" className="mt-auto btn-primary w-full block text-center">Buy Basic</a>
-            </div>
-            {/* Standard Tier */}
-            <div className="card-feature flex flex-col items-center border-2 border-primary">
-              <h3 className="text-heading-2 font-bold mb-2 text-primary">Standard</h3>
-              <div className="text-4xl font-extrabold mb-4 text-primary">$599</div>
-              <ul className="mb-6 space-y-2 text-text-secondary text-center">
-                <li>Everything in Basic</li>
-                <li>24/7 Lab Access</li>
-                <li>Practice Exams</li>
-                <li>Direct Instructor Q&A</li>
-              </ul>
-              <a href="https://ent.ccielab.net/lab-purchase" target="_blank" rel="noopener noreferrer" className="mt-auto btn-primary w-full block text-center">Buy Standard</a>
-            </div>
-            {/* Premium Tier */}
-            <div className="card-feature flex flex-col items-center">
-              <h3 className="text-heading-2 font-bold mb-2 text-text-primary">Premium</h3>
-              <div className="text-4xl font-extrabold mb-4 text-text-primary">$999</div>
-              <ul className="mb-6 space-y-2 text-text-secondary text-center">
-                <li>Everything in Standard</li>
-                <li>1-on-1 Mentorship</li>
-                <li>Personalized Study Plan</li>
-                <li>Priority Support</li>
-              </ul>
-              <a href="https://ent.ccielab.net/lab-purchase" target="_blank" rel="noopener noreferrer" className="mt-auto btn-primary w-full block text-center">Buy Premium</a>
-            </div>
+          <h2 className="text-heading-1 font-bold text-center mb-12 text-text-primary">Pricing Model - 1</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border border-border rounded-xl bg-background text-left">
+              <thead>
+                <tr className="bg-muted">
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Feature</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Only CCIE Labs ($1,499)</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Full CCIE Training ($2,499)</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Premium CCIE Training ($3,499)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border">Duration of the Course</td>
+                  <td className="px-6 py-4 border-b border-border">3 Weeks</td>
+                  <td className="px-6 py-4 border-b border-border">6 Weeks</td>
+                  <td className="px-6 py-4 border-b border-border">9 Weeks</td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4">Bootcamp (Full 2 Weeks, 10 Business Days or Weekends Only Model)</td>
+                  <td className="px-6 py-4">50 Hours</td>
+                  <td className="px-6 py-4">80 Hours</td>
+                  <td className="px-6 py-4">100 Hours</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -484,7 +480,7 @@ const CCIEPage: React.FC = () => {
               Certification Path
             </span>
             <div className="flex items-center justify-center gap-3 mb-4">
-              <img src="/ent_golden_icon.png" alt="CCIE Enterprise Logo" className="h-10 w-auto" />
+              <img src="/ent_golden_icon.png" alt="CCIE Enterprise Infrastructure Logo" className="h-10 w-auto" />
               <h2 className="text-heading-1 font-bold text-text-primary"><AuroraText>Your CCIE Enterprise Infrastructure Journey</AuroraText></h2>
             </div>
             <p className="text-text-secondary">
@@ -674,7 +670,7 @@ const CCIEPage: React.FC = () => {
                       <div className="relative h-[400px]">
                         <img 
                           src={topology.image} 
-                          alt={topology.title} 
+                          alt={`${topology.title} Topology - CCIE Enterprise Infrastructure Lab`} 
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
@@ -813,7 +809,7 @@ const CCIEPage: React.FC = () => {
           <div className="flex items-center gap-4 mb-4">
             <img
               src={story.image}
-              alt={story.name}
+              alt={`${story.name} - ${story.role} - CCIE Lab Success Story`}
               className="w-16 h-16 rounded-full object-cover border-2 border-primary/20"
             />
             <div>

@@ -131,7 +131,7 @@ const LabShowcaseSection: React.FC = () => {
                   <div key={topology.id} className="w-full flex-shrink-0 relative">
                     <img 
                       src={topology.image} 
-                      alt={topology.title} 
+                      alt={`${topology.title} Topology - CCIE Enterprise Infrastructure Lab`} 
                       className="w-full h-full object-contain bg-white"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
