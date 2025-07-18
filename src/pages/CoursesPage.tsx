@@ -6,6 +6,7 @@ import PageWrapper from '../components/PageWrapper';
 import { Card } from '../components/ui/Card';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 // Extended course interface for display purposes
 interface ExtendedCourse extends Course {
@@ -69,6 +70,10 @@ const CoursesPage: React.FC = () => {
   return (
     <PageWrapper>
       <div className="mb-8">
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: 'Courses' }
+        ]} />
         <h1 className="text-2xl font-bold">Available Courses</h1>
         <p className={isDarkMode ? "text-white/70 mt-1" : "text-gray-600 mt-1"}>
           Browse and enroll in networking courses

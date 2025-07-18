@@ -1,5 +1,6 @@
 import React from 'react';
 import { AuroraText } from '../components/magicui';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 const blogPosts = [
   {
@@ -38,6 +39,10 @@ const BlogPage: React.FC = () => {
   return (
     <div className="min-h-screen pt-20 bg-background text-foreground">
       <section className="container mx-auto px-4 md:px-8 lg:px-16">
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: 'Blog' }
+        ]} />
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-12 mt-8">
           <AuroraText>Blog</AuroraText>
         </h1>
@@ -50,7 +55,7 @@ const BlogPage: React.FC = () => {
               <div className="rounded-t-2xl overflow-hidden bg-muted flex items-center justify-center h-44">
                 <img
                   src={post.image}
-                  alt={post.title}
+                  alt={`${post.title} - CCIE Enterprise Infrastructure Training Blog`}
                   className="object-contain h-32 w-32 mx-auto"
                   style={{ filter: 'var(--blog-img-filter, none)' }}
                 />

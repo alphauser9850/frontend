@@ -44,7 +44,7 @@ const EnrolledCourseCard: React.FC<EnrolledCourseCardProps> = ({ course }) => {
           <div className="relative overflow-hidden h-32 rounded-t-lg">
             <img 
               src={course.image_url || `https://images.unsplash.com/photo-1544197150-b99a580bb7a8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60`} 
-              alt={course.title} 
+              alt={`${course.title} - Enrolled CCIE Enterprise Infrastructure Course`} 
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>

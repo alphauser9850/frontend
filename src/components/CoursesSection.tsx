@@ -31,7 +31,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, image, link, className, 
       <div className="flex flex-col items-center flex-grow">
         <img 
           src={image} 
-          alt={`${title} certification`} 
+          alt={`${title} Enterprise Infrastructure Certification Course`} 
           className={cn(
             "object-contain relative z-10 mx-auto",
             featured ? "w-full max-w-xs h-28 md:h-36 mb-3" : "w-full max-w-[140px] h-20 md:h-28 mb-2"
