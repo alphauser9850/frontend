@@ -9,9 +9,9 @@ Allow: /about-us
 Allow: /about
 Allow: /home
 Allow: /index.html
-
+Allow: /courses/ccie
 # Disallow non-essential pages
-Disallow: /courses/ccie
+
 Disallow: /about
 Disallow: /privacy-policy
 Disallow: /terms-and-conditions
