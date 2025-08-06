@@ -12,6 +12,7 @@ Allow: /index.html
 Allow: /courses/ccie
 # Disallow non-essential pages
 
+
 Disallow: /about
 Disallow: /privacy-policy
 Disallow: /terms-and-conditions
