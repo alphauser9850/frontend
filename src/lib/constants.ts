@@ -20,7 +20,7 @@ export const COURSE_DESCRIPTIONS = {
 export const COURSE_PATHS = {
   CCNA: "/courses/ccna",
   CCNP: "/courses/ccnp",
-  CCIE: "/courses/ccie",
+  CCIE: "/training/ccie-enterprise-infrastructure",
   CCIE_WIRELESS: "/courses/ccie-wireless",
   SD_WAN: "/courses/sd-wan",
   SD_ACCESS: "/courses/sd-access"

@@ -215,20 +215,18 @@ function App() {
             {/* Course Pages */}
             <Route path="/courses/ccna" element={<CCNAPage />} />
             <Route path="/courses/ccnp" element={<CCNPPage />} />
-            <Route path="/courses/ccie" element={<CCIEPage />}/>   
+            <Route path="/training/ccie-enterprise-infrastructure" element={<CCIEPage />} />
+            <Route path="/courses/ccie" element={<Navigate to="/training/ccie-enterprise-infrastructure" replace />} />
             <Route path="/courses/ccie-wireless" element={<CCIEWirelessPage />} />
             <Route path="/courses/sd-wan" element={<SDWANPage />} />
             <Route path="/courses/sd-access" element={<SDAccessPage />} />
             <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/blog" element={<BlogPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/blog" element={<BlogPage />} />
             <Route path="/test" element={<TestPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/refund" element={<RefundPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
-        
-       {/*}     <Route path="/courses/ccie" element={<Navigate to="/courses/ccie-enterprise-infrastructure" replace />} />  
-*/}
           </Route>
           
           {/* Protected routes */}
