@@ -7,7 +7,7 @@ import { ContactSection } from '../components/ContactSection';
 import { LabShowcaseSection } from '../components/LabShowcaseSection';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
-import { Helmet } from 'react-helmet-async';
+import SEOHeadings from '../components/SEOHeadings';
 
 const Rocket3DIcon = ({ isDarkMode }: { isDarkMode: boolean }) => (
   <svg
@@ -31,16 +31,20 @@ const HomePage: React.FC = () => {
   const { isDarkMode } = useThemeStore();
 
   return (
-    <>
-      <Helmet>
-        <title>CCIE Training and Certification | CCIELab.Net</title>
-        <meta name="description" content="Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance." />
-        <link rel="canonical" href="https://www.ccielab.net/" />
-      </Helmet>
     <main className={cn(
       "min-h-screen font-roboto",
       isDarkMode ? "bg-design-primary-background text-text-primary" : "bg-gray-50 text-gray-900"
     )} style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
+      
+      {/* SEO Optimized H1 Tag */}
+      <SEOHeadings
+        title="CCIE Training and Certification | CCIELab.Net"
+        description="Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance."
+        canonicalUrl="https://www.ccielab.net/"
+        h1Text="CCIE Training and Certification | CCIELab.Net"
+        h1ClassName="sr-only"
+      />
+      
       <HeroSection />
 
       {/* Custom Centered Gradient Section with 3D SVG Icon */}
@@ -80,7 +84,6 @@ const HomePage: React.FC = () => {
       <FAQSection />{/*change*/}
       <ContactSection source="home-page" />
     </main>
-    </>
   );
 };
 

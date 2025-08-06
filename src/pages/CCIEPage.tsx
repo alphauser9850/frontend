@@ -8,7 +8,7 @@ import Accordion from '../components/ui/Accordion';
 import { CheckCircle2 } from 'lucide-react';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';
-import { Helmet } from 'react-helmet-async';
+import SEOHeadings from '../components/SEOHeadings';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 declare global {
@@ -367,11 +367,15 @@ const CCIEPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>CCIE Enterprise Infrastructure v1.1 Training</title>
-        <meta name="description" content="https://www.ccielab.net/training/ccie-enterprise-infrastructure" />
-        <link rel="canonical" href="https://www.ccielab.net/training/ccie-enterprise-infrastructure" />
-      </Helmet>
+      {/* SEO Optimized Headings */}
+      <SEOHeadings
+        title="CCIE Enterprise Infrastructure v1.1 Training"
+        description="Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive CCIE Enterprise Infrastructure training program."
+        canonicalUrl="https://www.ccielab.net/training/ccie-enterprise-infrastructure"
+        h1Text="CCIE Enterprise Infrastructure Training v1.1"
+        h1ClassName="sr-only"
+      />
+      
       {/* Add PayPal script component */}
       <PayPalScript />
       
@@ -385,9 +389,9 @@ const CCIEPage: React.FC = () => {
       <section className="relative pt-32 pb-32 min-h-[60vh] flex items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(/ccie-ei.jpg)' }}>
         <div className="absolute inset-0 bg-surface/90"></div>
           <div className="container mx-auto px-4 relative z-20 flex flex-col items-center justify-center text-center">
-          <h1 className="text-hero font-bold mb-6 text-text-primary">
+          <h2 className="text-hero font-bold mb-6 text-text-primary">
             CCIE Enterprise Infrastructure Training v1.1
-          </h1>
+          </h2>
           <p className="text-xl text-text-secondary mb-8 max-w-xl mx-auto">
             Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive training program.
           </p>
