@@ -409,29 +409,34 @@ const CCIEPage: React.FC = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-heading-1 font-bold text-center mb-12 text-text-primary">Pricing Model - 1</h2>
           
+          {/* Debug Message */}
+          <div className="text-center mb-4 p-4 bg-blue-100 text-blue-800 rounded-lg">
+            DEBUG: Pricing tables should be visible below
+          </div>
+          
           {/* First Pricing Table - Duration and Bootcamp */}
           <div className="overflow-x-auto mb-12">
-            <table className="min-w-full border border-border rounded-xl bg-background text-left">
+            <table className="min-w-full border border-border rounded-xl bg-background text-left shadow-lg">
               <thead>
                 <tr className="bg-muted">
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Feature</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Only CCIE Labs ($1,499)</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Full CCIE Training ($2,499)</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Premium CCIE Training ($3,499)</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Feature</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Only CCIE Labs ($1,499)</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Full CCIE Training ($2,499)</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Premium CCIE Training ($3,499)</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border">Duration of the Course</td>
-                  <td className="px-6 py-4 border-b border-border">3 Weeks</td>
-                  <td className="px-6 py-4 border-b border-border">6 Weeks</td>
-                  <td className="px-6 py-4 border-b border-border">9 Weeks</td>
+                  <td className="px-6 py-4 border-b border-border text-text-primary">Duration of the Course</td>
+                  <td className="px-6 py-4 border-b border-border text-text-primary">3 Weeks</td>
+                  <td className="px-6 py-4 border-b border-border text-text-primary">6 Weeks</td>
+                  <td className="px-6 py-4 border-b border-border text-text-primary">9 Weeks</td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4">Bootcamp (Full 2 Weeks, 10 Business Days or Weekends Only Model)</td>
-                  <td className="px-6 py-4">50 Hours</td>
-                  <td className="px-6 py-4">80 Hours</td>
-                  <td className="px-6 py-4">100 Hours</td>
+                  <td className="px-6 py-4 text-text-primary">Bootcamp (Full 2 Weeks, 10 Business Days or Weekends Only Model)</td>
+                  <td className="px-6 py-4 text-text-primary">50 Hours</td>
+                  <td className="px-6 py-4 text-text-primary">80 Hours</td>
+                  <td className="px-6 py-4 text-text-primary">100 Hours</td>
                 </tr>
               </tbody>
             </table>
@@ -439,19 +444,19 @@ const CCIEPage: React.FC = () => {
 
           {/* Second Pricing Table - Comprehensive Features */}
           <div className="overflow-x-auto">
-            <table className="min-w-full border border-border rounded-xl bg-background text-left">
+            <table className="min-w-full border border-border rounded-xl bg-background text-left shadow-lg">
               <thead>
                 <tr className="bg-muted">
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Feature</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Instructor Support</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Limited</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Till Exam Date</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Till & Post Exam</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Feature</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Instructor Support</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Limited</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Till Exam Date</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Till & Post Exam</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">CCNA Include</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">CCNA Include</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-red-500 font-bold">✗</span>
                   </td>
@@ -466,7 +471,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">CCNP Include</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">CCNP Include</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-red-500 font-bold">✗</span>
                   </td>
@@ -481,7 +486,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Dumps</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Dumps</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-green-500 font-bold">✓</span>
                   </td>
@@ -496,7 +501,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Workbook with Solutions</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Workbook with Solutions</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-green-500 font-bold">✓</span>
                   </td>
@@ -511,7 +516,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Cisco Blue Print Topics</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Cisco Blue Print Topics</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-red-500 font-bold">No (Only Labs)</span>
                   </td>
@@ -526,7 +531,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Materials</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Materials</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-red-500 font-bold">✗</span>
                   </td>
@@ -541,7 +546,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Technical Support (24x7)</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Technical Support (24x7)</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-green-500 font-bold">✓</span>
                   </td>
@@ -556,7 +561,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Live Recordings</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Live Recordings</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-blue-500 font-bold">Limited to Bootcamp</span>
                   </td>
@@ -571,7 +576,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">LMS Access</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">LMS Access</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-green-500 font-bold">Life Time Access</span>
                   </td>
@@ -586,7 +591,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">EVE-NG + Physical Devices</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">EVE-NG + Physical Devices</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-red-500 font-bold">Limited</span>
                   </td>
@@ -601,7 +606,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Completion Certificate</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Completion Certificate</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-green-500 font-bold">✓</span>
                   </td>
@@ -616,7 +621,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold">Lab Access Until Exam Cleared</td>
+                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Lab Access Until Exam Cleared</td>
                   <td className="px-6 py-4 border-b border-border text-center">
                     <span className="text-red-500 font-bold">✗</span>
                   </td>
@@ -631,7 +636,7 @@ const CCIEPage: React.FC = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="px-6 py-4 font-semibold">Design Guide</td>
+                  <td className="px-6 py-4 font-semibold text-text-primary">Design Guide</td>
                   <td className="px-6 py-4 text-center">
                     <span className="text-blue-500 font-bold">Few</span>
                   </td>
