@@ -408,7 +408,9 @@ const CCIEPage: React.FC = () => {
       <section className="py-20 bg-surface-variant">
         <div className="container mx-auto px-4">
           <h2 className="text-heading-1 font-bold text-center mb-12 text-text-primary">Pricing Model - 1</h2>
-          <div className="overflow-x-auto">
+          
+          {/* First Pricing Table - Duration and Bootcamp */}
+          <div className="overflow-x-auto mb-12">
             <table className="min-w-full border border-border rounded-xl bg-background text-left">
               <thead>
                 <tr className="bg-muted">
@@ -430,6 +432,218 @@ const CCIEPage: React.FC = () => {
                   <td className="px-6 py-4">50 Hours</td>
                   <td className="px-6 py-4">80 Hours</td>
                   <td className="px-6 py-4">100 Hours</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Second Pricing Table - Comprehensive Features */}
+          <div className="overflow-x-auto">
+            <table className="min-w-full border border-border rounded-xl bg-background text-left">
+              <thead>
+                <tr className="bg-muted">
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border">Feature</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Instructor Support</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Limited</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Till Exam Date</th>
+                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center">Till & Post Exam</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">CCNA Include</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">CCNP Include</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Dumps</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Advanced Set</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Workbook with Solutions</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Cisco Blue Print Topics</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">No (Only Labs)</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">No (Only Labs)</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Scratch to CCIE</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Materials</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Technical Support (24x7)</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Priority Access</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Live Recordings</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-blue-500 font-bold">Limited to Bootcamp</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-blue-500 font-bold">Limited to Bootcamp</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Full Training Access</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Full Track (Lifetime)</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">LMS Access</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Life Time Access</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Life Time Access</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Life Time Access</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Life Time Access</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">EVE-NG + Physical Devices</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">Limited</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">Limited</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">Yes (Full)</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Completion Certificate</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 border-b border-border font-semibold">Lab Access Until Exam Cleared</td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-red-500 font-bold">✗</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                  <td className="px-6 py-4 border-b border-border text-center">
+                    <span className="text-green-500 font-bold">✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-6 py-4 font-semibold">Design Guide</td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="text-blue-500 font-bold">Few</span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="text-blue-500 font-bold">Few</span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="text-green-500 font-bold">More</span>
+                  </td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="text-green-500 font-bold">Extra</span>
+                  </td>
                 </tr>
               </tbody>
             </table>
