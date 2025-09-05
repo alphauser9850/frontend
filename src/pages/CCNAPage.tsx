@@ -8,18 +8,41 @@ import AccordionTrigger from "../components/ui/Accordion";
 import AccordionContent from "../components/ui/Accordion";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
-
-
-
-
+import SEOHeadings from "../components/SEOHeadings";
 
 const CCNAPage: React.FC = () => {
   const { isDarkMode } = useThemeStore();
 
   return (
-
-    
     <div className="relative min-h-screen overflow-x-hidden">
+      {/* SEO Optimized Headings */}
+      <SEOHeadings
+        title="CCNA Certification Training | CCIELab.Net - Cisco Networking Fundamentals"
+        description="Master networking fundamentals and prepare for the CCNA certification with our comprehensive course. Learn from expert instructors with hands-on labs and real-world scenarios."
+        canonicalUrl="https://www.ccielab.net/courses/ccna"
+        h1Text="CCNA Certification Training"
+        h1ClassName="sr-only"
+        keywords="CCNA training, CCNA certification, Cisco networking, networking fundamentals, Cisco training, networking certification"
+        image="/ccna.jpg"
+        type="course"
+        section="CCNA Training"
+        tags={["CCNA", "Cisco", "Networking", "Certification", "Training", "Fundamentals"]}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Course",
+          "name": "CCNA Certification Training",
+          "description": "Master networking fundamentals and prepare for the CCNA certification with our comprehensive course.",
+          "url": "https://www.ccielab.net/courses/ccna",
+          "provider": {
+            "@type": "Organization",
+            "name": "CCIE LAB",
+            "url": "https://www.ccielab.net"
+          },
+          "courseMode": "online",
+          "educationalLevel": "beginner",
+          "inLanguage": "en-US"
+        }}
+      />
 
        <Particles
               className="absolute inset-0 z-10"

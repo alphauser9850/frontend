@@ -39,7 +39,7 @@ const RefundPolicyPage: React.FC = () => {
 
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-foreground">Non-Transferability</h2>
-              <p className="text-muted-foreground">All courses and services are intended solely for the individual or entity that made the purchase. Transfers are not allowed unless explicitly authorized by Deshmukh Systems.</p>
+              <p className="text-muted-foreground">All courses and services are intended solely for the individual or entity that made the purchase. Transfers are not allowed unless explicitly authorized by CCIE LAB.</p>
             </section>
 
             <section className="space-y-4">

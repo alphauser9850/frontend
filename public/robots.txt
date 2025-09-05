@@ -5,20 +5,13 @@ Allow: /courses/
 Allow: /courses/*
 Allow: /blog/
 Allow: /blog/*
-Allow: /about-us
 Allow: /about
-Allow: /home
+Allow: /contact
+Allow: /servers
+Allow: /labs
 Allow: /index.html
-Allow: /courses/ccie
+
 # Disallow non-essential pages
-
-
-Disallow: /about
-Disallow: /privacy-policy
-Disallow: /terms-and-conditions
-Disallow: /refund-policy
-Disallow: /shipping-policy
-Disallow: /cookie-policy
 Disallow: /login
 Disallow: /signup
 Disallow: /admin
