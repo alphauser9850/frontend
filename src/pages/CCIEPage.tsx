@@ -117,19 +117,25 @@ const PayPalScript = () => {
     // Wait for PayPal SDK to load (it's now in the HTML head)
     const initializePayPalButtons = () => {
       if (window.paypal) {
-        // Initialize first tier button with new format
+        // Initialize first tier button with return and notify URLs
         window.paypal.HostedButtons({
           hostedButtonId: "Y78PA4NPGWZ6L",
+          return: "https://ent.ccielab.net",
+          notifyUrl: "https://ent.ccielab.net/lab-purchase"
         }).render("#paypal-container-Y78PA4NPGWZ6L");
         
-        // Initialize second tier button
+        // Initialize second tier button with return and notify URLs
         window.paypal.HostedButtons({
           hostedButtonId: "AR5H8PC8UQXME",
+          return: "https://ent.ccielab.net",
+          notifyUrl: "https://ent.ccielab.net/lab-purchase"
         }).render("#paypal-container-AR5H8PC8UQXME");
         
-        // Initialize third tier button
+        // Initialize third tier button with return and notify URLs
         window.paypal.HostedButtons({
           hostedButtonId: "BLY5FB35CKTY6",
+          return: "https://ent.ccielab.net",
+          notifyUrl: "https://ent.ccielab.net/lab-purchase"
         }).render("#paypal-container-BLY5FB35CKTY6");
       } else {
         // Retry if PayPal SDK hasn't loaded yet
