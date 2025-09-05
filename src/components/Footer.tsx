@@ -9,11 +9,39 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-         
-              <span className="font-bold text-xl">
-                <AuroraText>CCIE LAB</AuroraText>
-              </span>
+            <Link to="/" className="flex items-center gap-3 mb-4 group">
+              <div className="relative">
+                {/* Square overlay backgrounds */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-purple-600/25 to-blue-600/25 rounded-xl blur-lg scale-110 group-hover:scale-125 transition-all duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 via-pink-500/20 to-yellow-400/20 rounded-xl blur-xl scale-115 group-hover:scale-130 transition-all duration-700"></div>
+                
+                {/* Main logo container - square */}
+                <div className="relative h-16 w-16 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-primary/25 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
+                  {/* Logo image - natural square */}
+                  <img 
+                    src="/ccielab.net logo.jpeg" 
+                    alt="CCIELAB.NET Logo" 
+                    className="h-12 w-12 object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  
+                  {/* Square animated borders */}
+                  <div className="absolute inset-0 rounded-xl border border-primary/30 group-hover:border-primary/60 transition-all duration-300"></div>
+                  <div className="absolute inset-1 rounded-lg border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-500"></div>
+                  
+                  {/* Square glow effects */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              </div>
+              
+              {/* Enhanced text */}
+              <div className="flex flex-col">
+                <span className="font-bold text-xl group-hover:text-primary transition-colors duration-300">
+                  <AuroraText>CCIELAB.NET</AuroraText>
+                </span>
+                <span className="text-xs font-medium text-primary/70 uppercase tracking-wider">
+                  Advanced CCIE Training
+                </span>
+              </div>
             </Link>
             <p className="text-muted-foreground mb-6">
               Creating transformative online CCIE training experiences that empower network engineers to excel.
@@ -38,7 +66,7 @@ const Footer: React.FC = () => {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a 
-                href="https://www.instagram.com/deshmukhsystems" 
+                href="https://www.instagram.com/ccielab" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
@@ -82,11 +110,6 @@ const Footer: React.FC = () => {
               <li>
                 <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/test" className="text-muted-foreground hover:text-primary transition-colors">
-                  Test Page
                 </Link>
               </li>
               <li>

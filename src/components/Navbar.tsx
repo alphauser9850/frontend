@@ -88,13 +88,22 @@ const Navbar: React.FC = () => {
     }
   }, [user, fetchUserTimeBalance]);
 
-  // Handle scroll effect
+  // Handle scroll effect - improved to prevent menu disappearing
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          setScrolled(currentScrollY > 10);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -201,15 +210,46 @@ const Navbar: React.FC = () => {
       
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/dashboard" className="flex items-center gap-2">
-         
-            <span className={cn(
-              "font-bold text-xl transition-colors",
-              scrolled ? "text-foreground" : "text-white"
-            )}>
-              <AuroraText>CCIE LAB</AuroraText>
-            </span>
+          {/* Enhanced Logo */}
+          <Link to="/dashboard" className="flex items-center gap-3 group">
+            <div className="relative">
+              {/* Square overlay backgrounds */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-purple-600/25 to-blue-600/25 rounded-xl blur-lg scale-110 group-hover:scale-125 transition-all duration-500"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 via-pink-500/20 to-yellow-400/20 rounded-xl blur-xl scale-115 group-hover:scale-130 transition-all duration-700"></div>
+              
+              {/* Main logo container - square */}
+              <div className="relative h-20 w-20 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-primary/25 flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300">
+                {/* Logo image - natural square */}
+                <img 
+                  src="/ccielab.net logo.jpeg" 
+                  alt="CCIELAB.NET Logo" 
+                  className="h-16 w-16 object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-300" 
+                />
+                
+                {/* Square animated borders */}
+                <div className="absolute inset-0 rounded-xl border border-primary/30 group-hover:border-primary/60 transition-all duration-300"></div>
+                <div className="absolute inset-1 rounded-lg border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-500"></div>
+                
+                {/* Square glow effects */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            </div>
+            
+            {/* Enhanced text */}
+            <div className="flex flex-col">
+              <span className={cn(
+                "font-bold text-lg transition-colors group-hover:text-primary transition-colors duration-300",
+                scrolled ? "text-foreground" : "text-white"
+              )}>
+                <AuroraText>CCIELAB.NET</AuroraText>
+              </span>
+              <span className={cn(
+                "text-xs font-medium uppercase tracking-wider",
+                scrolled ? "text-primary/70" : "text-white/70"
+              )}>
+                Advanced CCIE Training
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

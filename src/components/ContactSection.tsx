@@ -6,7 +6,7 @@ import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
 
 interface ContactSectionProps {
-  source?: 'home-page';
+  source?: 'home-page' | 'ccie-page';
 }
 
 const countryOptions = [
@@ -289,8 +289,92 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
     return Object.keys(errors).length === 0;
   };
   
+  // Function to detect if text contains links
+  const containsLinks = (text: string): boolean => {
+    const linkPatterns = [
+      /https?:\/\/[^\s]+/gi,           // HTTP/HTTPS URLs
+      /www\.[^\s]+/gi,                  // WWW URLs
+      /[^\s]+\.[a-z]{2,}/gi,           // Domain patterns
+      /bit\.ly\/[^\s]+/gi,              // Bit.ly links
+      /t\.co\/[^\s]+/gi,                // Twitter links
+      /goo\.gl\/[^\s]+/gi,              // Google links
+      /tinyurl\.com\/[^\s]+/gi,         // TinyURL links
+      /[^\s]+\.com\/[^\s]*/gi,          // .com URLs
+      /[^\s]+\.org\/[^\s]*/gi,          // .org URLs
+      /[^\s]+\.net\/[^\s]*/gi,          // .net URLs
+      /[^\s]+\.io\/[^\s]*/gi,           // .io URLs
+      /[^\s]+\.co\/[^\s]*/gi,           // .co URLs
+      /ftp:\/\/[^\s]+/gi,               // FTP URLs
+      /mailto:[^\s]+/gi,                // Mailto links
+      /tel:[^\s]+/gi,                   // Tel links
+      /file:\/\/[^\s]+/gi               // File links
+    ];
+    
+    return linkPatterns.some(pattern => pattern.test(text));
+  };
+
+  // Function to prevent link input
+  const preventLinks = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    
+    // Check if the new value contains links
+    if (containsLinks(value)) {
+      e.preventDefault();
+      // Remove the link and show warning
+      const cleanValue = value.replace(/https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-z]{2,}|bit\.ly\/[^\s]+|t\.co\/[^\s]+|goo\.gl\/[^\s]+|tinyurl\.com\/[^\s]+|[^\s]+\.(com|org|net|io|co)\/[^\s]*|ftp:\/\/[^\s]+|mailto:[^\s]+|tel:[^\s]+|file:\/\/[^\s]+/gi, '');
+      
+      setFormData(prev => ({ ...prev, [name]: cleanValue }));
+      
+      // Show error message
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: 'Links are not allowed in this field'
+      }));
+      
+      return false;
+    }
+    
+    return true;
+  };
+
+  // Function to handle paste events and prevent links
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.preventDefault();
+    
+    const pastedText = e.clipboardData.getData('text');
+    
+    // Check if pasted text contains links
+    if (containsLinks(pastedText)) {
+      // Show error message
+      const { name } = e.currentTarget;
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: 'Links are not allowed in this field'
+      }));
+      
+      // Optionally show a toast or alert
+      alert('Links are not allowed in this field. Please remove any URLs before pasting.');
+      return;
+    }
+    
+    // If no links, allow the paste by manually setting the value
+    const { name, value } = e.currentTarget;
+    const newValue = value + pastedText;
+    
+    // Update the form data
+    setFormData(prev => ({ ...prev, [name]: newValue }));
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    // For text inputs and textareas, check for links
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (!preventLinks(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)) {
+        return; // Stop processing if links were detected
+      }
+    }
+    
     setFormData(prev => ({ ...prev, [name]: value }));
     
     // Clear error when field is edited
@@ -456,6 +540,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
+                          onPaste={handlePaste}
                           required
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
@@ -487,6 +572,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
+                          onPaste={handlePaste}
                           required
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
@@ -545,10 +631,11 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           name="phone"
                           value={formData.phone.startsWith(selectedCountryCode) ? formData.phone : selectedCountryCode + ' ' + formData.phone.replace(/^\+\d+\s*/, '')}
                           onChange={handleChange}
+                          onPaste={handlePaste}
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                             isDarkMode 
-                              ? "bg-white/5 border border-white/10 text-white" 
+                              ? "bg-white/5 border border-white/200 text-white" 
                               : "bg-white border border-gray-200 text-gray-900"
                           )}
                         />
@@ -568,6 +655,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
+                      onPaste={handlePaste}
                       required
                       rows={5}
                       className={cn(

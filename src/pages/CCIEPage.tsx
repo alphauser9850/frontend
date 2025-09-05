@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, BarChart, CheckCircle, ChevronRight, Layers, Network, Globe, Workflow, Lightbulb, Zap, Mail, Phone, User, ArrowLeft, ArrowRight, Send, MapPin, MessageCircle, Linkedin } from 'lucide-react';
+import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, BarChart, CheckCircle, ChevronRight, Layers, Network, Globe, Workflow, Lightbulb, Zap, Mail, Phone, User, ArrowLeft, ArrowRight, Send, MapPin, MessageCircle, Linkedin, X, Crown } from 'lucide-react';
 import { AuroraText, Particles, ShineBorder, AnimatedDotPattern, MagicCard, BorderBeam } from '../components/magicui';
 import { cn } from '../lib/utils';
 import { CCIETimeline } from '../components/CCIETimeline';
@@ -10,6 +10,7 @@ import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';
 import SEOHeadings from '../components/SEOHeadings';
 import Breadcrumbs from '../components/Breadcrumbs';
+import { ContactSection } from '../components/ContactSection';
 
 declare global {
   interface Window {
@@ -110,26 +111,34 @@ const securityTopics = [
   "Ansible/Puppet for Configuration Management"
 ];
 
-// Add PayPal script to the head
+// PayPal button initialization component
 const PayPalScript = () => {
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = "https://www.paypal.com/sdk/js?client-id=BAAdToKbFkJbyWK-JAV7_bvAgJ7mUr0sekMHjXwbLbdzY6HM-suhGKGr0wUcR5e8EvmGk5h2bwRp7VTiE0&components=hosted-buttons&enable-funding=venmo&currency=USD";
-    script.async = true;
-    document.body.appendChild(script);
-
-    // Initialize PayPal button after script loads
-    script.onload = () => {
+    // Wait for PayPal SDK to load (it's now in the HTML head)
+    const initializePayPalButtons = () => {
       if (window.paypal) {
+        // Initialize first tier button with new format
         window.paypal.HostedButtons({
-          hostedButtonId: "QFMPV6AJEZH42",
-        }).render("#paypal-container-QFMPV6AJEZH42");
+          hostedButtonId: "Y78PA4NPGWZ6L",
+        }).render("#paypal-container-Y78PA4NPGWZ6L");
+        
+        // Initialize second tier button
+        window.paypal.HostedButtons({
+          hostedButtonId: "AR5H8PC8UQXME",
+        }).render("#paypal-container-AR5H8PC8UQXME");
+        
+        // Initialize third tier button
+        window.paypal.HostedButtons({
+          hostedButtonId: "BLY5FB35CKTY6",
+        }).render("#paypal-container-BLY5FB35CKTY6");
+      } else {
+        // Retry if PayPal SDK hasn't loaded yet
+        setTimeout(initializePayPalButtons, 100);
       }
     };
 
-    return () => {
-      document.body.removeChild(script);
-    };
+    // Start initialization
+    initializePayPalButtons();
   }, []);
 
   return null;
@@ -138,7 +147,6 @@ const PayPalScript = () => {
 const CCIEPage: React.FC = () => {
   // State for carousel
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   
   // Form state
@@ -150,14 +158,7 @@ const CCIEPage: React.FC = () => {
     message: ''
   });
   
-  // Contact form state
-  const [contactFormData, setContactFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
+
   
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -168,19 +169,11 @@ const CCIEPage: React.FC = () => {
     }));
   };
   
-  // Handle contact form input changes
-  const handleContactInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target;
-    setContactFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-  };
+
   
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsFormSubmitting(true);
     
     try {
       // Import the form service
@@ -213,53 +206,10 @@ const CCIEPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-    } finally {
-      setIsFormSubmitting(false);
     }
   };
   
-  // Handle contact form submission
-  const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsFormSubmitting(true);
-    
-    try {
-      // Import the form service
-      const { submitFormToN8n } = await import('../services/formService');
-      
-      // Prepare data for n8n using the contactFormData state
-      const submissionData: CCIEFormData = {
-        firstName: contactFormData.firstName,
-        lastName: contactFormData.lastName,
-        name: `${contactFormData.firstName} ${contactFormData.lastName}`.trim(),
-        email: contactFormData.email,
-        phone: contactFormData.phone,
-        message: contactFormData.message,
-        source: 'course-page'
-      };
-      
-      // Submit to n8n
-      const result = await submitFormToN8n(submissionData);
-      
-      if (result.success) {
-        // Show success message
-        alert('Thank you for your message! We will contact you soon.');
-        // Reset form
-        setContactFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          message: ''
-        });
-      }
-    } catch (error) {
-      console.error('Error submitting contact form:', error);
-      alert('There was an error submitting your message. Please try again.');
-    } finally {
-      setIsFormSubmitting(false);
-    }
-  };
+
   
   // Carousel navigation
   const nextSlide = () => {
@@ -369,11 +319,36 @@ const CCIEPage: React.FC = () => {
     <div className="min-h-screen bg-background">
       {/* SEO Optimized Headings */}
       <SEOHeadings
-        title="CCIE Enterprise Infrastructure v1.1 Training"
-        description="Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive CCIE Enterprise Infrastructure training program."
+        title="CCIE Enterprise Infrastructure v1.1 Training | CCIELab.Net - Expert CCIE Certification"
+        description="Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive CCIE Enterprise Infrastructure training program. 24/7 lab access, expert instructors, and proven success rates."
         canonicalUrl="https://www.ccielab.net/training/ccie-enterprise-infrastructure"
         h1Text="CCIE Enterprise Infrastructure Training v1.1"
         h1ClassName="sr-only"
+        keywords="CCIE Enterprise Infrastructure, CCIE training, CCIE certification, enterprise networking, Cisco training, CCIE lab practice, networking certification"
+        image="/ccie-ei.jpg"
+        type="course"
+        section="CCIE Training"
+        tags={["CCIE", "Enterprise Infrastructure", "Cisco", "Networking", "Certification", "Training"]}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Course",
+          "name": "CCIE Enterprise Infrastructure Training v1.1",
+          "description": "Master advanced enterprise networking skills and earn the most prestigious certification in the industry with our comprehensive CCIE Enterprise Infrastructure training program.",
+          "url": "https://www.ccielab.net/training/ccie-enterprise-infrastructure",
+          "provider": {
+            "@type": "Organization",
+            "name": "CCIE LAB",
+            "url": "https://www.ccielab.net"
+          },
+          "courseMode": "online",
+          "educationalLevel": "advanced",
+          "inLanguage": "en-US",
+          "offers": {
+            "@type": "Offer",
+            "category": "CCIE Training",
+            "description": "Comprehensive CCIE Enterprise Infrastructure training program"
+          }
+        }}
       />
       
       {/* Add PayPal script component */}
@@ -404,255 +379,178 @@ const CCIEPage: React.FC = () => {
         </section>
       </section>
 
-      {/* Pricing Section */}
-      <section className="py-20 bg-surface-variant">
+      {/* Enhanced Pricing Section */}
+      <section className="py-20 bg-gradient-to-br from-background via-surface-variant/30 to-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-heading-1 font-bold text-center mb-12 text-text-primary">Pricing Model - 1</h2>
-          
-          {/* Debug Message */}
-          <div className="text-center mb-4 p-4 bg-blue-100 text-blue-800 rounded-lg">
-            DEBUG: Pricing tables should be visible below
+          {/* Header */}
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-6">
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              Training Packages
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+              <AuroraText>CCIE Enterprise Training Pricing</AuroraText>
+            </h2>
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed">
+              Choose the perfect training package that fits your learning goals and budget. 
+              All packages include lifetime access and expert support.
+            </p>
           </div>
           
-          {/* First Pricing Table - Duration and Bootcamp */}
-          <div className="overflow-x-auto mb-12">
-            <table className="min-w-full border border-border rounded-xl bg-background text-left shadow-lg">
-              <thead>
-                <tr className="bg-muted">
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Feature</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Only CCIE Labs ($1,499)</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Full CCIE Training ($2,499)</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Premium CCIE Training ($3,499)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border text-text-primary">Duration of the Course</td>
-                  <td className="px-6 py-4 border-b border-border text-text-primary">3 Weeks</td>
-                  <td className="px-6 py-4 border-b border-border text-text-primary">6 Weeks</td>
-                  <td className="px-6 py-4 border-b border-border text-text-primary">9 Weeks</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 text-text-primary">Bootcamp (Full 2 Weeks, 10 Business Days or Weekends Only Model)</td>
-                  <td className="px-6 py-4 text-text-primary">50 Hours</td>
-                  <td className="px-6 py-4 text-text-primary">80 Hours</td>
-                  <td className="px-6 py-4 text-text-primary">100 Hours</td>
-                </tr>
-              </tbody>
-            </table>
+          {/* Pricing Cards */}
+          <div className="grid lg:grid-cols-3 gap-8 mb-16">
+            {/* Basic Package */}
+            <div className="relative group">
+              <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 flex flex-col">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-4">
+                    <Server className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-text-primary mb-2">Only CCIE Labs</h3>
+                  <div className="text-4xl font-bold text-primary mb-2">$1,499</div>
+                </div>
+                
+                <div className="space-y-4 mb-8 flex-grow">
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">3 Weeks Duration</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">50 Hours Bootcamp</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Workbook with Solutions</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">24/7 Technical Support</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Lifetime LMS Access</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Completion Certificate</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <X className="h-5 w-5 text-red-400 flex-shrink-0" />
+                    <span className="text-text-secondary text-center">Cisco Blueprint Topics</span>
+                  </div>
+                </div>
+                
+                <div className="mt-auto flex justify-center">
+                  <div id="paypal-container-Y78PA4NPGWZ6L" className="w-full max-w-xs [&>div]:text-center [&>div]:flex [&>div]:justify-center [&>div>div]:text-center [&>div>div]:flex [&>div>div]:justify-center [&_button]:text-center [&_button]:flex [&_button]:justify-center [&_button]:items-center"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Standard Package */}
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
+              <div className="relative bg-background/90 backdrop-blur-sm border-2 border-primary/30 rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 flex flex-col">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <div className="bg-gradient-to-r from-primary to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    Most Popular
+                  </div>
+                </div>
+                
+                <div className="text-center mb-8 mt-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary/20 to-purple-600/20 rounded-2xl mb-4">
+                    <Layers className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-text-primary mb-2">Full CCIE Training</h3>
+                  <div className="text-4xl font-bold text-primary mb-2">$2,499</div>
+                </div>
+                
+                <div className="space-y-4 mb-8 flex-grow">
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">6 Weeks Duration</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">80 Hours Bootcamp</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Workbook with Solutions</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">24/7 Technical Support</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Lifetime LMS Access</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Completion Certificate</span>
+                  </div>
+                </div>
+                
+                <div className="mt-auto flex justify-center">
+                  <div id="paypal-container-AR5H8PC8UQXME" className="w-full max-w-xs [&>div]:text-center [&>div]:flex [&>div]:justify-center [&>div>div]:text-center [&>div>div]:flex [&>div>div]:justify-center [&_button]:text-center [&_button]:flex [&_button]:justify-center [&_button]:items-center"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Premium Package */}
+            <div className="relative group">
+              <div className="bg-background/80 backdrop-blur-sm border border-border/50 rounded-2xl p-8 h-full transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 flex flex-col">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-600/20 to-primary/20 rounded-2xl mb-4">
+                    <Crown className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-text-primary mb-2">Premium CCIE Training</h3>
+                  <div className="text-4xl font-bold text-primary mb-2">$3,499</div>
+                </div>
+                
+                <div className="space-y-4 mb-8 flex-grow">
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">9 Weeks Duration</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">100 Hours Bootcamp</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Scratch to CCIE Blueprint</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">All Materials Included</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Priority Support Access</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Full Track Recordings</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Full EVE-NG Access</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-text-primary text-center">Lab Access Until Exam Pass</span>
+                  </div>
+                </div>
+                
+                <div className="mt-auto flex justify-center">
+                  <div id="paypal-container-BLY5FB35CKTY6" className="w-full max-w-xs [&>div]:text-center [&>div]:flex [&>div]:justify-center [&>div>div]:text-center [&>div>div]:flex [&>div>div]:justify-center [&_button]:text-center [&_button]:flex [&_button]:justify-center [&_button]:items-center"></div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Second Pricing Table - Comprehensive Features */}
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-border rounded-xl bg-background text-left shadow-lg">
-              <thead>
-                <tr className="bg-muted">
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-text-primary">Feature</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Instructor Support</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Limited</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Till Exam Date</th>
-                  <th className="px-6 py-4 font-bold text-lg border-b border-border text-center text-text-primary">Till & Post Exam</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">CCNA Include</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">CCNP Include</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Dumps</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Advanced Set</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Workbook with Solutions</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Cisco Blue Print Topics</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">No (Only Labs)</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">No (Only Labs)</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Scratch to CCIE</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Materials</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Technical Support (24x7)</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Priority Access</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Live Recordings</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-blue-500 font-bold">Limited to Bootcamp</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-blue-500 font-bold">Limited to Bootcamp</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Full Training Access</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Full Track (Lifetime)</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">LMS Access</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Life Time Access</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Life Time Access</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Life Time Access</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Life Time Access</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">EVE-NG + Physical Devices</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">Limited</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">Limited</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">Yes (Full)</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Completion Certificate</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 border-b border-border font-semibold text-text-primary">Lab Access Until Exam Cleared</td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-red-500 font-bold">✗</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                  <td className="px-6 py-4 border-b border-border text-center">
-                    <span className="text-green-500 font-bold">✓</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 font-semibold text-text-primary">Design Guide</td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="text-blue-500 font-bold">Few</span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="text-blue-500 font-bold">Few</span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="text-green-500 font-bold">More</span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="text-green-500 font-bold">Extra</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </section>
       
@@ -1169,88 +1067,7 @@ const CCIEPage: React.FC = () => {
             </div>
           </div>
           
-          <div className="max-w-xl mx-auto bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-            <form className="space-y-4" onSubmit={handleContactSubmit}>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="contactFirstName" className="block text-sm font-medium text-white/80 mb-1">First Name</label>
-                  <input 
-                    type="text" 
-                    id="contactFirstName" 
-                    className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                    placeholder="John"
-                    required
-                    value={contactFormData.firstName}
-                    onChange={handleContactInputChange}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="contactLastName" className="block text-sm font-medium text-white/80 mb-1">Last Name</label>
-                  <input 
-                    type="text" 
-                    id="contactLastName" 
-                    className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                    placeholder="Doe"
-                    required
-                    value={contactFormData.lastName}
-                    onChange={handleContactInputChange}
-                  />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="contactEmail" className="block text-sm font-medium text-white/80 mb-1">Email Address</label>
-                <input 
-                  type="email" 
-                  id="contactEmail" 
-                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                  placeholder="john.doe@example.com"
-                  required
-                  value={contactFormData.email}
-                  onChange={handleContactInputChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="contactPhone" className="block text-sm font-medium text-white/80 mb-1">Phone Number</label>
-                <input 
-                  type="tel" 
-                  id="contactPhone" 
-                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                  placeholder="+1 760 858 0505"
-                  value={contactFormData.phone}
-                  onChange={handleContactInputChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="contactMessage" className="block text-sm font-medium text-white/80 mb-1">Your Message</label>
-                <textarea 
-                  id="contactMessage" 
-                  rows={3}
-                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-white"
-                  placeholder="I'm interested in learning more about the CCIE program..."
-                  required
-                  value={contactFormData.message}
-                  onChange={handleContactInputChange}
-                ></textarea>
-              </div>
-              <button 
-                type="submit" 
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center"
-                disabled={isFormSubmitting}
-              >
-                {isFormSubmitting ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Submitting...
-                  </>
-                ) : (
-                  "Submit Request"
-                )}
-              </button>
-            </form>
-          </div>
+          <ContactSection source="ccie-page" />
         </div>
       </section>
     </div>

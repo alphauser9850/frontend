@@ -19,6 +19,81 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onRegisterClick }) => 
   const { signIn } = useAuthStore();
   const navigate = useNavigate();
 
+  // Function to detect if text contains links
+  const containsLinks = (text: string): boolean => {
+    const linkPatterns = [
+      /https?:\/\/[^\s]+/gi,           // HTTP/HTTPS URLs
+      /www\.[^\s]+/gi,                  // WWW URLs
+      /[^\s]+\.[a-z]{2,}/gi,           // Domain patterns
+      /bit\.ly\/[^\s]+/gi,              // Bit.ly links
+      /t\.co\/[^\s]+/gi,                // Twitter links
+      /goo\.gl\/[^\s]+/gi,              // Google links
+      /tinyurl\.com\/[^\s]+/gi,         // TinyURL links
+      /[^\s]+\.com\/[^\s]*/gi,          // .com URLs
+      /[^\s]+\.org\/[^\s]*/gi,          // .org URLs
+      /[^\s]+\.net\/[^\s]*/gi,          // .net URLs
+      /[^\s]+\.io\/[^\s]*/gi,           // .io URLs
+      /[^\s]+\.co\/[^\s]*/gi,           // .co URLs
+      /ftp:\/\/[^\s]+/gi,               // FTP URLs
+      /mailto:[^\s]+/gi,                // Mailto links
+      /tel:[^\s]+/gi,                   // Tel links
+      /file:\/\/[^\s]+/gi               // File links
+    ];
+    
+    return linkPatterns.some(pattern => pattern.test(text));
+  };
+
+  // Function to prevent link input
+  const preventLinks = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    
+    // Check if the new value contains links
+    if (containsLinks(value)) {
+      e.preventDefault();
+      // Remove the link and show warning
+      const cleanValue = value.replace(/https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-z]{2,}|bit\.ly\/[^\s]+|t\.co\/[^\s]+|goo\.gl\/[^\s]+|tinyurl\.com\/[^\s]+|[^\s]+\.(com|org|net|io|co)\/[^\s]*|ftp:\/\/[^\s]+|mailto:[^\s]+|tel:[^\s]+|file:\/\/[^\s]+/gi, '');
+      
+      // Update the appropriate state based on the field
+      if (e.target.id === 'email') {
+        setEmail(cleanValue);
+      } else if (e.target.id === 'password') {
+        setPassword(cleanValue);
+      }
+      
+      // Show error message
+      setError('Links are not allowed in this field');
+      
+      return false;
+    }
+    
+    return true;
+  };
+
+  // Function to handle paste events and prevent links
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    
+    const pastedText = e.clipboardData.getData('text');
+    
+    // Check if pasted text contains links
+    if (containsLinks(pastedText)) {
+      // Show error message
+      setError('Links are not allowed in this field. Please remove any URLs before pasting.');
+      return;
+    }
+    
+    // If no links, allow the paste by manually setting the value
+    const { id, value } = e.currentTarget;
+    const newValue = value + pastedText;
+    
+    // Update the appropriate state based on the field
+    if (id === 'email') {
+      setEmail(newValue);
+    } else if (id === 'password') {
+      setPassword(newValue);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -68,7 +143,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onRegisterClick }) => 
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              if (preventLinks(e)) {
+                setEmail(e.target.value);
+              }
+            }}
+            onPaste={handlePaste}
             required
             placeholder="you@example.com"
             className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -89,7 +169,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onRegisterClick }) => 
               id="password"
               type={showPassword ? "text" : "password"}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                if (preventLinks(e)) {
+                  setPassword(e.target.value);
+                }
+              }}
+              onPaste={handlePaste}
               required
               placeholder="••••••••"
               className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50"

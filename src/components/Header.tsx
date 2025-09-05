@@ -49,13 +49,22 @@ const Header: React.FC = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showCoursesMenu, setShowCoursesMenu] = useState(false);
 
-  // Handle scroll effect
+  // Handle scroll effect - improved to prevent menu disappearing
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          setScrolled(currentScrollY > 10);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -102,9 +111,9 @@ const Header: React.FC = () => {
   return (
     <header 
       className={cn(
-        "top-0 left-0 right-0 z-50 transition-all duration-300",
+        "sticky top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled 
-          ? "bg-surface border-b border-border-subtle shadow-subtle py-3" 
+          ? "bg-surface/95 backdrop-blur-md border-b border-border-subtle shadow-subtle py-3" 
           : "bg-surface py-8"
       )}
     >
@@ -114,14 +123,42 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Left: Logo and Navigation */}
           <div className="flex items-center gap-8 flex-shrink-0">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-3">
-              <img src="/new-logo-1.png" alt="CCIE Lab Logo" className="h-16 w-16 rounded-xl object-contain bg-surface p-1 shadow-medium" />
-              <span className={cn(
-                "font-bold text-2xl transition-colors text-text-primary"
-              )}>
-                <AuroraText>CCIE LAB</AuroraText>
-              </span>
+            {/* Enhanced Logo */}
+            <Link to="/" className="flex items-center gap-4 group">
+              <div className="relative">
+                {/* Square overlay backgrounds */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-purple-600/25 to-blue-600/25 rounded-xl blur-lg scale-110 group-hover:scale-125 transition-all duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 via-pink-500/20 to-yellow-400/20 rounded-xl blur-xl scale-115 group-hover:scale-130 transition-all duration-700"></div>
+                
+                {/* Main logo container - square */}
+                <div className="relative h-24 w-24 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-primary/25 flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300">
+                  {/* Logo image - natural square */}
+                  <img 
+                    src="/ccielab.net logo.jpeg" 
+                    alt="CCIELAB.NET Logo" 
+                    className="h-20 w-20 object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-300" 
+                  />
+                  
+                  {/* Square animated borders */}
+                  <div className="absolute inset-0 rounded-xl border border-primary/30 group-hover:border-primary/60 transition-all duration-300"></div>
+                  <div className="absolute inset-1 rounded-lg border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-500"></div>
+                  
+                  {/* Square glow effects */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              </div>
+              
+              {/* Enhanced text */}
+              <div className="flex flex-col">
+                <span className={cn(
+                  "font-bold text-2xl transition-colors text-text-primary group-hover:text-primary transition-colors duration-300"
+                )}>
+                  <AuroraText>CCIELAB.NET</AuroraText>
+                </span>
+                <span className="text-xs font-medium text-primary/70 uppercase tracking-wider">
+                  Advanced CCIE Training
+                </span>
+              </div>
             </Link>
             {/* Navigation (left, next to logo) */}
             <nav className="hidden md:flex items-center gap-6 ml-6 text-base font-roboto" style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
@@ -262,7 +299,7 @@ const Header: React.FC = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-surface border-b border-border-subtle">
+        <div className="md:hidden bg-surface/95 backdrop-blur-md border-b border-border-subtle shadow-lg">
           <div className="container mx-auto px-4 py-4">
             <nav className="flex flex-col gap-2">
               <div className="flex flex-col">

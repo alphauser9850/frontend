@@ -38,11 +38,34 @@ const HomePage: React.FC = () => {
       
       {/* SEO Optimized H1 Tag */}
       <SEOHeadings
-        title="CCIE Training and Certification | CCIELab.Net"
-        description="Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance."
+        title="CCIE Training and Certification | CCIELab.Net - Expert Cisco Certification Training"
+        description="Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance. Join thousands of successful CCIE professionals."
         canonicalUrl="https://www.ccielab.net/"
         h1Text="CCIE Training and Certification | CCIELab.Net"
         h1ClassName="sr-only"
+        keywords="CCIE training, CCIE certification, Cisco training, CCIE lab practice, CCIE Enterprise Infrastructure, CCIE Wireless, CCNA training, CCNP training, networking certification, Cisco labs"
+        image="/ccielab.net logo.jpeg"
+        type="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "CCIE Training and Certification",
+          "headline": "Master the CCIE Lab and Pass your Certification Exam",
+          "description": "Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance.",
+          "url": "https://www.ccielab.net/",
+          "mainEntity": {
+            "@type": "Organization",
+            "name": "CCIE LAB",
+            "url": "https://www.ccielab.net",
+            "logo": "https://www.ccielab.net/ccielab.net logo.jpeg",
+            "description": "Expert Cisco certification training and CCIE lab preparation",
+            "offers": {
+              "@type": "Offer",
+              "category": "CCIE Training",
+              "description": "Comprehensive CCIE certification training programs"
+            }
+          }
+        }}
       />
       
       <HeroSection />

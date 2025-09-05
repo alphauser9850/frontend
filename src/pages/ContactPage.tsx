@@ -95,6 +95,82 @@ const ContactPage: React.FC = () => {
     setIsVisible(true);
   }, []);
 
+  // Function to detect if text contains links
+  const containsLinks = (text: string): boolean => {
+    const linkPatterns = [
+      /https?:\/\/[^\s]+/gi,           // HTTP/HTTPS URLs
+      /www\.[^\s]+/gi,                  // WWW URLs
+      /[^\s]+\.[a-z]{2,}/gi,           // Domain patterns
+      /bit\.ly\/[^\s]+/gi,              // Bit.ly links
+      /t\.co\/[^\s]+/gi,                // Twitter links
+      /goo\.gl\/[^\s]+/gi,              // Google links
+      /tinyurl\.com\/[^\s]+/gi,         // TinyURL links
+      /[^\s]+\.com\/[^\s]*/gi,          // .com URLs
+      /[^\s]+\.org\/[^\s]*/gi,          // .org URLs
+      /[^\s]+\.net\/[^\s]*/gi,          // .net URLs
+      /[^\s]+\.io\/[^\s]*/gi,           // .io URLs
+      /[^\s]+\.co\/[^\s]*/gi,           // .co URLs
+      /ftp:\/\/[^\s]+/gi,               // FTP URLs
+      /mailto:[^\s]+/gi,                // Mailto links
+      /tel:[^\s]+/gi,                   // Tel links
+      /file:\/\/[^\s]+/gi               // File links
+    ];
+    
+    return linkPatterns.some(pattern => pattern.test(text));
+  };
+
+  // Function to prevent link input
+  const preventLinks = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    
+    // Check if the new value contains links
+    if (containsLinks(value)) {
+      e.preventDefault();
+      // Remove the link and show warning
+      const cleanValue = value.replace(/https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-z]{2,}|bit\.ly\/[^\s]+|t\.co\/[^\s]+|goo\.gl\/[^\s]+|tinyurl\.com\/[^\s]+|[^\s]+\.(com|org|net|io|co)\/[^\s]*|ftp:\/\/[^\s]+|mailto:[^\s]+|tel:[^\s]+|file:\/\/[^\s]+/gi, '');
+      
+      setFormData(prev => ({ ...prev, [id]: cleanValue }));
+      
+      // Show error message
+      setErrors(prev => ({
+        ...prev,
+        [id]: 'Links are not allowed in this field'
+      }));
+      
+      return false;
+    }
+    
+    return true;
+  };
+
+  // Function to handle paste events and prevent links
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.preventDefault();
+    
+    const pastedText = e.clipboardData.getData('text');
+    
+    // Check if pasted text contains links
+    if (containsLinks(pastedText)) {
+      // Show error message
+      const { id } = e.currentTarget;
+      setErrors(prev => ({
+        ...prev,
+        [id]: 'Links are not allowed in this field'
+      }));
+      
+      // Optionally show a toast or alert
+      alert('Links are not allowed in this field. Please remove any URLs before pasting.');
+      return;
+    }
+    
+    // If no links, allow the paste by manually setting the value
+    const { id, value } = e.currentTarget;
+    const newValue = value + pastedText;
+    
+    // Update the form data
+    setFormData(prev => ({ ...prev, [id]: newValue }));
+  };
+
   // Form validation
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -126,6 +202,14 @@ const ContactPage: React.FC = () => {
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
+    
+    // For text inputs and textareas, check for links
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (!preventLinks(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)) {
+        return; // Stop processing if links were detected
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
       [id]: value
@@ -329,6 +413,7 @@ const ContactPage: React.FC = () => {
                             id="name"
                             value={formData.name}
                             onChange={handleInputChange}
+                            onPaste={handlePaste}
                             className={cn(
                               "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors",
                               errors.name ? "border-red-500" : "border-border"
@@ -353,6 +438,7 @@ const ContactPage: React.FC = () => {
                             id="email"
                             value={formData.email}
                             onChange={handleInputChange}
+                            onPaste={handlePaste}
                             className={cn(
                               "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors",
                               errors.email ? "border-red-500" : "border-border"
@@ -402,6 +488,7 @@ const ContactPage: React.FC = () => {
                             id="phone"
                             value={formData.phone}
                             onChange={handleInputChange}
+                            onPaste={handlePaste}
                             className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                             placeholder="Enter your phone number"
                           />
@@ -417,6 +504,7 @@ const ContactPage: React.FC = () => {
                           id="subject"
                           value={formData.subject}
                           onChange={handleInputChange}
+                          onPaste={handlePaste}
                           className={cn(
                             "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors",
                             errors.subject ? "border-red-500" : "border-border"
@@ -440,6 +528,7 @@ const ContactPage: React.FC = () => {
                           id="message"
                           value={formData.message}
                           onChange={handleInputChange}
+                          onPaste={handlePaste}
                           rows={6}
                           className={cn(
                             "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none",
