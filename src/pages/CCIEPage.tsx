@@ -117,8 +117,8 @@ const PayPalScript = () => {
     // Wait for PayPal SDK to load (it's now in the HTML head)
     const initializePayPalButtons = () => {
       if (window.paypal) {
-        // Initialize first tier button with return and notify URLs
-        window.paypal.HostedButtons({
+        // Initialize first tier button with exact format from testing
+        paypal.HostedButtons({
           hostedButtonId: "Y78PA4NPGWZ6L",
           return: "https://ent.ccielab.net",
           notifyUrl: "https://ent.ccielab.net/lab-purchase"
