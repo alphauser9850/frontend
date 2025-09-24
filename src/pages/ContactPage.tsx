@@ -273,12 +273,12 @@ const ContactPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Contact Us - CCIE LAB | Get in Touch with Our Team</title>
-        <meta name="description" content="Contact CCIE LAB for expert Cisco certification training. Get in touch with our CCIE-certified instructors for personalized guidance and support." />
-        <meta name="keywords" content="contact CCIE LAB, Cisco training support, CCIE certification help, network training contact" />
+        <title>Contact Us | Get in Touch with CCIE Lab</title>
+        <meta name="description" content="Have questions about CCIE training or enrollment? Contact CCIE Lab today. Our support team is here to assist you with course details, queries, and scheduling." />
+         
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Contact Us - CCIE LAB" />
-        <meta property="og:description" content="Get in touch with our CCIE-certified instructors for personalized guidance and support." />
+        <meta property="og:title" content="Contact Us | Get in Touch with CCIE Lab" />
+        <meta property="og:description" content="Have questions about CCIE training or enrollment? Contact CCIE Lab today. Our support team is here to assist you with course details, queries, and scheduling." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://ccielab.net/contact" />
         <link rel="canonical" href="https://ccielab.net/contact" />

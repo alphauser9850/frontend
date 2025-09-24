@@ -601,3 +601,7 @@
 .animate-shiny-text {
   animation: shiny-text 2s linear infinite;
 }
+
+.logo:focus {
+  outline: none;
+}
