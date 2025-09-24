@@ -124,7 +124,7 @@ const Header: React.FC = () => {
           {/* Left: Logo and Navigation */}
           <div className="flex items-center gap-8 flex-shrink-0">
             {/* Enhanced Logo */}
-            <Link to="/" className="flex items-center gap-4 group">
+            <Link to="/" className="flex items-center gap-4 group logo">
               <div className="relative">
                 {/* Square overlay backgrounds */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-purple-600/25 to-blue-600/25 rounded-xl blur-lg scale-110 group-hover:scale-125 transition-all duration-500"></div>
@@ -210,8 +210,7 @@ const Header: React.FC = () => {
                     : "text-text-primary hover:bg-surface-variant"
                 )}
               >
-                <span className="flex items-center gap-1.5">
-                  <Info className="h-4 w-4" />
+                <span className="flex items-center gap-1.5"> 
                   About Us
                 </span>
               </Link>

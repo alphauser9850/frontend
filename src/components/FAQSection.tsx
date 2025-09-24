@@ -6,59 +6,63 @@ import { ChevronDown } from 'lucide-react';
 
 const faqs = [
   {
-    question: "How are the courses delivered?",
+    question: "How are the CCIE courses delivered?",
     answer: "Our courses are delivered through live interactive sessions, combining expert-led theory and extensive hands-on lab practice to ensure a real-world learning experience."
   },
   {
-    question: "Will I get access to labs?",
+    question: "Will I get CCIE lab access?",
     answer: "Yes! Every student gets dedicated access to our labs. We believe true mastery comes from practicing concepts,not just studying them"
   },
   {
-    question: "Are the instructors certified professionals?",
+    question: "Are the instructors CCIE certified professionals?",
     answer: "Yes, all our instructors are CISCO-certified professionals with real-world experience. They don't just teach — they mentor"
   },
   {
-    question: "Do you offer career support after the course?",
+    question: "Do you provide career support?",
     answer: "Definitely. We offer career guidance, interview preparation, and mentorship even after your course ends, helping you succeed beyond just certifications."
   },
   {
-    question: "Are there any prerequisites for joining?",
+    question: "Are there any prerequisites to join this CCIE Training program?",
     answer: "While some advanced programs may need prior knowledge, we offer beginner to expert-level training paths. You can start where you are and grow with us."
   },
   {
-    question: "How is your training different from others?",
+    question: "What makes your CCIE training unique?",
     answer: "We focus on practical learning, real-time troubleshooting, project-based training, and a personal mentorship approach — not just theory or slides."
   },
   {
-    question: "Can I practice labs after the course timing?",
+    question: "Can I access labs after class hours?",
     answer: "Yes, lab access is flexible . You can continue practicing outside class hours based on your schedule and availability."
   },
   {
-    question: "Do you offer certification exam guidance?",
+    question: "Do you guide for CCIE certification exams?",
     answer: "Of course! We guide you through the entire certification process — right from preparation strategies to mock exams and final readiness assessments."
   },
   {
-    question: "What happens if I miss a session?",
+    question: "What if I miss a session?",
     answer: "No worries — you can access the session recordings, and our support team is always there to help you catch up on any missed topics."
   },
   {
-    question: "I have taken a break from my work of 1 year to pursue CCIE, will there be a problem in interviews that I will face?",
+    question: "Will a career break affect my chances after CCIE?",
     answer: "Taking a year to prepare for CCIE wont hurt your job prospects—if you clearly present it as a strategic investment in your skills. Emphasize the depth of knowledge and commitment you have gained to position it as career advancing move."
   },
     {
-    question: "Are weekend classes available?",
+    question: "Do you have weekend classes?",
     answer: "No. Only Weekday classes are available(MON - THU)."
   },
   {
-    question: "How can I register for the training?",
+    question: "How can I register this CCIE Certification Program?",
     answer: "Feel free to reach out to us at +91 7972852821 or support@ccielab.net. You can also share your details through our contact form — we'll get back to you shortly with all the information you need."
   },
-  {
-    question: "Are there any installment options for the payment? In that case, what are the late fee charges?",
-    answer: "Actually we offer 3 installment options. There will be no extra charges for late payment, but they will be not permitted to the classes if amount is not paid in time."
+   {
+    question: "Do you offer installment payment options?",
+    answer: "Actually we offer 3 installment options. "
   },
   {
-    question: " What are the payment modes available?",
+    question: "What are the late fee charges?",
+    answer: "There will be no extra charges for late payment, but they will be not permitted to the classes if amount is not paid in time."
+  },
+  {
+    question: "Which payment modes are available?",
     answer: "We accept payments using methods such as net banking, NEFT/RTGS, Credit/Debit cards, PayPal, UPI."
   }
 
