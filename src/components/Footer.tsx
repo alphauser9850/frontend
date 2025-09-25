@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
                 <Youtube className="h-5 w-5" />
               </a>
               <a 
-                href="https://www.linkedin.com/company/105885899/admin/dashboard/" 
+                href="https://www.linkedin.com/company/ccie-lab" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
                 <Linkedin className="h-5 w-5" />
               </a>
               <a 
-                href="https://www.instagram.com/ccielab" 
+                href="https://www.instagram.com/ccie.lab/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
                 <Instagram className="h-5 w-5" />
               </a>
               <a 
-                href="https://x.com/Deshmuk955803" 
+                href="https://x.com/CcielabNet" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
@@ -90,17 +90,17 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/" className="hover:text-primary transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/courses/ccie" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/courses/ccie" className="hover:text-primary transition-colors">
                   CCIE Enterprise
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/about" className="hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
@@ -108,7 +108,7 @@ const Footer: React.FC = () => {
 
               
               <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link to="/contact" className="hover:text-primary transition-colors">
                   Contact Us
                 </Link>
               </li>

@@ -8,7 +8,7 @@ const blogPosts = [
     id: 1,
     title: 'Understanding MTU: Layer 2 vs Layer 3',
     category: 'Networking',
-    image: '/blog/mtu-layer2-layer3.png',
+    image: '/mtu-layer2-layer3.png',
     author: 'Saif Deshmukh, CCIE EI Instructor, ccielab.net',
     date: 'Jul 15, 2025',
     readTime: '7 min read',
@@ -18,7 +18,7 @@ const blogPosts = [
     id: 2,
     title: 'Cisco Modeling Labs (CML) Free Tier: What You Need to Know',
     category: 'Cisco',
-    image: '/blog/cml-free-tier.png',
+    image: '/cml-free-tier.png',
     author: 'Saif Deshmukh, CCIE EI Instructor, ccielab.net',
     date: 'Jul 15, 2025',
     readTime: '5 min read',
@@ -28,7 +28,7 @@ const blogPosts = [
     id: 3,
     title: 'Coming Soon: More Networking Insights',
     category: 'Announcement',
-    image: '/blog/coming-soon.png',
+    image: '/coming-soon.png',
     author: 'Saif Deshmukh, CCIE EI Instructor, ccielab.net',
     date: 'Jul 15, 2025',
     readTime: '2 min read',
@@ -38,24 +38,26 @@ const blogPosts = [
 
 const BlogPage: React.FC = () => {
   return (
-    <div className="min-h-screen pt-20 bg-background text-foreground">
+    <>
+    <div className='container mx-auto px-4'>
+     <Breadcrumbs items={[
+          { label: 'Home', href: '/' },
+          { label: 'Blogs' }
+        ]} />
+      </div>
+    <div className="min-h-screen pt-20 bg-background text-foreground pb-20">
       {/* SEO Optimized Headings */}
       <SEOHeadings
         title="CCIE Training Blog | Networking Insights & Cisco Technologies"
         description="Expert insights on CCIE training, networking technologies, Cisco certifications, and hands-on lab guides from certified CCIE instructors."
-        canonicalUrl="https://www.ccielab.net/blog"
-        h1Text="CCIE Training Blog | Networking Insights & Cisco Technologies"
-        h1ClassName="sr-only"
+        canonicalUrl="https://www.ccielab.net/blog" 
       />
       
       <section className="container mx-auto px-4 md:px-8 lg:px-16">
-        <Breadcrumbs items={[
-          { label: 'Home', href: '/' },
-          { label: 'Blog' }
-        ]} />
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 mt-8">
-          <AuroraText>Blog</AuroraText>
-        </h2>
+       
+        <h1 className=" blogTitle text-4xl md:text-5xl font-bold text-center mb-10">
+          <AuroraText>Blogs</AuroraText>
+        </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           {blogPosts.map((post) => (
             <div
@@ -66,23 +68,24 @@ const BlogPage: React.FC = () => {
                 <img
                   src={post.image}
                   alt={`${post.title} - CCIE Enterprise Infrastructure Training Blog`}
-                  className="object-contain h-32 w-32 mx-auto"
+                  className="object-cover object-top"
                   style={{ filter: 'var(--blog-img-filter, none)' }}
                 />
               </div>
-              <div className="p-6 flex flex-col flex-1">
-                <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-2">
+              <div className="flex flex-col flex-1 blogDesc p-6">
+                <span className="categotyBadge  inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-2">
                   {post.category}
                 </span>
+                <div className="dFlex postMeta pb-6">
+                  <span>{post.author}</span> 
+                  <span>{post.date}</span> 
+                </div>
                 <h3 className="text-lg font-bold mb-2 text-foreground">
                   {post.title}
                 </h3>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                  <span>{post.author}</span>
-                  <span className="mx-1">•</span>
-                  <span>{post.date}</span>
-                  <span className="mx-1">—</span>
-                  <span>{post.readTime}</span>
+                  
+                  <span className='readBadge'>{post.readTime}</span>
                 </div>
               </div>
             </div>
@@ -90,6 +93,7 @@ const BlogPage: React.FC = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

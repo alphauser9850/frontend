@@ -18,6 +18,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { submitFormToN8n, ContactFormData } from '../services/formService';
 import { cn } from '../lib/utils';
+import Breadcrumbs from '../components/Breadcrumbs';
 
 // Contact information
 const contactInfo = [
@@ -202,9 +203,9 @@ const ContactPage: React.FC = () => {
   // Handle form input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
-    
+    console.log(id)
     // For text inputs and textareas, check for links
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+    if ((e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) && id!=="email") {
       if (!preventLinks(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)) {
         return; // Stop processing if links were detected
       }
@@ -273,12 +274,12 @@ const ContactPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Contact Us - CCIE LAB | Get in Touch with Our Team</title>
-        <meta name="description" content="Contact CCIE LAB for expert Cisco certification training. Get in touch with our CCIE-certified instructors for personalized guidance and support." />
-        <meta name="keywords" content="contact CCIE LAB, Cisco training support, CCIE certification help, network training contact" />
+        <title>Contact Us | Get in Touch with CCIE Lab</title>
+        <meta name="description" content="Have questions about CCIE training or enrollment? Contact CCIE Lab today. Our support team is here to assist you with course details, queries, and scheduling." />
+         
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Contact Us - CCIE LAB" />
-        <meta property="og:description" content="Get in touch with our CCIE-certified instructors for personalized guidance and support." />
+        <meta property="og:title" content="Contact Us | Get in Touch with CCIE Lab" />
+        <meta property="og:description" content="Have questions about CCIE training or enrollment? Contact CCIE Lab today. Our support team is here to assist you with course details, queries, and scheduling." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://ccielab.net/contact" />
         <link rel="canonical" href="https://ccielab.net/contact" />
@@ -301,8 +302,14 @@ const ContactPage: React.FC = () => {
           })}
         </script>
       </Helmet>
+        <div className='container mx-auto px-4'>
+       <Breadcrumbs items={[
+            { label: 'Home', href: '/' },
+            { label: 'Contact Us' }
+          ]} />
+      </div>
 
-      <div className="min-h-screen pt-20 bg-background">
+      <div className="min-h-screen pt-10 bg-background">
         {/* Hero Section */}
         <section className="relative pt-20 pb-32 overflow-hidden">
           <div className="absolute inset-0 bg-black z-0"></div>
@@ -336,7 +343,7 @@ const ContactPage: React.FC = () => {
                 <BorderBeamWrapper key={index} beamColor="blue" duration={8}>
                   <Card className="h-full transition-all duration-300 hover:shadow-lg hover:scale-105">
                     <CardHeader className="text-center">
-                      <div className={cn("mx-auto mb-4 p-3 rounded-full bg-muted", info.color)}>
+                      <div className={cn("mx-auto mb-4 p-3 rounded-full bg-muted inline-block", info.color)}>
                         {info.icon}
                       </div>
                       <CardTitle className="text-lg">{info.title}</CardTitle>
@@ -624,7 +631,7 @@ const ContactPage: React.FC = () => {
                 <BorderBeamWrapper beamColor="green" duration={8}>
                   <Card className="text-center">
                     <CardContent className="pt-6">
-                      <div className="mx-auto mb-4 p-3 rounded-full bg-green-100 dark:bg-green-900">
+                      <div className="mx-auto mb-4 p-3 rounded-full bg-green-100 dark:bg-green-900 w-auto inline-block">
                         <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
                       </div>
                       <h3 className="font-semibold mb-2">Expert Instructors</h3>
@@ -636,7 +643,7 @@ const ContactPage: React.FC = () => {
                 <BorderBeamWrapper beamColor="blue" duration={8}>
                   <Card className="text-center">
                     <CardContent className="pt-6">
-                      <div className="mx-auto mb-4 p-3 rounded-full bg-blue-100 dark:bg-blue-900">
+                      <div className="mx-auto mb-4 p-3 rounded-full bg-blue-100 dark:bg-blue-900 w-auto inline-block">
                         <MessageCircle className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                       </div>
                       <h3 className="font-semibold mb-2">24/7 Support</h3>
@@ -648,7 +655,7 @@ const ContactPage: React.FC = () => {
                 <BorderBeamWrapper beamColor="purple" duration={8}>
                   <Card className="text-center">
                     <CardContent className="pt-6">
-                      <div className="mx-auto mb-4 p-3 rounded-full bg-purple-100 dark:bg-purple-900">
+                      <div className="mx-auto mb-4 p-3 rounded-full bg-purple-100 dark:bg-purple-900 w-auto inline-block">
                         <Globe className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                       </div>
                       <h3 className="font-semibold mb-2">Global Community</h3>
