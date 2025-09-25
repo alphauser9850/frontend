@@ -185,7 +185,7 @@ const TestimonialsSection: React.FC = () => {
           </Marquee>
         </div>*/}
 
-        /*changes*/
+        {/*changes*/}
         <div className="hidden md:block">
           <Marquee pauseOnHover={true} className="py-4" speed={30}>
             {testimonials.map((testimonial, index) => (

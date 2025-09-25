@@ -7,7 +7,7 @@ import { ContactSection } from '../components/ContactSection';
 import { LabShowcaseSection } from '../components/LabShowcaseSection';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
-import SEOHeadings from '../components/SEOHeadings';
+import { Helmet } from 'react-helmet-async';
 
 const Rocket3DIcon = ({ isDarkMode }: { isDarkMode: boolean }) => (
   <svg
@@ -31,82 +31,62 @@ const HomePage: React.FC = () => {
   const { isDarkMode } = useThemeStore();
 
   return (
-    <main className={cn(
-      "min-h-screen font-roboto",
-      isDarkMode ? "bg-design-primary-background text-text-primary" : "bg-gray-50 text-gray-900"
-    )} style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
-      
-      {/* SEO Optimized H1 Tag */}
-      <SEOHeadings
-        title="CCIE Training and Certification | CCIELab.Net - Expert Cisco Certification Training"
-        description="Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance. Join thousands of successful CCIE professionals."
-        canonicalUrl="https://www.ccielab.net/"
-        h1Text="CCIE Training and Certification | CCIELab.Net"
-        h1ClassName="sr-only"
-        keywords="CCIE training, CCIE certification, Cisco training, CCIE lab practice, CCIE Enterprise Infrastructure, CCIE Wireless, CCNA training, CCNP training, networking certification, Cisco labs"
-        image="/ccielab.net logo.jpeg"
-        type="website"
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "CCIE Training and Certification",
-          "headline": "Master the CCIE Lab and Pass your Certification Exam",
-          "description": "Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance.",
-          "url": "https://www.ccielab.net/",
-          "mainEntity": {
-            "@type": "Organization",
-            "name": "CCIE LAB",
-            "url": "https://www.ccielab.net",
-            "logo": "https://www.ccielab.net/ccielab.net logo.jpeg",
-            "description": "Expert Cisco certification training and CCIE lab preparation",
-            "offers": {
-              "@type": "Offer",
-              "category": "CCIE Training",
-              "description": "Comprehensive CCIE certification training programs"
-            }
-          }
-        }}
-      />
-      
-      <HeroSection />
+    <>
+      <Helmet>
+        <title>CCIE Training and Certification | CCIELab.Net</title>
+        <meta name="description" content="Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance." />
+        <meta property="og:title" content="CCIE Training and Certification | CCIELab.Net" />
+        <meta property="og:description" content="Master the CCIE Lab and Pass your Certification Exam with Expert Bootcamps, 24/7 Rack Access, Dedicated Instructor Support, and Real-Time Guidance." />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <main className={cn(
+        "min-h-screen font-roboto",
+        isDarkMode ? "bg-design-primary-background text-text-primary" : "bg-gray-50 text-gray-900"
+      )} style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
 
-      {/* Custom Centered Gradient Section with 3D SVG Icon */}
-      <section className={cn(
-        "min-h-screen flex flex-col justify-center bg-gradient-section",
-      )}>
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 md:gap-24">
-          {/* Left: Content */}
-          <div className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left max-w-2xl">
-            <span className="inline-flex items-center justify-center rounded-full bg-transparent p-0 mb-6">
-              <Rocket3DIcon isDarkMode={isDarkMode} />
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text" style={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
-              Elevate your CCIE Lab experience with our customized solution
-            </h2>
-            <p className={cn(
-              "text-lg max-w-xl mx-0 md:mx-0",
-              isDarkMode ? "text-text-secondary" : "text-gray-800"
-            )} style={{ fontWeight: 400 }}>
-              Unlock exceptional learning outcomes by integrating tailored CCIE scenarios directly into your training platform. Build a fully-branded, immersive lab environment without relying on external servers or redirecting to third-party tools.
-            </p>
-          </div>
-          {/* Right: Image */}
-          <div className="flex-1 flex items-center justify-center w-full h-full">
-            <img
-              src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80"
+        {/* SEO Optimized H1 Tag */}
+
+
+        <HeroSection />
+
+        {/* Custom Centered Gradient Section with 3D SVG Icon */}
+        <section className={cn(
+          "min-h-screen flex flex-col justify-center bg-gradient-section",
+        )}>
+          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 md:gap-24">
+            {/* Left: Content */}
+            <div className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left max-w-2xl">
+              <span className="inline-flex items-center justify-center rounded-full bg-transparent p-0 mb-6">
+                <Rocket3DIcon isDarkMode={isDarkMode} />
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text" style={{ fontWeight: 700, letterSpacing: '-0.01em' }}>
+                Elevate your CCIE Lab experience with our customized solution
+              </h2>
+              <p className={cn(
+                "text-lg max-w-xl mx-0 md:mx-0",
+                isDarkMode ? "text-text-secondary" : "text-gray-800"
+              )} style={{ fontWeight: 400 }}>
+                Unlock exceptional learning outcomes by integrating tailored CCIE scenarios directly into your training platform. Build a fully-branded, immersive lab environment without relying on external servers or redirecting to third-party tools.
+              </p>
+            </div>
+            {/* Right: Image */}
+            <div className="flex-1 flex items-center justify-center w-full h-full">
+              <img
+                src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80"
                 alt="CCIE Enterprise Infrastructure Lab Training - Modern Technology Innovation"
-              className="rounded-3xl shadow-xl object-cover w-full max-w-lg h-[400px] md:h-[500px]"
-              style={{ minWidth: 280 }}
-            />
+                className="rounded-3xl shadow-xl object-cover w-full max-w-lg h-[400px] md:h-[500px]"
+                style={{ minWidth: 280 }}
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <ServiceSection />
-      <TestimonialsSection />
-      <FAQSection />{/*change*/}
-      <ContactSection source="home-page" />
-    </main>
+        <ServiceSection />
+        <TestimonialsSection />
+        <FAQSection />{/*change*/}
+        <ContactSection source="home-page" />
+      </main>
+    </>
   );
 };
 
