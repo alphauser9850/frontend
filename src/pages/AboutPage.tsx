@@ -133,13 +133,16 @@ const AboutPage: React.FC = () => {
         <meta property="og:description" content="Learn more about CCIE Lab founded by industry experts. Our mission is to provide world-class CCIE training and help professionals achieve their career goals." />
         <meta property="og:type" content="website" />
       </Helmet>
-      <div className="min-h-screen pt-20 bg-background">
-       
-        <section className="container mx-auto px-4">
-          <Breadcrumbs items={[
+      <div className='container mx-auto px-4'>
+       <Breadcrumbs items={[
             { label: 'Home', href: '/' },
             { label: 'About' }
           ]} />
+      </div>
+      <div className="min-h-screen pt-20 bg-background">
+       
+        <section className="container mx-auto px-4">
+         
           {/* Hero Section */}
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">

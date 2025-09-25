@@ -1,8 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 
 @layer base {
   :root {
@@ -604,4 +605,80 @@
 
 .logo:focus {
   outline: none;
+}
+
+.contactForm input{
+ padding-left: 40px;
+}
+
+.contactForm option {
+  background-color: #000;
+}
+.blogTitle{
+  line-height: 1.6!important;
+}
+
+.blogDesc{
+position: relative;
+}
+.categotyBadge{
+  position: absolute;
+  left:10px;
+  top:-35px;
+  border: 2px solid #ccc;
+  padding: 4px 8px 6px;
+  width: auto;
+  display: inline-block;
+  border-radius: 80px;
+  background-color: #0066FF;
+  color:#fff;
+  min-width: 80px;
+  text-align: center;
+}
+.dFlex{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap:10px
+
+}
+.postMeta span{
+font-size: 12px;
+display: block; 
+}
+
+.readBadge {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: #f00;
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.Breadcrumbs span.divider{
+  font-size: 18px;
+}
+.Breadcrumbs a span{
+  color: #fff;
+  font-size: 16px;
+}
+.Breadcrumbs  span{
+  color: #0052CC;
+  font-size: 16px;
+}
+.light .Breadcrumbs  a >  span{
+  color:#000;
+ 
+}
+.border-beam-content{
+  height: 100%;
+}
+@media screen and (max-width:768px) {
+  .text-hero span{
+  max-width: 100%;
+    white-space: pre-wrap;
+
+}
 }

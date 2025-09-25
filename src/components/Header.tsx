@@ -237,7 +237,7 @@ const Header: React.FC = () => {
                 )}
               >
                 <span className="flex items-center gap-1.5">
-                  Blog
+                  Blogs
                 </span>
               </Link>
             </nav>
@@ -343,9 +343,21 @@ const Header: React.FC = () => {
                     : ""
                 )}
               >
-                <span className="flex items-center gap-1.5">
-                  <Info className="h-4 w-4" />
+                <span className="flex items-center gap-1.5"> 
                   About Us
+                </span>
+              </Link>
+                <Link 
+                to="/blog" 
+                className={cn(
+                  "px-4 py-3 rounded-md font-bold text-text-primary hover:bg-surface-variant text-base",
+                  isActive('/blog') 
+                    ? "bg-design-primary-accent/10 text-design-primary-accent" 
+                    : ""
+                )}
+              >
+                <span className="flex items-center gap-1.5"> 
+                  Blogs
                 </span>
               </Link>
               {/* Auth Buttons (Mobile) */}
