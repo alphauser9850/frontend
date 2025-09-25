@@ -8,7 +8,7 @@ const HeroSection: React.FC = () => {
     <section className="relative flex items-center justify-center bg-design-primary-background section-bg overflow-hidden pt-32 md:pt-36 pb-16 min-h-[calc(100vh-4rem)]">
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
-        <video
+         <video
           autoPlay
           loop
           muted
@@ -19,8 +19,8 @@ const HeroSection: React.FC = () => {
             WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 30%, black 100%)',
           }}
         >
-          <source src="/3130284-uhd_3840_2160_30fps.mp4" type="video/mp4" />
-        </video>
+          <source src="/heroVideo.mp4" type="video/mp4" />
+        </video> 
         {/* Video overlay for better text readability */}
         <div className="absolute inset-0 bg-black/40"></div>
       </div>

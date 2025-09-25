@@ -95,7 +95,7 @@ export const CardTitle: React.FC<CardTitleProps> = ({ children, className }) => 
   
   return (
     <h3 className={cn(
-      "text-xl font-semibold flex items-center",
+      "text-xl font-semibold items-center",
       isDarkMode ? "text-white" : "text-card-foreground",
       className
     )}>

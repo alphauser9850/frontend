@@ -366,16 +366,17 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    
+    const { name, value } = e.target; 
     // For text inputs and textareas, check for links
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+
+    if ((e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) && name!='email') {
       if (!preventLinks(e as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)) {
         return; // Stop processing if links were detected
       }
     }
-    
+
     setFormData(prev => ({ ...prev, [name]: value }));
+   
     
     // Clear error when field is edited
     if (formErrors[name]) {
@@ -452,7 +453,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
 
   return (
     <section className={cn(
-      "py-24 relative overflow-hidden",
+      "py-24 relative overflow-hidden contactForm",
       isDarkMode 
         ? "bg-gradient-to-b from-black to-indigo-950/30" 
         : "bg-gradient-to-b from-white to-gray-50"
@@ -607,8 +608,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                               : "bg-white border border-gray-200 text-gray-900"
                           )}
                         >
-                          {countryOptions.map((country) => (
-                            <option key={country.code} value={country.name}>{country.name}</option>
+                          {countryOptions.map((country,i) => (
+                            <option key={i} value={country.name}>{country.name}</option>
                           ))}
                         </select>
                       </div>
@@ -626,9 +627,9 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           <Phone className={isDarkMode ? "h-5 w-5 text-white/40" : "h-5 w-5 text-gray-400"} />
                         </div>
                         <input
-                          type="tel"
+                          type="tel" 
                           id="contact-phone"
-                          name="phone"
+                          name="phone" 
                           value={formData.phone.startsWith(selectedCountryCode) ? formData.phone : selectedCountryCode + ' ' + formData.phone.replace(/^\+\d+\s*/, '')}
                           onChange={handleChange}
                           onPaste={handlePaste}
