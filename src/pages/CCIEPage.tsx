@@ -262,7 +262,7 @@ const CCIEPage: React.FC = () => {
       certification: "CCIE® Enterprise Infrastructure v1.1 Instructor",
       experience: "10+ years",
       description: "CCIE-certified instructor (#67714) with deep expertise in SD-WAN, SD-Access & automation, delivering practical, lab-focused training for certification success.",
-      image: "/saif_deshmukh.png",
+      image: "/saif_deshmukh.jpg",
       linkedin: "https://www.linkedin.com/in/deshmukh-saif/",
       highlights: [
         "CCIE-certified expert in Enterprise Infrastructure v1.1",
@@ -452,7 +452,7 @@ const CCIEPage: React.FC = () => {
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>96 hours</span> instructor-led training",
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>128 hours</span> hands-on lab access",
         "Mock Exams",
-        "Self Study Toolkit",,
+        "Self Study Toolkit", ,
         "1:1 mentorship + 20 hours of support calls",
         "Certificate with Exam Readiness Rating + Personalised improvement notes"
       ],
@@ -548,7 +548,7 @@ const CCIEPage: React.FC = () => {
 
 
             <div className="flex items-center justify-center gap-2 mb-6">
-              {isDarkMode ? (
+              {/* {isDarkMode ? (
                 <img
                   src="/EI_Black.png"
                   alt="CCIE Logo Dark"
@@ -560,14 +560,24 @@ const CCIEPage: React.FC = () => {
                   alt="CCIE Logo Light"
                   className="h-40 md:h-48 lg:h-56 object-contain"
                 />
-              )}
+              )} */}
+               <div className="relative pb-[56.25%] h-0 overflow-hidden">
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full"
+                    src="https://www.youtube.com/embed/kYpiyjWV3cY"
+                    title="CCIE Enterprise Infrastructure Lab Demonstration"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Lab Video Section - Moved right after hero section */}
-      <section className="py-16">
+      {/* <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
@@ -626,7 +636,7 @@ const CCIEPage: React.FC = () => {
             </BorderBeamWrapper>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* Course Features */}
       <section className="py-20">
         <div className="container mx-auto px-4">
@@ -715,9 +725,10 @@ const CCIEPage: React.FC = () => {
                   <img
                     src={instructors[0].image}
                     alt={instructors[0].name}
-                    className="w-40 h-40 rounded-full object-cover border-4 border-primary/20"
+                    className="w-56 h-56 rounded-full object-cover border-4 border-primary/20 bg-white"
                   />
                 </div>
+
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold mb-2">{instructors[0].name}</h3>
                   <p className="text-primary font-medium mb-3">{instructors[0].role}</p>
@@ -1019,7 +1030,7 @@ const CCIEPage: React.FC = () => {
       {/* Demo Call */}
       <CCIeDemoMetting />
       {/* Exam Details */}
-      <section className="py-12 bg-muted/30">
+      {/* <section className="py-12 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold mb-4"><AuroraText> CCIE Enterprise Infrastructure v1.1 Exam Details </AuroraText></h2>
@@ -1045,7 +1056,7 @@ const CCIEPage: React.FC = () => {
             Expert (CCIE).
           </p>
         </div>
-      </section>
+      </section> */}
       {/* Frequently Asked Questions */}
       <section className="py-12 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -1066,7 +1077,7 @@ const CCIEPage: React.FC = () => {
       </section>
 
       {/* Training Program Details                                        ---------------extra */}
-      <section className="py-20 bg-muted/30">
+      {/* <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
@@ -1212,7 +1223,7 @@ const CCIEPage: React.FC = () => {
             </BorderBeamWrapper>
           </div>
         </div>
-      </section>
+      </section> */}
 
 
 
