@@ -6,6 +6,7 @@ import { useState } from "react";
 const CCIeDemoMetting = () => {
     const { isDarkMode } = useThemeStore();
     const [open, setOpen] = useState(false);
+    const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
 
     return (
         <section
@@ -61,7 +62,7 @@ const CCIeDemoMetting = () => {
 
             {/* Calendly Modal */}
             <PopupModal
-                url="https://calendly.com/sparshi-jain-berkut/30min" 
+                url={clendely_id}
                 onModalClose={() => setOpen(false)}
                 open={open}
                 rootElement={document.getElementById("root")!}
