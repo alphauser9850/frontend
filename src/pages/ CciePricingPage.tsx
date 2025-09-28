@@ -3,6 +3,7 @@ import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
 import { ChevronDown, ChevronUp, Loader, CheckCircle, X } from 'lucide-react';
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
+import Stripe from '../components/PaymentGateways/Stripe';
 
 interface PricingPlan {
   tierName: string;
@@ -15,6 +16,8 @@ interface PricingPlan {
   buttonClass: string;
   paymentOptions: string;
   popular?: boolean;
+  // Add duration property to the interface
+  duration?: string;
 }
 
 interface PricingPageProps {
@@ -22,7 +25,7 @@ interface PricingPageProps {
 }
 
 interface PricingCardProps extends PricingPlan {
-  onPlanSelect: (planName: string, planPrice: string) => void;
+  onPlanSelect: (planName: string, planPrice: string, duration?: string) => void;
 }
 
 const countryOptions = [
@@ -41,6 +44,7 @@ const countryOptions = [
 interface EnrollModalProps {
   selectedPlan: string;
   selectedPlanPrice: string;
+  selectedPlanDuration?: string;
   onClose: () => void;
   isDarkMode: boolean;
 }
@@ -110,7 +114,7 @@ function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: Suc
 
 type ModalStep = 'form' | 'payment' | 'processing';
 
-function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: EnrollModalProps) {
+function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, onClose, isDarkMode }: EnrollModalProps) {
   const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>('form');
@@ -119,7 +123,6 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
   const [contactId, setContactId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-  const [stripePaymentUrl, setStripePaymentUrl] = useState<string | null>(null);
 
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -187,7 +190,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
               message: submissionData.message,
               leads_status: 'NEW',
               hs_lead_status: "NEW",
-              course_status: 'onGoing',
+              course_status: 'ongoing',
               payment_status: 'Pending'
             },
           }),
@@ -212,15 +215,23 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
       setIsProcessing(false);
     }
   };
+
   const handlePaymentSuccess = useCallback(async (paymentData: any) => {
     if (!contactId) return;
 
     try {
-      await fetch(`/api/hubspot/update-contact/${contactId}`, {
-        method: "PATCH",
+      await fetch(`/api/hubspot/update-details`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          properties: {
+          hubspot: {
+            contactId: contactId,
+            email: formData.email,
+            firstname: formData.name,
+            phone: formData.phone,
+            course_name: formData.course,
+            message: formData.message,
+            course_status: 'onGoing',
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: selectedPlanPrice.replace(/[^0-9.]/g, ""),
@@ -228,6 +239,12 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
             payment_id: paymentData.data.id,
             payment_type: "paypal",
           },
+          email: {
+            name: formData.name,
+            email: formData.email,
+            packageName: formData.course,
+            duration: selectedPlanDuration // Use the passed duration
+          }
         }),
       });
       // Show success dialog
@@ -237,9 +254,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
       console.error("Error updating enrollment:", err);
       alert('Payment successful but there was an error updating your enrollment. Please contact support.');
     }
-  }, [contactId, selectedPlanPrice]);
-
-
+  }, [contactId, selectedPlanPrice, selectedPlanDuration, formData]);
 
   const handlePaymentError = useCallback((error: any) => {
     console.error('Payment error:', error);
@@ -250,43 +265,6 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
     setShowSuccessDialog(false);
     onClose(); // Close the main enrollment modal
   };
-
-
-  const handleStripePayment = useCallback(async () => {
-    try {
-      setIsProcessing(true);
-
-      const stripeResponse = await fetch("/api/payment/generateStripePaymentLink", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: parseInt(selectedPlanPrice.replace(/[^0-9.]/g, ""), 10),
-          course: selectedPlan,
-          url: window.location.href,
-        }),
-      });
-
-      const data = await stripeResponse.json();
-
-      console.log("API Response:", data);
-
-      // Corrected condition - check status and nested url
-      if (data.status === "Success" && data.data?.url) {
-        setStripePaymentUrl(data.data.url);
-        // Redirect to Stripe checkout
-        window.location.href = data.data.url;
-      } else {
-        throw new Error(data.message || 'Failed to generate payment link');
-      }
-    } catch (err) {
-      console.error("Error generating Stripe payment link:", err);
-      alert('Error generating payment link. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [selectedPlanPrice, selectedPlan]);
-
-
 
   const renderFormStep = () => (
     <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
@@ -476,60 +454,26 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
     // If Stripe is selected, show only Stripe UI
     if (selectedPaymentMethod === 'stripe') {
       return (
-        <div className="flex flex-col gap-6">
-          {/* Order Summary */}
-          <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <h4 className={cn("font-semibold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>Order Summary</h4>
-            <div className="flex justify-between items-center">
-              <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan}</span>
-              <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlanPrice}</span>
-            </div>
-          </div>
+        <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
+          <Stripe
+            contactId={Number(contactId)}
+            amount={Number(selectedPlanPrice.replace(/[^0-9.]/g, ""))}
+            course={selectedPlan}
+            course_status='onGoing'
+            email={formData.email}
+            firstname={formData.name}
+            phone={formData.phone}
+            course_name={formData.course}
+            message={formData.message}
+            onClick={onClose}
+            duration={selectedPlanDuration} // Pass the duration here too
+          />
 
-          {/* Stripe Payment */}
-          <div className={cn("p-6 text-center border rounded-lg", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <div className="mb-4">
-              <h4 className={cn("font-medium text-lg", isDarkMode ? "text-white" : "text-gray-800")}>
-                💳 Pay with Stripe
-              </h4>
-              <p className={cn("text-sm mt-1", isDarkMode ? "text-gray-400" : "text-gray-600")}>
-                Secure payment with credit/debit card
-              </p>
-            </div>
-
-            <button
-              onClick={handleStripePayment}
-              disabled={isProcessing}
-              className={cn(
-                "w-full py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2",
-                isProcessing
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
-              )}
-            >
-              {isProcessing ? (
-                <>
-                  <Loader className="w-4 h-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                'Proceed to Stripe Checkout'
-              )}
-            </button>
-
-            {stripePaymentUrl && (
-              <div className="mt-4">
-                <p className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>
-                  Redirecting to secure payment page...
-                </p>
-              </div>
-            )}
-          </div>
         </div>
+
       );
     }
   };
-
 
   return (
     <>
@@ -594,19 +538,22 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
   const { isDarkMode } = useThemeStore();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [selectedPlanPrice, setSelectedPlanPrice] = useState<string | null>(null);
+  const [selectedPlanDuration, setSelectedPlanDuration] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const pricingPlans = propPricingPlans || [];
 
-  const handlePlanSelect = (planName: string, planPrice: string) => {
+  const handlePlanSelect = (planName: string, planPrice: string, duration?: string) => {
     setSelectedPlan(planName);
     setSelectedPlanPrice(planPrice);
+    setSelectedPlanDuration(duration || "Not specified");
     setShowModal(true);
   };
 
   const handleLabAccessSelect = (hours: number, price: string) => {
     setSelectedPlan(`Lab Access only - ${hours}h`);
     setSelectedPlanPrice(price);
+    setSelectedPlanDuration(`${hours} hours`);
     setShowModal(true);
   };
 
@@ -614,9 +561,10 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
     setShowModal(false);
     setSelectedPlan(null);
     setSelectedPlanPrice(null);
+    setSelectedPlanDuration(null);
   };
 
-  // Pricing Card Component (unchanged)
+  // Pricing Card Component 
   const PricingCard: React.FC<PricingCardProps> = ({
     tierName,
     tierSubtitle,
@@ -628,6 +576,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
     buttonClass,
     popular = false,
     paymentOptions,
+    duration,
     onPlanSelect
   }) => {
     const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -672,7 +621,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
 
         <button
           className={`w-full py-4 rounded-xl font-semibold text-white uppercase tracking-wider transition-all duration-300 ${buttonClass} hover:shadow-xl hover:-translate-y-1`}
-          onClick={() => onPlanSelect(tierName, price)}
+          onClick={() => onPlanSelect(tierName, price, duration)}
         >
           {buttonText}
         </button>
@@ -743,7 +692,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
                   ? "bg-gray-900 border-gray-700 hover:border-blue-500"
                   : "bg-gray-50 border-gray-200 hover:border-blue-600"
               )}
-              onClick={() => handleLabAccessSelect(10, "200")}
+              onClick={() => handleLabAccessSelect(10, "199")}
             >
               <span className='bg-blue-100 text-blue-700 px-1 rounded'>Duration: 10 hours</span>
               <div
@@ -766,7 +715,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
                   ? "bg-gray-900 border-gray-700 hover:border-blue-500"
                   : "bg-gray-50 border-gray-200 hover:border-blue-600"
               )}
-              onClick={() => handleLabAccessSelect(25, "450")}
+              onClick={() => handleLabAccessSelect(25, "499")}
             >
               <span className='bg-blue-100 text-blue-700 px-1 rounded'>Duration: 30 hours</span>
               <div
@@ -798,6 +747,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
         <EnrollModal
           selectedPlan={selectedPlan}
           selectedPlanPrice={selectedPlanPrice}
+          selectedPlanDuration={selectedPlanDuration || undefined}
           onClose={handleCloseModal}
           isDarkMode={isDarkMode}
         />

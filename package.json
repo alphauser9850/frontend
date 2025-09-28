@@ -11,9 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "@n8n/chat": "^0.27.1",
     "@paypal/paypal-server-sdk": "^1.1.0",
     "@paypal/react-paypal-js": "^8.9.1",
+    "@stripe/react-stripe-js": "^4.0.2",
+    "@stripe/stripe-js": "^7.9.0",
     "@supabase/supabase-js": "^2.39.7",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "axios": "^1.12.2",
