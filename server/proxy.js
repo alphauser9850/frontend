@@ -2,8 +2,7 @@ import express from 'express';
 // import { createProxyMiddleware } from 'http-proxy-middleware';
 import cors from 'cors';
 // import { supabase } from '../src/lib/supabase.js';
-import dotenv from 'dotenv';
-dotenv.config();
+
 import router from "./routes/index.js";
 
 const app = express();

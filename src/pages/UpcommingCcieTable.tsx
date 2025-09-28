@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, Loader, CheckCircle, X } from "lucide-react";
 import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
+import Stripe from '../components/PaymentGateways/Stripe';
 
 interface Batch {
   startDate: string;
@@ -234,37 +235,68 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       countryCode: selectedCountryCode,
       classStartDate: selectedStartDate,
       instructor: batch.instructor,
-      // timeZone: batch.time,
       payment_status: "pending",
     };
 
     setFormData(submissionData);
 
     try {
-      // Step 1: Create contact
-      const response = await fetch("/api/hubspot/create-contact", {
+      // Step 1: Check if contact already exists
+      const checkContactResponse = await fetch("/api/hubspot/get-contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          properties: {
-            email: submissionData.email,
-            firstname: submissionData.name,
-            phone: submissionData.phone,
-            course_name: selectedPlan?.name || submissionData.plan,
-            message: submissionData.message,
-            leads_status: 'NEW',
-            hs_lead_status: "NEW",
-            course_status: 'upcoming',
-            payment_status: 'Pending',
-            course_start_date: selectedStartDate,
-            instructor_name: batch.instructor,
-            // time_zone: batch.time
-          },
+          filterGroups: [
+            {
+              filters: [
+                {
+                  propertyName: "email",
+                  operator: "EQ",
+                  value: submissionData.email
+                }
+              ]
+            }
+          ],
+          properties: ["firstname", "lastname", "email", "phone", "id"]
         }),
       });
-      const data = await response.json();
-      const contactId = data?.data?.id;
-      if (!contactId) throw new Error("No contact ID returned from HubSpot");
+
+      const checkContactData = await checkContactResponse.json();
+
+      let contactId: string;
+
+      // If contact exists, use the existing contact ID
+      if (checkContactData.data && checkContactData.data.results && checkContactData.data.results.length > 0) {
+        contactId = checkContactData.data.results[0].id;
+        console.log("Contact already exists with ID:", contactId);
+      } else {
+        // If contact doesn't exist, create a new one
+        const createContactResponse = await fetch("/api/hubspot/create-contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            properties: {
+              email: submissionData.email,
+              firstname: submissionData.name,
+              phone: submissionData.phone,
+              course_name: selectedPlan?.name || submissionData.plan,
+              message: submissionData.message,
+              leads_status: 'NEW',
+              hs_lead_status: "NEW",
+              course_status: 'upcoming',
+              payment_status: 'Pending',
+              course_start_date: selectedStartDate,
+              instructor_name: batch.instructor,
+            },
+          }),
+        });
+
+        const createContactData = await createContactResponse.json();
+        contactId = createContactData?.data?.id;
+
+        if (!contactId) throw new Error("No contact ID returned from HubSpot");
+        console.log("New contact created with ID:", contactId);
+      }
 
       setContactId(contactId);
 
@@ -272,8 +304,8 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       setCurrentStep('payment');
 
     } catch (err) {
-      console.error("Error submitting to HubSpot:", err);
-      // alert('Error submitting form. Please try again.');
+      console.error("Error processing contact:", err);
+      alert('Error submitting form. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -283,18 +315,33 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     if (!contactId || !selectedPlan) return;
 
     try {
-      await fetch(`/api/hubspot/update-contact/${contactId}`, {
-        method: "PATCH",
+      await fetch(`/api/hubspot/update-details`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          properties: {
+          hubspot: {
+            contactId: contactId,
+            email: formData.email,
+            firstname: formData.name,
+            phone: formData.phone,
+            course_name: selectedPlan?.name || formData.plan,
+            message: formData.message,
+            course_status: 'upcoming',
+            course_start_date: selectedStartDate,
+            instructor_name: batch.instructor,
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: selectedPlan.price.replace(/[^0-9.]/g, ""),
             payment_status: "Completed",
-            payment_id: paymentData.data.id,
-            payment_type: "paypal",
+            payment_id: paymentData.data?.id || paymentData.id,
+            payment_type: selectedPaymentMethod,
           },
+          email: {
+            name: formData.name,
+            email: formData.email,
+            packageName: selectedPlan.name,
+            duration: batch.duration
+          }
         }),
       });
       // Show success dialog
@@ -304,7 +351,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       console.error("Error updating enrollment:", err);
       alert('Payment successful but there was an error updating your enrollment. Please contact support.');
     }
-  }, [contactId, selectedPlan]);
+  }, [contactId, selectedPlan, selectedPaymentMethod, formData, batch.duration]);
 
   const handlePaymentError = useCallback((error: any) => {
     console.error('Payment error:', error);
@@ -523,7 +570,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     // If PayPal is selected, show only PayPal UI
     if (selectedPaymentMethod === 'paypal' && selectedPlan) {
       return (
-        <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto p-2 rounded-lg">
+        <div className="flex flex-col gap-6 overflow-y-auto p-2 rounded-lg">
           <PayPalCheckout
             amount={selectedPlan.price.replace(/[^0-9.]/g, "")}
             course={selectedPlan.name}
@@ -535,38 +582,25 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     }
 
     // If Stripe is selected, show only Stripe UI
-    if (selectedPaymentMethod === 'stripe') {
+    if (selectedPaymentMethod === 'stripe' && selectedPlan) {
       return (
-        <div className="flex flex-col gap-6">
-          {/* Order Summary */}
-          <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <h4 className={cn("font-semibold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>Order Summary</h4>
-            <div className="flex justify-between items-center">
-              <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan?.name}</span>
-              <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlan?.price}</span>
-            </div>
-          </div>
+        <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
+          <Stripe
+            contactId={Number(contactId)}
+            amount={Number(selectedPlan.price.replace(/[^0-9.]/g, ""))}
+            course={selectedPlan.name}
+            email={formData.email}
+            firstname={formData.name}
+            phone={formData.phone}
+            course_name={selectedPlan.name}
+            course_status='upcoming'
+            message={formData.message}
+            duration={batch.duration}
+            course_start_date={selectedStartDate}
+            instructor_name={batch.instructor}
+            onClick={onClose}
 
-          {/* Stripe Payment */}
-          <div className={cn("p-6 text-center border rounded-lg", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <div className="mb-4">
-              <h4 className={cn("font-medium text-lg", isDarkMode ? "text-white" : "text-gray-800")}>
-                💳 Pay with Stripe
-              </h4>
-              <p className={cn("text-sm mt-1", isDarkMode ? "text-gray-400" : "text-gray-600")}>
-                Secure payment with credit/debit card
-              </p>
-            </div>
-
-            <div className={cn("p-4 rounded border", isDarkMode ? "bg-gray-600 border-gray-500" : "bg-white border-gray-300")}>
-              <p className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>
-                Stripe integration coming soon...
-              </p>
-              <p className={cn("text-xs mt-2", isDarkMode ? "text-gray-400" : "text-gray-500")}>
-                Please use PayPal for now or contact support for alternative payment methods.
-              </p>
-            </div>
-          </div>
+          />
         </div>
       );
     }

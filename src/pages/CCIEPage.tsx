@@ -15,6 +15,7 @@ import CCIEExamDetail from './CCIEExamDetail';
 import { FAqs } from '../components/ui/Faqs';
 import { useThemeStore } from '../store/themeStore';
 import CciePricingPage from './ CciePricingPage';
+import { Helmet } from 'react-helmet-async';
 
 // Sample lab topologies data
 const labTopologies = [
@@ -410,6 +411,7 @@ const CCIEPage: React.FC = () => {
       tierSubtitle: "Basic training + labs for a quick start",
       price: "$1,299",
       pricePeriod: "Starter Pack",
+      duration: "2 Weeks",
       durationBadge: "Duration: 2 Weeks",
       features: [
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>24 hours</span> instructor-led training",
@@ -428,6 +430,7 @@ const CCIEPage: React.FC = () => {
       tierSubtitle: "Extended labs + full materials + instructor support",
       price: "$1,999",
       pricePeriod: "Advanced Pack(Most Popular)",
+      duration: " 6 Weeks",
       durationBadge: "Duration: 6 Weeks",
       features: [
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>48hours</span> instructor-led training ",
@@ -447,6 +450,7 @@ const CCIEPage: React.FC = () => {
       tierSubtitle: "Intensive training + deep labs + full mentoring",
       price: "$2,499",
       pricePeriod: "Expert Pack",
+      duration: " 9 Weeks",
       durationBadge: "Duration: 9 Weeks",
       features: [
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>96 hours</span> instructor-led training",
@@ -486,98 +490,95 @@ const CCIEPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-0 bg-background">
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-black z-0"></div>
+    <>
+      <Helmet>
+        <title>CCIE Enterprise Infrastructure v1.1 Training & Certification | CCIELab.Net</title>
+        <meta name="description" content="CCIE Enterprise Infrastructure Training v1.1 with 24/7 Hands-on Lab Practices, CCIE Certified Instructors with Proven Expertise and Interactive Bootcamps." />
+        <meta property="og:title" content="CCIE Enterprise Infrastructure v1.1 Training & Certification | CCIELab.Net| CCIELab.Net" />
+        <meta property="og:description" content="CCIE Enterprise Infrastructure Training v1.1 with 24/7 Hands-on Lab Practices, CCIE Certified Instructors with Proven Expertise and Interactive Bootcamps." />
+        <meta property="og:type" content="website" />
+      </Helmet>
+      <div className="min-h-screen pt-0 bg-background">
+        {/* Hero Section */}
+        <section className="relative pt-20 pb-32 overflow-hidden">
+          <div className="absolute inset-0 bg-black z-0"></div>
 
-        <Particles
-          className="absolute inset-0 z-10"
-          quantity={50}
-          staticity={50}
-          color="#6366f1"
-          size={0.5}
-        />
+          <Particles
+            className="absolute inset-0 z-10"
+            quantity={50}
+            staticity={50}
+            color="#6366f1"
+            size={0.5}
+          />
 
-        <div className="container mx-auto px-4 relative z-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <img
-                  src="/ent_golden_icon.png"
-                  alt="CCIE Logo"
-                  className="h-16 object-contain"
-                />
-              </div>
-
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                CCIE Enterprise Infrastructure Training v1.1
-              </h1>
-
-              <p className="text-xl text-white/80 mb-8 max-w-xl">
-                Become a CCIE Enterprise Infrastructure Expert. Our program is designed to help you pass the
-                CCIE Enterprise Infrastructure exam faster, smarter, and with the right tools and resources.
-              </p>
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-3 text-white/90">
-                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>24/7 access to fully equipped lab environments</span>
+          <div className="container mx-auto px-4 relative z-20">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center gap-2 mb-6">
+                  <img
+                    src="/ent_golden_icon.png"
+                    alt="CCIE Logo"
+                    className="h-16 object-contain"
+                  />
                 </div>
-                <div className="flex items-center gap-3 text-white/90">
-                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Realistic exam simulations and troubleshooting exercises</span>
+
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                  CCIE Enterprise Infrastructure Training v1.1
+                </h1>
+
+                <p className="text-xl text-white/80 mb-8 max-w-xl">
+                  Become a CCIE Enterprise Infrastructure Expert. Our program is designed to help you pass the
+                  CCIE Enterprise Infrastructure exam faster, smarter, and with the right tools and resources.
+                </p>
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-center gap-3 text-white/90">
+                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                    <span>24/7 access to fully equipped lab environments</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white/90">
+                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                    <span>Realistic exam simulations and troubleshooting exercises</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white/90">
+                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                    <span>Personalised mentorship from certified experts with real-world training</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-3 text-white/90">
-                  <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Personalised mentorship from certified experts with real-world training</span>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <ShineBorder>
-                  <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-medium text-lg">
-                    Join Waitlist
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <ShineBorder>
+                    <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-medium text-lg">
+                      Join Waitlist
+                    </button>
+                  </ShineBorder>
+
+                  <button className="px-8 py-3 rounded-full font-medium text-lg border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                    Learn More
                   </button>
-                </ShineBorder>
-
-                <button className="px-8 py-3 rounded-full font-medium text-lg border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
-                  Learn More
-                </button>
-              </div>
-            </div>
-
-
-
-            <div className="flex items-center justify-center gap-2 mb-6">
-              {/* {isDarkMode ? (
-                <img
-                  src="/EI_Black.png"
-                  alt="CCIE Logo Dark"
-                  className="h-52 md:h-68 lg:h-64 object-contain"
-                />
-              ) : (
-                <img
-                  src="/EI_white.png"
-                  alt="CCIE Logo Light"
-                  className="h-40 md:h-48 lg:h-56 object-contain"
-                />
-              )} */}
-               <div className="relative pb-[56.25%] h-0 overflow-hidden">
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full"
-                    src="https://www.youtube.com/embed/kYpiyjWV3cY"
-                    title="CCIE Enterprise Infrastructure Lab Demonstration"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
                 </div>
+              </div>
+
+              {/* Right column with image and video */} 
+              
+              <div className="space-y-6">    
+                {/* Video with forced styles */}
+                <div className="w-full max-w-lg relative z-30"> 
+                  <div className="relative h-72 w-full aspect-video bg-black rounded-xl overflow-hidden">
+                    <iframe
+                      src="https://www.youtube.com/embed/kYpiyjWV3cY"
+                      title="CCIE Enterprise Infrastructure Lab Demonstration"
+                      className="w-full h-full relative z-30"
+                      frameBorder="0"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Lab Video Section - Moved right after hero section */}
-      {/* <section className="py-16">
+        {/* Lab Video Section - Moved right after hero section */}
+        {/* <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
@@ -637,400 +638,400 @@ const CCIEPage: React.FC = () => {
           </div>
         </div>
       </section> */}
-      {/* Course Features */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              Our CCIE Course Highlights
-            </span>
-            <h3 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive Learning Experience</AuroraText></h3>
-            <p className="text-muted-foreground">
-              Everything you need to master enterprise networking and pass your CCIE certification.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <div key={index} className="relative overflow-hidden">
-                <Card className="h-full relative overflow-hidden" withBeam={true}>
-                  <CardHeader>
-                    <CardTitle>
-                      <div className="flex items-center gap-3 ">
-                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          {feature.icon}
-                        </div>
-                        <h3> {feature.title} </h3>
-                      </div>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">
-                      {feature.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/*  CCIE Training Pricing Plans*/}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              CCIE Training Pricing Plans
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Training Program</AuroraText></h2>
-            <p className="text-muted-foreground">
-              Choose the perfect training plan to achieve your CCIE certification goals
-            </p>
-          </div>
-          <CciePricingPage pricingPlans={pricingPlans} />
-        </div>
-      </section>
-
-
-
-      {/*   Pricing Plans*/}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-
-            <h2 className="text-3xl font-bold mb-4"><AuroraText> Upcoming CCIE EI Classes</AuroraText></h2>
-          </div>
-          <UpecommingCcieTable batches={batches} />
-        </div>
-      </section>
-
-      {/* Instructors */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              Meet Your Instructor
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Instructor Details:</AuroraText></h2>
-            <p className="text-muted-foreground">
-              Your instructor is an active CCIE professional with years of real-world experience.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <BorderBeamWrapper beamColor="blue" duration={8}>
-              <div className="flex flex-col md:flex-row gap-8 items-start bg-background border border-border rounded-xl p-8 transition-all hover:shadow-md">
-                <div className="flex-shrink-0">
-                  <img
-                    src={instructors[0].image}
-                    alt={instructors[0].name}
-                    className="w-56 h-56 rounded-full object-cover border-4 border-primary/20 bg-white"
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold mb-2">{instructors[0].name}</h3>
-                  <p className="text-primary font-medium mb-3">{instructors[0].role}</p>
-                  <p className="text-muted-foreground mb-4">{instructors[0].description}</p>
-
-                  <div className="space-y-2 text-sm text-muted-foreground mb-6">
-                    <p className="flex items-center gap-2">
-                      <Award className="h-4 w-4" />
-                      {instructors[0].certification}
-                    </p>
-                    <p className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      {instructors[0].experience} industry experience
-                    </p>
-                  </div>
-
-                  <div className="mb-6">
-                    <h4 className="font-semibold mb-3 text-foreground">Key Highlights:</h4>
-                    <ul className="space-y-2">
-                      {instructors[0].highlights.map((highlight, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm">{highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <a
-                    href={instructors[0].linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                    Connect on LinkedIn
-                  </a>
-                </div>
-              </div>
-            </BorderBeamWrapper>
-          </div>
-        </div>
-      </section>
-
-
-      {/* Complete CCIE Enterprise Syllabus */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              Core CCIE Enterprise Infrastructure Topics
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Enterprise Infrastructure Syllabus Overview</AuroraText></h2>
-            <p className="text-muted-foreground">
-              Our curriculum covers all exam domains with in-depth practical labs and theory.
-
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <Accordion>
-              <Accordion.Item title="Network Infrastructure (30%)" defaultOpen={true}>
-                <ul className="space-y-3">
-                  {networkInfrastructureTopics.map((topic, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>{topic}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Accordion.Item>
-
-              <Accordion.Item title="Software Defined Infrastructure (25%)">
-                <ul className="space-y-3">
-                  {softwareDefinedTopics.map((topic, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>{topic}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Accordion.Item>
-
-              <Accordion.Item title="Transport Technologies and Solutions (20%)">
-                <ul className="space-y-3">
-                  {transportTopics.map((topic, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>{topic}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Accordion.Item>
-
-              <Accordion.Item title="Infrastructure Security and Services (25%)">
-                <ul className="space-y-3">
-                  {securityTopics.map((topic, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>{topic}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Accordion.Item>
-            </Accordion>
-          </div>
-        </div>
-      </section>
-
-      {/* Certification Timeline */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              Certification Path
-            </span>
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <img src="/ent_golden_icon.png" alt="CCIE Enterprise Logo" className="h-10 w-auto" />
-              <h2 className="text-3xl font-bold"><AuroraText>Your CCIE Enterprise Infrastructure Journey </AuroraText></h2>
-            </div>
-            <p className="text-muted-foreground">
-              Follow this structured path to achieve your CCIE Enterprise Infrastructure certification.
-            </p>
-          </div>
-
-          <CCIETimeline />
-        </div>
-      </section>
-
-      {/* Lab Topologies Carousel */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              Sample Topologies
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
-            <p className="text-muted-foreground">
-              Get familiar with the diverse network topologies you'll work with during your CCIE Enterprise Infrastructure training.
-            </p>
-          </div>
-
-          <div className="max-w-5xl mx-auto">
-            <div className="relative">
-              {/* Carousel container */}
-              <div className="overflow-hidden rounded-xl">
-                <div
-                  className="flex transition-transform duration-500 ease-in-out"
-                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                >
-                  {labTopologies.map((topology) => (
-                    <div key={topology.id} className="w-full flex-shrink-0">
-                      <div className="relative h-[400px]">
-                        <img
-                          src={topology.image}
-                          alt={topology.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                          <h3 className="text-2xl font-bold mb-2">{topology.title}</h3>
-                          <p className="text-white/80">{topology.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Navigation buttons */}
-              <button
-                onClick={prevSlide}
-                className="absolute top-1/2 left-4 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors z-10"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </button>
-
-              <button
-                onClick={nextSlide}
-                className="absolute top-1/2 right-4 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors z-10"
-              >
-                <ArrowRight className="h-5 w-5" />
-              </button>
-
-              {/* Indicators */}
-              <div className="flex justify-center mt-4 gap-2">
-                {labTopologies.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-2 rounded-full transition-all ${currentSlide === index ? "w-8 bg-primary" : "w-2 bg-primary/30"
-                      }`}
-                  ></button>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-8 text-center">
-              <p className="text-muted-foreground mb-4">
-                These are just a few examples of the lab topologies you'll work with. Our curriculum includes over 50 different lab scenarios covering all aspects of the CCIE Enterprise Infrastructure exam.
+        {/* Course Features */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Our CCIE Course Highlights
+              </span>
+              <h3 className="text-3xl font-bold mb-4"><AuroraText>Comprehensive Learning Experience</AuroraText></h3>
+              <p className="text-muted-foreground">
+                Everything you need to master enterprise networking and pass your CCIE certification.
               </p>
-              {/* <button className="inline-flex items-center gap-2 text-primary hover:underline">
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {features.map((feature, index) => (
+                <div key={index} className="relative overflow-hidden">
+                  <Card className="h-full relative overflow-hidden" withBeam={true}>
+                    <CardHeader>
+                      <CardTitle>
+                        <div className="flex items-center gap-3 ">
+                          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                            {feature.icon}
+                          </div>
+                          <h3> {feature.title} </h3>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground">
+                        {feature.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/*  CCIE Training Pricing Plans*/}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                CCIE Training Pricing Plans
+              </span>
+              <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Training Program</AuroraText></h2>
+              <p className="text-muted-foreground">
+                Choose the perfect training plan to achieve your CCIE certification goals
+              </p>
+            </div>
+            <CciePricingPage pricingPlans={pricingPlans} />
+          </div>
+        </section>
+
+
+
+        {/*   Pricing Plans*/}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+
+              <h2 className="text-3xl font-bold mb-4"><AuroraText> Upcoming CCIE EI Classes</AuroraText></h2>
+            </div>
+            <UpecommingCcieTable batches={batches} />
+          </div>
+        </section>
+
+        {/* Instructors */}
+        <section className="py-20 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Meet Your Instructor
+              </span>
+              <h2 className="text-3xl font-bold mb-4"><AuroraText>Instructor Details:</AuroraText></h2>
+              <p className="text-muted-foreground">
+                Your instructor is an active CCIE professional with years of real-world experience.
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              <BorderBeamWrapper beamColor="blue" duration={8}>
+                <div className="flex flex-col md:flex-row gap-8 items-start bg-background border border-border rounded-xl p-8 transition-all hover:shadow-md">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={instructors[0].image}
+                      alt={instructors[0].name}
+                      className="w-56 h-56 rounded-full object-cover border-4 border-primary/20 bg-white"
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold mb-2">{instructors[0].name}</h3>
+                    <p className="text-primary font-medium mb-3">{instructors[0].role}</p>
+                    <p className="text-muted-foreground mb-4">{instructors[0].description}</p>
+
+                    <div className="space-y-2 text-sm text-muted-foreground mb-6">
+                      <p className="flex items-center gap-2">
+                        <Award className="h-4 w-4" />
+                        {instructors[0].certification}
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        {instructors[0].experience} industry experience
+                      </p>
+                    </div>
+
+                    <div className="mb-6">
+                      <h4 className="font-semibold mb-3 text-foreground">Key Highlights:</h4>
+                      <ul className="space-y-2">
+                        {instructors[0].highlights.map((highlight, index) => (
+                          <li key={index} className="flex items-start gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <span className="text-sm">{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <a
+                      href={instructors[0].linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors"
+                    >
+                      <Linkedin className="h-4 w-4" />
+                      Connect on LinkedIn
+                    </a>
+                  </div>
+                </div>
+              </BorderBeamWrapper>
+            </div>
+          </div>
+        </section>
+
+
+        {/* Complete CCIE Enterprise Syllabus */}
+        <section className="py-20 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Core CCIE Enterprise Infrastructure Topics
+              </span>
+              <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Enterprise Infrastructure Syllabus Overview</AuroraText></h2>
+              <p className="text-muted-foreground">
+                Our curriculum covers all exam domains with in-depth practical labs and theory.
+
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              <Accordion>
+                <Accordion.Item title="Network Infrastructure (30%)" defaultOpen={true}>
+                  <ul className="space-y-3">
+                    {networkInfrastructureTopics.map((topic, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{topic}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion.Item>
+
+                <Accordion.Item title="Software Defined Infrastructure (25%)">
+                  <ul className="space-y-3">
+                    {softwareDefinedTopics.map((topic, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{topic}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion.Item>
+
+                <Accordion.Item title="Transport Technologies and Solutions (20%)">
+                  <ul className="space-y-3">
+                    {transportTopics.map((topic, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{topic}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion.Item>
+
+                <Accordion.Item title="Infrastructure Security and Services (25%)">
+                  <ul className="space-y-3">
+                    {securityTopics.map((topic, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{topic}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion.Item>
+              </Accordion>
+            </div>
+          </div>
+        </section>
+
+        {/* Certification Timeline */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Certification Path
+              </span>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <img src="/ent_golden_icon.png" alt="CCIE Enterprise Logo" className="h-10 w-auto" />
+                <h2 className="text-3xl font-bold"><AuroraText>Your CCIE Enterprise Infrastructure Journey </AuroraText></h2>
+              </div>
+              <p className="text-muted-foreground">
+                Follow this structured path to achieve your CCIE Enterprise Infrastructure certification.
+              </p>
+            </div>
+
+            <CCIETimeline />
+          </div>
+        </section>
+
+        {/* Lab Topologies Carousel */}
+        <section className="py-12 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Sample Topologies
+              </span>
+              <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
+              <p className="text-muted-foreground">
+                Get familiar with the diverse network topologies you'll work with during your CCIE Enterprise Infrastructure training.
+              </p>
+            </div>
+
+            <div className="max-w-5xl mx-auto">
+              <div className="relative">
+                {/* Carousel container */}
+                <div className="overflow-hidden rounded-xl">
+                  <div
+                    className="flex transition-transform duration-500 ease-in-out"
+                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  >
+                    {labTopologies.map((topology) => (
+                      <div key={topology.id} className="w-full flex-shrink-0">
+                        <div className="relative h-[400px]">
+                          <img
+                            src={topology.image}
+                            alt={topology.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                          <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                            <h3 className="text-2xl font-bold mb-2">{topology.title}</h3>
+                            <p className="text-white/80">{topology.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Navigation buttons */}
+                <button
+                  onClick={prevSlide}
+                  className="absolute top-1/2 left-4 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors z-10"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </button>
+
+                <button
+                  onClick={nextSlide}
+                  className="absolute top-1/2 right-4 -translate-y-1/2 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/70 transition-colors z-10"
+                >
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+
+                {/* Indicators */}
+                <div className="flex justify-center mt-4 gap-2">
+                  {labTopologies.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentSlide(index)}
+                      className={`h-2 rounded-full transition-all ${currentSlide === index ? "w-8 bg-primary" : "w-2 bg-primary/30"
+                        }`}
+                    ></button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-8 text-center">
+                <p className="text-muted-foreground mb-4">
+                  These are just a few examples of the lab topologies you'll work with. Our curriculum includes over 50 different lab scenarios covering all aspects of the CCIE Enterprise Infrastructure exam.
+                </p>
+                {/* <button className="inline-flex items-center gap-2 text-primary hover:underline">
                 <span>View All Lab Topologies</span>
                 <ChevronRight className="h-4 w-4" />
               </button> */}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CCIE Lab Infrastructure */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              Comprehensive Curriculum
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Lab Infrastructure</AuroraText></h2>
-            <p className="text-muted-foreground">
-              At our CCIE Enterprise Infrastructure program, hands-on practice is key.
-            </p>
-          </div>
-          <CCIELabInfrastructure />
-        </div>
-
-      </section>
-      {/* who should */}
-      <section className="py-16 bg-gradient-to-b from-muted/20 via-muted/30 to-muted/40">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">
-              <AuroraText>Who Should Take This Course?</AuroraText>
-            </h2>
+        {/* CCIE Lab Infrastructure */}
+        <section className="py-12 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Comprehensive Curriculum
+              </span>
+              <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Lab Infrastructure</AuroraText></h2>
+              <p className="text-muted-foreground">
+                At our CCIE Enterprise Infrastructure program, hands-on practice is key.
+              </p>
+            </div>
+            <CCIELabInfrastructure />
           </div>
 
-          <div className="grid gap-6 md:gap-8 ">
-            {[
-              "Network professionals aiming for expert-level validation",
-              "CCNP-certified engineers ready to level up",
-              "Solution architects and senior network engineers",
-              "IT professionals looking to move into higher salary brackets",
-            ].map((item, idx) => (
-              <div
-                key={idx}
+        </section>
+        {/* who should */}
+        <section className="py-16 bg-gradient-to-b from-muted/20 via-muted/30 to-muted/40">
+          <div className="container mx-auto px-6">
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">
+                <AuroraText>Who Should Take This Course?</AuroraText>
+              </h2>
+            </div>
 
-                className={cn(
-                  "border flex items-start gap-4 p-5 md:p-5 rounded-2xl bg-card shadow-md hover:shadow-xl transition-all duration-300",
-                  isDarkMode
-                    ? "bg-gray-900 border-gray-700 text-gray-200"
-                    : "bg-gray-50 border-gray-300 text-gray-800"
-                )}
-              >
-                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <CheckCheckIcon className="h-4 w-4 text-blue-500 -mt-0.5 flex-shrink-0" />
+            <div className="grid gap-6 md:gap-8 ">
+              {[
+                "Network professionals aiming for expert-level validation",
+                "CCNP-certified engineers ready to level up",
+                "Solution architects and senior network engineers",
+                "IT professionals looking to move into higher salary brackets",
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+
+                  className={cn(
+                    "border flex items-start gap-4 p-5 md:p-5 rounded-2xl bg-card shadow-md hover:shadow-xl transition-all duration-300",
+                    isDarkMode
+                      ? "bg-gray-900 border-gray-700 text-gray-200"
+                      : "bg-gray-50 border-gray-300 text-gray-800"
+                  )}
+                >
+                  <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <CheckCheckIcon className="h-4 w-4 text-blue-500 -mt-0.5 flex-shrink-0" />
+                  </div>
+                  <p className="text-md md:text-base  text-left mt-2">{item}</p>
                 </div>
-                <p className="text-md md:text-base  text-left mt-2">{item}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-      {/* learning outcome */}
+        </section>
+        {/* learning outcome */}
 
-      <section className="py-16 bg-gradient-to-b from-muted/20 via-muted/30 to-muted/40 ">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center mb-12 ">
-            <h2 className="text-3xl font-bold mb-6 pb-2">
-              <AuroraText>Learning Outcomes</AuroraText>
-            </h2>
-          </div>
-          <div className="grid gap-6 md:gap-8 ">
-            {[
-              "End-to-end enterprise network design & deployment skills",
-              "Proficiency in OSPF, BGP, QoS, Multicast",
-              "Automation using Python",
-              "Advanced troubleshooting and documentation skills",
-              "SD-WAN and Catalyst Center management expertise"
-            ].map((item, idx) => (
-              <div
-                key={idx}
+        <section className="py-16 bg-gradient-to-b from-muted/20 via-muted/30 to-muted/40 ">
+          <div className="container mx-auto px-6">
+            <div className="max-w-3xl mx-auto text-center mb-12 ">
+              <h2 className="text-3xl font-bold mb-6 pb-2">
+                <AuroraText>Learning Outcomes</AuroraText>
+              </h2>
+            </div>
+            <div className="grid gap-6 md:gap-8 ">
+              {[
+                "End-to-end enterprise network design & deployment skills",
+                "Proficiency in OSPF, BGP, QoS, Multicast",
+                "Automation using Python",
+                "Advanced troubleshooting and documentation skills",
+                "SD-WAN and Catalyst Center management expertise"
+              ].map((item, idx) => (
+                <div
+                  key={idx}
 
-                className={cn(
-                  "border flex items-start gap-4 p-5 md:p-5 rounded-2xl bg-card shadow-md hover:shadow-xl transition-all duration-300",
-                  isDarkMode
-                    ? "bg-gray-900 border-gray-700 text-gray-200"
-                    : "bg-gray-50 border-gray-300 text-gray-800"
-                )}
-              >
-                <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <CheckCheckIcon className="h-4 w-4 text-blue-500 -mt-0.5 flex-shrink-0" />
+                  className={cn(
+                    "border flex items-start gap-4 p-5 md:p-5 rounded-2xl bg-card shadow-md hover:shadow-xl transition-all duration-300",
+                    isDarkMode
+                      ? "bg-gray-900 border-gray-700 text-gray-200"
+                      : "bg-gray-50 border-gray-300 text-gray-800"
+                  )}
+                >
+                  <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <CheckCheckIcon className="h-4 w-4 text-blue-500 -mt-0.5 flex-shrink-0" />
+                  </div>
+                  <p className="text-md md:text-base  text-left mt-2">{item}</p>
                 </div>
-                <p className="text-md md:text-base  text-left mt-2">{item}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Demo Call */}
-      <CCIeDemoMetting />
-      {/* Exam Details */}
-      {/* <section className="py-12 bg-muted/30">
+        {/* Demo Call */}
+        <CCIeDemoMetting />
+        {/* Exam Details */}
+        {/* <section className="py-12 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <h2 className="text-3xl font-bold mb-4"><AuroraText> CCIE Enterprise Infrastructure v1.1 Exam Details </AuroraText></h2>
@@ -1057,27 +1058,27 @@ const CCIEPage: React.FC = () => {
           </p>
         </div>
       </section> */}
-      {/* Frequently Asked Questions */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
+        {/* Frequently Asked Questions */}
+        <section className="py-12 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
 
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Frequently Asked Questions</AuroraText></h2>
+              <h2 className="text-3xl font-bold mb-4"><AuroraText>Frequently Asked Questions</AuroraText></h2>
+            </div>
+            <FAqs>
+              {faqData.map((faq, index) => (
+                <FAqs.Item key={index} title={faq.question}>
+                  <div className="text-sm text-gray-600 dark:text-gray-300">
+                    {faq.answer}
+                  </div>
+                </FAqs.Item>
+              ))}
+            </FAqs>
           </div>
-          <FAqs>
-            {faqData.map((faq, index) => (
-              <FAqs.Item key={index} title={faq.question}>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  {faq.answer}
-                </div>
-              </FAqs.Item>
-            ))}
-          </FAqs>
-        </div>
-      </section>
+        </section>
 
-      {/* Training Program Details                                        ---------------extra */}
-      {/* <section className="py-20 bg-muted/30">
+        {/* Training Program Details                                        ---------------extra */}
+        {/* <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
             <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
@@ -1230,8 +1231,8 @@ const CCIEPage: React.FC = () => {
 
 
 
-      {/* Contact Form Section */}
-      {/* <section className="py-24 relative overflow-hidden">
+        {/* Contact Form Section */}
+        {/* <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-black z-0"></div>
 
         <Particles
@@ -1360,7 +1361,8 @@ const CCIEPage: React.FC = () => {
           </div>
         </div>
       </section> */}
-    </div >
+      </div >
+    </>
   );
 };
 
