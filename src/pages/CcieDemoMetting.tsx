@@ -345,7 +345,7 @@ const CCIeDemoMeeting = () => {
                             <div>
                                 <textarea
                                     name="message"
-                                    placeholder="Message (Optional)"
+                                    placeholder="Message"
                                     value={formData.message}
                                     onChange={handleChange}
                                     rows={4}
