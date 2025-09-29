@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<!-- Homepage -->
+<url>
+  <loc>https://www.ccielab.net/</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>1.0</priority>
+</url>
+
+<!-- Main Course Pages -->
+<url>
+  <loc>https://www.ccielab.net/courses</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/courses/ccie-enterprise-infrastructure</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/courses/ccie-wireless</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/courses/ccna</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/courses/ccnp</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/courses/sd-wan</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/courses/sd-access</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<!-- Information Pages -->
+<url>
+  <loc>https://www.ccielab.net/about</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/contact</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/blog</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<!-- Legal Pages -->
+<url>
+  <loc>https://www.ccielab.net/privacy-policy</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/terms</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/refund-policy</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>yearly</changefreq>
+  <priority>0.3</priority>
+</url>
+
+<!-- Lab and Server Pages -->
+<url>
+  <loc>https://www.ccielab.net/servers</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://www.ccielab.net/labs</loc>
+  <lastmod>2025-01-27T00:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+</urlset>

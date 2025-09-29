@@ -1,0 +1,32 @@
+User-agent: *
+# Allow essential pages
+Allow: /$
+Allow: /courses/
+Allow: /courses/*
+Allow: /blog/
+Allow: /blog/*
+Allow: /about
+Allow: /contact
+Allow: /servers
+Allow: /labs
+Allow: /index.html
+
+# Disallow non-essential pages
+Disallow: /login
+Disallow: /signup
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /user
+Disallow: /account
+Disallow: /checkout
+Disallow: /cart
+Disallow: /order
+Disallow: /404
+Disallow: /error
+Disallow: /track-order
+
+# Block all query parameter versions of URLs (optional, if you want clean URLs indexed)
+Disallow: /*?
+
+# Sitemap location
+Sitemap: https://www.ccielab.net/sitemap.xml
