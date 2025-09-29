@@ -231,7 +231,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             phone: formData.phone,
             course_name: formData.course,
             message: formData.message,
-            course_status: 'onGoing',
+            course_status: 'ongoing',
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: selectedPlanPrice.replace(/[^0-9.]/g, ""),
@@ -459,7 +459,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             contactId={Number(contactId)}
             amount={Number(selectedPlanPrice.replace(/[^0-9.]/g, ""))}
             course={selectedPlan}
-            course_status='onGoing'
+            course_status='ongoing'
             email={formData.email}
             firstname={formData.name}
             phone={formData.phone}
