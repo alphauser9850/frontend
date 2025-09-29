@@ -154,7 +154,7 @@ function BatchTable({ data, onEnroll, isDarkMode }: TableProps) {
           <tr>
             {tableHeaders.map((header) => (
               <th key={header} className={cn(
-                "p-2 text-left border",
+                "p-2 text-left border whitespace-nowrap",
                 isDarkMode ? "border-gray-600" : "border-gray-300"
               )}>
                 {header}
