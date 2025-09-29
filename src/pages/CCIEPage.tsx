@@ -279,33 +279,33 @@ const CCIEPage: React.FC = () => {
   const features = [
     {
       icon: <Play className="h-6 w-6 text-primary" />,
-      title: "6 months to 1 Year access to Live Recordings*",
-      description: "Comprehensive Class lectures covering all CCIE Enterprise Infrastructure Classes"
+      title: "1 Year Access to Live Recording:",
+      description: "Access comprehensive recorded sessions covering all CCIE Enterprise Infrastructure topics. Review complex concepts anytime, anywhere with lifetime access to expert-led training content."
     },
     {
       icon: <Server className="h-6 w-6 text-primary" />,
       title: "Virtual Lab Environment",
-      description: "24/7 access to Cisco devices for hands-on practice"
+      description: "Practice on real Cisco equipment remotely 24/7. Book lab sessions in 1-hour increments with pre-configured topologies matching actual CCIE exam scenarios for hands-on experience."
     },
     {
       icon: <FileText className="h-6 w-6 text-primary" />,
       title: "Downloadable Resources",
-      description: "Detailed workbooks, configuration guides, and cheat sheets"
+      description: "Get detailed study guides, configuration templates, cheat sheets, and workbooks. Everything you need for offline study including network diagrams and troubleshooting references."
     },
     {
       icon: <Code className="h-6 w-6 text-primary" />,
-      title: "Practice Exam Simulator",
-      description: "Realistic exam questions with detailed explanations"
+      title: "Mock Exams",
+      description: "Test your knowledge with realistic CCIE lab simulations. Timed practice sessions with detailed feedback help you identify weak areas and build confidence before the actual exam."
     },
     {
       icon: <Users className="h-6 w-6 text-primary" />,
-      title: "Community Support",
-      description: "Private study group with instructor-led sessions"
+      title: "Self-Study Toolkit",
+      description: "Comprehensive learning materials including video tutorials, practice labs, documentation, and study schedules. Self-paced learning resources to supplement live training sessions."
     },
     {
       icon: <Clock className="h-6 w-6 text-primary" />,
-      title: "1-Year+ Access",
-      description: "Extended access to support your certification journey"
+      title: "Instructor Support",
+      description: "Get direct access to CCIE #67714 expert Mr. Saif Deshmukh. Email support, messaging, and dedicated hours for doubt resolution throughout your certification journey."
     },
   ];
 
@@ -522,24 +522,24 @@ const CCIEPage: React.FC = () => {
                   />
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+                <h1 className="text-4xl md:text-4xl font-bold mb-6 text-white">
                   CCIE Enterprise Infrastructure Training v1.1
                 </h1>
 
-                <p className="text-xl text-white/80 mb-8 max-w-xl">
+                <p className="text-base md:text-lg text-white/90 mb-8 ax-w-lg  text-justify">
                   Become a CCIE Enterprise Infrastructure Expert. Our program is designed to help you pass the
                   CCIE Enterprise Infrastructure exam faster, smarter, and with the right tools and resources.
                 </p>
                 <div className="space-y-3 mb-8">
-                  <div className="flex items-center gap-3 text-white/90">
+                  <div className="flex items-center gap-3 text-white/90 ">
                     <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
                     <span>24/7 access to fully equipped lab environments</span>
                   </div>
-                  <div className="flex items-center gap-3 text-white/90">
+                  <div className="flex items-center gap-3 text-white/90 ">
                     <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
                     <span>Realistic exam simulations and troubleshooting exercises</span>
                   </div>
-                  <div className="flex items-center gap-3 text-white/90">
+                  <div className="flex items-center gap-3 text-white/90 ">
                     <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
                     <span>Personalised mentorship from certified experts with real-world training</span>
                   </div>
@@ -557,11 +557,11 @@ const CCIEPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right column with image and video */} 
-              
-              <div className="space-y-6">    
+              {/* Right column with image and video */}
+
+              <div className="space-y-6">
                 {/* Video with forced styles */}
-                <div className="w-full max-w-lg relative z-30"> 
+                <div className="w-full max-w-lg relative z-30">
                   <div className="relative h-72 w-full aspect-video bg-black rounded-xl overflow-hidden">
                     <iframe
                       src="https://www.youtube.com/embed/kYpiyjWV3cY"
@@ -666,9 +666,10 @@ const CCIEPage: React.FC = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground">
+                      <p className="text-muted-foreground ">
                         {feature.description}
                       </p>
+
                     </CardContent>
                   </Card>
                 </div>
