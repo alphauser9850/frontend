@@ -1,0 +1,15 @@
+[Unit]
+Description=Project Production Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/start-https-prod-server.sh
+Restart=on-failure
+Environment=NODE_ENV=production
+# Increase Node.js memory limit for better performance
+Environment=NODE_OPTIONS="--max-old-space-size=4096"
+
+[Install]
+WantedBy=multi-user.target 
