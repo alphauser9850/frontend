@@ -1,19 +1,50 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import fs from "fs";
 import path from "path";
 
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
+export default defineConfig(({ command }) => {
+  const isDev = command === "serve";
+
+  return {
+    plugins: [react()],
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "src"),
+      },
     },
-  },
-  build: {
-    manifest: true,
-    outDir: "dist/client",
-  },
-  ssr: {
-    noExternal: ["react-helmet-async"],
-  },
+    optimizeDeps: {
+      exclude: ["lucide-react"], // prevent too many files open
+    },
+    server: isDev
+      ? {
+          host: "0.0.0.0",
+          port: 443,
+          strictPort: true,
+          https: {
+            key: fs.readFileSync(path.resolve(__dirname, "certs/key.pem")),
+            cert: fs.readFileSync(path.resolve(__dirname, "certs/cert.pem")),
+          },
+          hmr: {
+            port: 24678, // fixed HMR WebSocket port
+            host: "localhost",
+            protocol: "wss",
+          },
+          proxy: {
+            "/api": {
+              target: "http://localhost:3001",
+              changeOrigin: true,
+              secure: false,
+            },
+          },
+        }
+      : undefined,
+    build: {
+      manifest: true,
+      outDir: "dist/client",
+    },
+    ssr: {
+      noExternal: ["react-helmet-async"],
+    },
+  };
 });
