@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
-import { AuroraText } from './magicui';
+import { AnimatedDotPattern, AuroraText } from './magicui';
 import { 
   LogIn, 
   UserPlus, 
@@ -13,8 +13,24 @@ import {
   Moon, 
   Sun,
   BookOpen,
+  FileText,
+  Info,
+  Youtube,
+  Linkedin,
+  Instagram,
+  Twitter,
+  Sparkles,
   ChevronDown,
-  Sparkles
+  Network,
+  Server,
+  Layers,
+  Globe,
+  Workflow,
+  Shield,
+  Target,
+  Users,
+  Briefcase,
+  Heart
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { RainbowButton } from './ui/RainbowButton';
@@ -45,7 +61,8 @@ const Header: React.FC = () => {
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 10);
+          const currentScrollY = window.scrollY;
+          setScrolled(currentScrollY > 10);
           ticking = false;
         });
         ticking = true;
@@ -60,10 +77,32 @@ const Header: React.FC = () => {
     setShowCoursesMenu(false);
   }, [location.pathname]);
 
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
   const toggleTheme = () => {
     setTheme(isDarkMode ? 'light' : 'dark');
   };
 
+  const handleLoginClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowLoginModal(true);
+    setShowRegisterModal(false);
+  };
+
+  const handleRegisterClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowRegisterModal(true);
+    setShowLoginModal(false);
+  };
+
+  const handleAuthSuccess = () => {
+    setShowLoginModal(false);
+    setShowRegisterModal(false);
+  };
+
+  // Only show CCIE Enterprise in the courses menu
   const ccieCourseItem = {
     title: COURSE_NAMES.CCIE,
     icon: <Sparkles className="h-5 w-5" />, 
@@ -237,6 +276,122 @@ const Header: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-surface/95 backdrop-blur-md border-b border-border-subtle shadow-lg">
+          <div className="container mx-auto px-4 py-4">
+            <nav className="flex flex-col gap-2">
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setShowCoursesMenu(!showCoursesMenu)}
+                  className={cn(
+                    "px-4 py-3 rounded-md font-bold flex items-center justify-between text-text-primary hover:bg-surface-variant text-base",
+                    location.pathname.includes('/courses') 
+                      ? "bg-design-primary-accent/10 text-design-primary-accent" 
+                      : ""
+                  )}
+                >
+                  <span className="flex items-center gap-1.5">
+                    <BookOpen className="h-4 w-4" />
+                    Courses
+                  </span>
+                  <ChevronDown className={cn("h-4 w-4 transition-transform", showCoursesMenu ? "rotate-180" : "")}/>
+                </button>
+                {showCoursesMenu && (
+                  <div className="pl-4 mt-1 space-y-1">
+                    {[ccieCourseItem].map((item, index) => (
+                      <Link 
+                        key={index}
+                        to={item.path}
+                        className="flex items-center gap-2 px-4 py-2 rounded-md text-sm hover:bg-surface-variant transition-colors text-text-primary"
+                      >
+                        <div className="p-1 rounded-full bg-design-primary-accent/10 text-design-primary-accent">
+                          {item.icon}
+                        </div>
+                        <span className="text-text-primary">{item.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <Link 
+                to="/about" 
+                className={cn(
+                  "px-4 py-3 rounded-md font-bold text-text-primary hover:bg-surface-variant text-base",
+                  isActive('/about') 
+                    ? "bg-design-primary-accent/10 text-design-primary-accent" 
+                    : ""
+                )}
+              >
+                <span className="flex items-center gap-1.5"> 
+                  About Us
+                </span>
+              </Link>
+                <Link 
+                to="/blog" 
+                className={cn(
+                  "px-4 py-3 rounded-md font-bold text-text-primary hover:bg-surface-variant text-base",
+                  isActive('/blog') 
+                    ? "bg-design-primary-accent/10 text-design-primary-accent" 
+                    : ""
+                )}
+              >
+                <span className="flex items-center gap-1.5"> 
+                  Blogs
+                </span>
+              </Link>
+              {/* Auth Buttons (Mobile) */}
+              {!user && (
+                <div className="flex flex-col gap-2 mt-2 pt-2 border-t border-border-subtle">
+                  <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md font-bold hover:bg-surface-variant transition-colors text-text-primary text-base">
+                    <span className="flex items-center gap-1.5">
+                      <LogIn className="h-4 w-4" />
+                      Login
+                    </span>
+                  </a>
+                  <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="px-4 py-3 rounded-md bg-design-primary-accent text-white hover:bg-accent-hover transition-colors text-base">
+                    <span className="flex items-center gap-1.5">
+                      <UserPlus className="h-4 w-4" />
+                      Register
+                    </span>
+                  </a>
+                </div>
+              )}
+            </nav>
+          </div>
+        </div>
+      )}
+      
+      {/* Login Modal */}
+      <Modal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        title="Login to Your Account"
+      >
+        <LoginForm 
+          onSuccess={handleAuthSuccess} 
+          onRegisterClick={() => {
+            setShowLoginModal(false);
+            setShowRegisterModal(true);
+          }}
+        />
+      </Modal>
+      
+      {/* Register Modal */}
+      <Modal
+        isOpen={showRegisterModal}
+        onClose={() => setShowRegisterModal(false)}
+        title="Create Your Account"
+      >
+        <RegisterForm 
+          onSuccess={handleAuthSuccess}
+          onLoginClick={() => {
+            setShowRegisterModal(false);
+            setShowLoginModal(true);
+          }}
+        />
+      </Modal>
     </header>
   );
 };
