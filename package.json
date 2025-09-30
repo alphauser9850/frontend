@@ -4,12 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-       "dev": "cross-env NODE_ENV=development node server/proxy.js",
-        "build": "npm run build:client && npm run build:server",
-        "build:client": "vite build --outDir dist/client",
-        "build:server": "vite build --outDir dist/server --ssr src/entry-server.tsx",
-        "preview": "cross-env NODE_ENV=production node server/proxy.js",
-        "start": "cross-env NODE_ENV=production node server/proxy.js"
+    "dev": "cross-env NODE_ENV=development node server/proxy.js",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "vite build --outDir dist/server --ssr src/entry-server.tsx",
+    "build": "npm run build:client && npm run build:server",
+    "preview": "cross-env NODE_ENV=production node server/proxy.js",
+    "start": "cross-env NODE_ENV=production node server/proxy.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.1",
@@ -60,7 +60,7 @@
     "@types/stripe": "^8.0.417",
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.18",
-    "cross-env": "^10.0.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",

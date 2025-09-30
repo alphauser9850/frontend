@@ -14,28 +14,21 @@ export default defineConfig(({ command }) => {
       },
     },
     optimizeDeps: {
-      exclude: ["lucide-react"], // prevent too many files open
+      exclude: ["lucide-react"], // prevent too many files open / SSR issues
     },
     server: isDev
       ? {
           host: "0.0.0.0",
-          port: 443,
+          port: 3443, // match proxy.js
           strictPort: true,
           https: {
             key: fs.readFileSync(path.resolve(__dirname, "certs/key.pem")),
             cert: fs.readFileSync(path.resolve(__dirname, "certs/cert.pem")),
           },
           hmr: {
-            port: 24678, // fixed HMR WebSocket port
+            port: 24678,
             host: "localhost",
             protocol: "wss",
-          },
-          proxy: {
-            "/api": {
-              target: "http://localhost:3001",
-              changeOrigin: true,
-              secure: false,
-            },
           },
         }
       : undefined,
@@ -44,7 +37,7 @@ export default defineConfig(({ command }) => {
       outDir: "dist/client",
     },
     ssr: {
-      noExternal: ["react-helmet-async"],
+      noExternal: ["react-helmet-async", "lucide-react"], // add SSR-incompatible libs here
     },
   };
 });
