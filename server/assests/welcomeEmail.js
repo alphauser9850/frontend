@@ -35,7 +35,7 @@ export const welcomeEmail = () => {
           <!-- CTA Button -->
           <tr>
             <td align="center" style="padding:20px;">
-              <a href="https://ccielab.net" 
+              <a href="https://ccielab.net/welcome-onboard" 
                  style="background:#0a7cff; color:#ffffff; padding:12px 30px; border-radius:6px; text-decoration:none; font-weight:bold; display:inline-block;">
                 Access Course Portal
               </a>

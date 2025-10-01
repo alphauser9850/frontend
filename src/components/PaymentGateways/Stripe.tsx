@@ -6,6 +6,7 @@ import {
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
+import { useNavigate } from "react-router-dom";
 
 // Load your Stripe publishable key
 
@@ -20,6 +21,12 @@ const SuccessDialog: React.FC<{
   paymentIntent: any;
 }> = ({ isOpen, onClose, paymentIntent }) => {
   if (!isOpen) return null;
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    navigate("/welcome-onboard"); // Then navigate
+    onClose(); // Close the dialog first
+  };
 
   return (
     <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
@@ -46,11 +53,11 @@ const SuccessDialog: React.FC<{
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 text-left">
           <h3 className="text-gray-700 font-semibold mb-3 text-base">Transaction Details</h3>
           <div className="text-gray-500 text-sm">
-        
+
             <div className="mb-2">
               <strong>Amount:</strong> ${(paymentIntent.amount / 100).toFixed(2)}
             </div>
-        
+
             {paymentIntent.description && (
               <div>
                 <strong>Course:</strong> {paymentIntent.description}
@@ -61,7 +68,7 @@ const SuccessDialog: React.FC<{
 
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={handleContinue}
           className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-3 px-8 font-semibold w-full transition-colors"
         >
           Continue

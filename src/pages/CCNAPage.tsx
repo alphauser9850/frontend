@@ -8,7 +8,7 @@ import AccordionTrigger from "../components/ui/Accordion";
 import AccordionContent from "../components/ui/Accordion";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
-import SEOHeadings from "../components/SEOHeadings";
+// import SEOHeadings from "../components/SEOHeadings";
 
 const CCNAPage: React.FC = () => {
   const { isDarkMode } = useThemeStore();
@@ -16,7 +16,7 @@ const CCNAPage: React.FC = () => {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {/* SEO Optimized Headings */}
-      <SEOHeadings
+      {/* <SEOHeadings
         title="CCNA Certification Training | CCIELab.Net - Cisco Networking Fundamentals"
         description="Master networking fundamentals and prepare for the CCNA certification with our comprehensive course. Learn from expert instructors with hands-on labs and real-world scenarios."
         canonicalUrl="https://www.ccielab.net/courses/ccna"
@@ -42,7 +42,7 @@ const CCNAPage: React.FC = () => {
           "educationalLevel": "beginner",
           "inLanguage": "en-US"
         }}
-      />
+      /> */}
 
        <Particles
               className="absolute inset-0 z-10"

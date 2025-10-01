@@ -1,7 +1,7 @@
 import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
 import { PopupModal } from "react-calendly";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Loader } from "lucide-react";
 
 // Country code options
@@ -17,17 +17,17 @@ const countryOptions = [
     { code: "+65", short: "SG" },
     { code: "+60", short: "MY" },
 ];
-
 const CCIeDemoMeeting = () => {
-    const { isDarkMode } = useThemeStore();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
-    const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
-    const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
+  	const { isDarkMode } = useThemeStore();
+  	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
+    	const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+    	const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
+    	const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+    	const [isProcessing, setIsProcessing] = useState(false);
+    	const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
 
-    const [formData, setFormData] = useState({
+    	const [formData, setFormData] = useState({
         firstname: "",
         lastname: "",
         email: "",
@@ -39,6 +39,10 @@ const CCIeDemoMeeting = () => {
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
+  useEffect(() => {
+    // ✅ Runs only on client (avoids SSR crash)
+    setRootElement(document.getElementById("root"));
+  }, []);
 
     const validateForm = () => {
         const newErrors: Record<string, string> = {};
@@ -74,27 +78,56 @@ const CCIeDemoMeeting = () => {
 
         try {
             // Save contact to HubSpot with full phone number (country code + number)
-            const fullPhone = `${selectedCountryCode}${formData.phone}`;
-
-            const res = await fetch("/api/hubspot/create-contact", {
+            const checkContactResponse = await fetch("/api/hubspot/get-contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    properties: {
-                        ...formData,
-                        phone: fullPhone, // Save with country code
-                    }
+                    filterGroups: [
+                        {
+                            filters: [
+                                {
+                                    propertyName: "email",
+                                    operator: "EQ",
+                                    value: formData.email, // ✅ fixed (was submissionData)
+                                }
+                            ]
+                        }
+                    ],
+                    properties: ["firstname", "lastname", "email", "phone", "id"]
                 }),
             });
 
-            if (res.ok) {
-                // Close modal and open Calendly
-                setIsModalOpen(false);
-                setIsCalendlyOpen(true);
+            const checkContactData = await checkContactResponse.json();
+
+            let contactId: string | null = null;
+
+            if (checkContactData.data?.results?.length > 0) {
+                contactId = checkContactData.data.results[0].id;
+                console.log("Contact already exists with ID:", contactId);
             } else {
-                const errorData = await res.json();
-                console.error("HubSpot create contact failed:", errorData);
-                alert("Failed to save contact. Please try again.");
+                // Create new contact
+                const fullPhone = `${selectedCountryCode}${formData.phone}`;
+
+                const res = await fetch("/api/hubspot/create-contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        properties: {
+                            ...formData,
+                            phone: fullPhone, // Save with country code
+                        }
+                    }),
+                });
+
+                if (res.ok) {
+                    // Close modal and open Calendly
+                    setIsModalOpen(false);
+                    setIsCalendlyOpen(true);
+                } else {
+                    const errorData = await res.json();
+                    console.error("HubSpot create contact failed:", errorData);
+                    alert("Failed to save contact. Please try again.");
+                }
             }
         } catch (err) {
             console.error("API error:", err);
@@ -136,7 +169,7 @@ const CCIeDemoMeeting = () => {
         });
     };
 
-    return (
+ return (
         <>
             <section
                 className={cn(
@@ -391,7 +424,7 @@ const CCIeDemoMeeting = () => {
                     url={clendely_id}
                     open={isCalendlyOpen}
                     onModalClose={handleCalendlyClose}
-                    rootElement={document.getElementById("root")!}
+                    rootElement={rootElement}
                     prefill={{
                         name: `${formData.firstname} ${formData.lastname}`,
                         email: formData.email,
