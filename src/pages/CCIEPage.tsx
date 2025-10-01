@@ -14,10 +14,8 @@ import CCIEExamDetail from './CCIEExamDetail';
 import { FAqs } from '../components/ui/Faqs';
 import { useThemeStore } from '../store/themeStore';
 import CciePricingPage from './CciePricingPage';
-import CciePricingPage from './CciePricingPage';
 import { Helmet } from 'react-helmet-async';
 import CCIESyllabus from '../components/ui/SyllabusAccordion';
-
 
 
 const labTopologies = [

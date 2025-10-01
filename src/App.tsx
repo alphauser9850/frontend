@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
@@ -9,6 +9,7 @@ import { checkSupabaseConnection } from './lib/supabase';
 
 // Components
 import AuthGuard from './components/AuthGuard';
+
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import { Footer } from './components/Footer';
