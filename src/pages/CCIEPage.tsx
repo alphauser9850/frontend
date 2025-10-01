@@ -281,58 +281,53 @@ const labTopologies = [
     },
   ];
 const networkInfrastructureTopics = [
-  "Layer 2 Technologies (VLANs, STP, EtherChannel, LACP)",
-  "Layer 3 Technologies (OSPF v2/v3, EIGRP, BGP)",
-  "First Hop Redundancy Protocols (HSRP, VRRP, GLBP)",
-  "IPv4 and IPv6 Addressing and Routing",
-  "Route Redistribution and Path Selection",
-  "Network Services (DHCP, DNS, NTP)",
-  "Network Management Protocols (SNMP, Syslog, NetFlow)",
-  "QoS Implementation and Verification",
-  "Network Virtualization (VRF, GRE)",
-  "High Availability and Resilience"
+  "Switch Administration (MAC address table, Errdisable recovery, L2 MTU)",
+  "Layer 2 Protocols (CDP, LLDP, UDLD)",
+  "VLAN Technologies (Access/Trunk ports, Native VLAN, VLAN pruning, Voice VLAN)",
+  "EtherChannel (LACP, Static, L2/L3, Load balancing, MEC use cases)",
+  "Spanning Tree Protocol (PVST+, Rapid-PVST+, MST, PortFast, BPDU Guard, Loop Guard, Root Guard)",
+  "Routing Concepts (Admin Distance, Static Routing, Policy-Based Routing, VRF-Lite, Route Leaking, Filtering, Redistribution, Authentication, BFD, L3 MTU)",
+  "EIGRP (Adjacencies, Best Path Selection, Metrics, Operations, Topology Table, Packet Types, SIA, Named Mode, Scalability/Optimization)",
+  "OSPFv2/v3 (Adjacencies, AF Support, Area Types, Path Preference, Operations, GTSM, Optimization/Scalability, LSA Throttling, SPF tuning)",
+  "BGP (IBGP/EBGP Peerings, Templates, Dynamic Neighbors, AS Numbers, Path Selection, Policy Control, Attribute Manipulation, Route Reflectors, Aggregation, Soft Reconfig, Route Refresh)",
+  "Multicast (IGMPv2/v3, IGMP Snooping, PIM Sparse Mode, Auto-RP, BSR, Anycast RP, SSM, RP Mapping, MSDP, Multipath)"
 ];
 
 const softwareDefinedTopics = [
-  "Cisco SD-WAN Architecture and Components",
-  "SD-WAN Control and Data Plane Operations",
-  "SD-WAN Policies and Templates",
-  "OMP Routing Protocol",
-  "Cisco SD-Access Fabric Architecture",
-  "LISP and VXLAN in SD-Access",
-  "DNA Center for Automation and Assurance",
-  "Policy Implementation in SD-Access",
-  "Cisco ACI Concepts and Architecture",
-  "Multi-site and Multi-domain SD-WAN"
+  "Cisco SD-Access (Underlay – manual, LAN automation, PnP, Device Discovery, Extended Nodes)",
+  "SD-Access Overlay (LISP, BGP Control Planes, VXLAN, TrustSec Policy Plane, L2 Flooding, Multicast)",
+  "Fabric Design (Single-Site, Multi-Site, Fabric-in-a-Box)",
+  "Fabric Deployment (Host Onboarding, Auth Templates, Port Config, Border Priorities, Device Additions)",
+  "Fabric Border Handoff (SDA/SD-WAN/IP Transit Integration, Peer Device, L2 Border Handoff)",
+  "Segmentation (Macro via VN, Micro via SGT/SGACL)",
+  "Cisco SD-WAN (Controller Architecture – vManage, vBond, vSmart)",
+  "SD-WAN Underlay (WAN Edge Cloud/Hardware Deployments, Configurations, TLOC Extension)",
+  "OMP (Attributes, IPsec Key Management, Route Aggregation, Redistribution, SDA Integration)",
+  "Configuration Templates (CLI, Feature, Device Templates)",
+  "Policies (Centralized Data/Control/Application-Aware, Localized ACL/Route Policies)"
 ];
 
 const transportTopics = [
-  "MPLS Fundamentals (LDP/TDP)",
-  "MPLS VPN (L2VPN/L3VPN)",
-  "MPLS Traffic Engineering",
-  "VPN Technologies (DMVPN, GETVPN, FlexVPN)",
-  "IPsec VPN Implementation and Troubleshooting",
-  "Multicast Routing (PIM - ASM, SSM, Bidir)",
-  "IGMP/MLD for Multicast Group Management",
-  "Multicast Security and Filtering",
-  "WAN Optimization Techniques",
-  "Traffic Engineering and Path Selection"
+  "GRE Tunnels (Static Point-to-Point)",
+  "MPLS Operations (Label Stack, LSR, LSP, LDP, MPLS Ping, Traceroute)",
+  "MPLS L3VPN (PE-CE Routing with BGP, MP-BGP VPNv4/v6)",
+  "DMVPN (Phase 3, Dual Hub, NHRP, IPsec/IKEv2 with PSK)"
 ];
 
-const securityTopics = [
-  "Device Security (Control Plane Policing, Management Plane Protection)",
-  "Network Security (ACLs, Zone-Based Firewall)",
-  "802.1X Implementation and Troubleshooting",
-  "MACsec for Layer 2 Security",
-  "Infrastructure Security Best Practices",
-  "QoS Implementation for Voice and Video",
-  "Python Scripting for Network Automation",
-  "REST APIs and API Security",
-  "NETCONF/RESTCONF Protocols",
-  "YANG Data Models",
-  "JSON/XML for Data Representation",
-  "Puppet for Configuration Management"
+const securityAndServicesTopics = [
+  "Device Security (Control Plane Policing/Protection, AAA)",
+  "Switch Security (VACL/PACL, Storm Control, DHCP Snooping/Opt82, IP Source Guard, DAI, Port Security)",
+  "Router Security (IPv4/IPv6 ACLs, uRPF, IPv6 Filters)",
+  "IPv6 Infrastructure Security (RA Guard, DHCP Guard, Binding Table, Device Tracking, ND Inspection, Source Guard)",
+  "System Management (Console/VTY, SSH/SCP, RESTCONF, NETCONF, SNMP v2c/v3, Syslog/Debugs)",
+  "QoS (DiffServ Architecture, Classification, NBAR, DSCP Marking, Policing/Shaping, Congestion Mgmt, HQoS, MQC)",
+  "Network Services (HSRP, VRRP, IPv6 RS/RA Redundancy, NTP, PTP, DHCPv4/v6, NAT/PAT – Static/Dynamic/Policy/VRF-aware)",
+  "Network Optimization (IP SLA, Object Tracking, Flexible NetFlow)",
+  "Network Operations (SPAN, RSPAN, ERSPAN, Embedded Packet Capture, Packet Trace, Conditional Debugger)",
+  "Infrastructure Automation & Programmability (JSON, XML, YAML, Jinja, EEM Applets, Guest Shell, Python, vManage API, DNA Center API, Model-Driven Telemetry)"
 ];
+
+
 
 
 const CCIEPage: React.FC = () => {
@@ -481,15 +476,249 @@ const CCIEPage: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-return(
-  <>
-          <Helmet>
-            <title>CCIE Enterprise Infrastructure v1.1 Training & Certification</title>
-            <meta name="description" content="CCIE Enterprise Infrastructure Training v1.1 with 24/7 Hands-on Lab Practices, CCIE Certified Instructors with Proven Expertise and Interactive Bootcamps." />
-            <meta property="og:title" content="CCIE Enterprise Infrastructure v1.1 Training & Certification" />
-            <meta property="og:description" content="CCIE Enterprise Infrastructure Training v1.1 with 24/7 Hands-on Lab Practices, CCIE Certified Instructors with Proven Expertise and Interactive Bootcamps." />
-            <meta property="og:type" content="website" />
-          </Helmet>
+  // Course instructors
+  const instructors = [
+    {
+      name: "Saif Deshmukh",
+      role: "Lead CCIE Instructor",
+      certification: "CCIE® Enterprise Infrastructure v1.1 Instructor",
+      experience: "10+ years",
+      description: "CCIE-certified instructor (#67714) with deep expertise in SD-WAN, SD-Access & automation, delivering practical, lab-focused training for certification success.",
+      image: "/saif_deshmukh.jpg",
+      linkedin: "https://www.linkedin.com/in/deshmukh-saif/",
+      highlights: [
+        "CCIE-certified expert in Enterprise Infrastructure v1.1",
+        "Strong expertise in SD-WAN, SD-Access, IPv6, and Network Automation",
+        "Skilled in designing, deploying, and securing enterprise networks",
+        "Hands-on experience with Versa SD-WAN, Viptela, Juniper EX switches, and SRX firewalls",
+        "Known for delivering detailed, practical, and lab-driven training",
+        "Proven track record of helping aspirants succeed in CCNP & CCIE certifications"
+      ]
+    }
+  ];
+  // Course features
+  const features = [
+    {
+      icon: <Play className="h-6 w-6 text-primary" />,
+      title: "1 Year Access to Live Recording:",
+      description: "Access comprehensive recorded sessions covering all CCIE Enterprise Infrastructure topics. Review complex concepts anytime, anywhere with lifetime access to expert-led training content."
+    },
+    {
+      icon: <Server className="h-6 w-6 text-primary" />,
+      title: "Virtual Lab Environment",
+      description: "Practice on real Cisco equipment remotely 24/7. Book lab sessions in 1-hour increments with pre-configured topologies matching actual CCIE exam scenarios for hands-on experience."
+    },
+    {
+      icon: <FileText className="h-6 w-6 text-primary" />,
+      title: "Downloadable Resources",
+      description: "Get detailed study guides, configuration templates, cheat sheets, and workbooks. Everything you need for offline study including network diagrams and troubleshooting references."
+    },
+    {
+      icon: <Code className="h-6 w-6 text-primary" />,
+      title: "Mock Exams",
+      description: "Test your knowledge with realistic CCIE lab simulations. Timed practice sessions with detailed feedback help you identify weak areas and build confidence before the actual exam."
+    },
+    {
+      icon: <Users className="h-6 w-6 text-primary" />,
+      title: "Self-Study Toolkit",
+      description: "Comprehensive learning materials including video tutorials, practice labs, documentation, and study schedules. Self-paced learning resources to supplement live training sessions."
+    },
+    {
+      icon: <Clock className="h-6 w-6 text-primary" />,
+      title: "Instructor Support",
+      description: "Get direct access to CCIE #67714 expert Mr. Saif Deshmukh. Email support, messaging, and dedicated hours for doubt resolution throughout your certification journey."
+    },
+  ];
+
+  // Success stories
+  const successStories = [
+    {
+      name: "Michael Chen",
+      role: "Network Engineer at Fortune 500",
+      quote: "The labs and practice scenarios were instrumental in my exam success. I passed on my first attempt!",
+      image: "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
+    },
+    {
+      name: "Jessica Patel",
+      role: "Senior Infrastructure Engineer",
+      quote: "The depth of content and instructor support made all the difference. Highly recommended for serious CCIE candidates.",
+      image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
+    },
+  ];
+
+  // Course modules
+  const courseModules = [
+    {
+      title: "Enterprise Network Architecture",
+      icon: <Network className="h-5 w-5" />,
+      topics: ["Campus LAN Design", "Enterprise WAN Design", "Network Virtualization", "High Availability Design"]
+    },
+    {
+      title: "Advanced Routing & Switching",
+      icon: <Layers className="h-5 w-5" />,
+      topics: ["EIGRP, OSPF & BGP", "MPLS & Segment Routing", "Multicast", "QoS Implementation"]
+    },
+    {
+      title: "Software-Defined Networking",
+      icon: <Workflow className="h-5 w-5" />,
+      topics: ["SD-WAN", "SD-Access", "Cisco DNA Center", "Programmable Fabric"]
+    },
+    {
+      title: "Network Services & Security",
+      icon: <Globe className="h-5 w-5" />,
+      topics: ["Network Security", "Device Hardening", "AAA & ISE", "Network Assurance"]
+    }
+  ];
+  const batches = [
+    {
+      startDate: "November 15, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "IST (9 AM- 1 PM)",
+      duration: "4 Weeks",
+      seats: "8 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "December 2, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "EST (6 PM- 11 PM)",
+      duration: "4 Weeks",
+      seats: "12 seats",
+      type: "full-time",
+    },
+    {
+      startDate: "December 16, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "GMT (2PM - 6PM)",
+      duration: "4 Weeks",
+      seats: "15 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "January 6, 2026",
+      instructor: "Mr. Saif Deshmukh",
+      time: "PST (6 PM- 10 PM)",
+      duration: "3 Weeks",
+      seats: " 20 seats",
+      type: "part-time",
+    },
+  ];
+  const WrittenExam = [
+    { aspect: "Exam Code", details: "350-401 ENCOR" },
+    { aspect: "Duration", details: "120 minutes (2 hours)" },
+    { aspect: "Question Count ", details: "90-110 questions" },
+    { aspect: "Question Types", details: "Multiple choice, drag-and-drop, fillin-the-blank, testlet" },
+    { aspect: "Passing Score ", details: "Variable (typically 800-850 out of 1000)" },
+    { aspect: "Cost", details: "$400 USD" },
+    { aspect: "Languages", details: "English, Japanese" },
+    { aspect: "Delivery Method ", details: "Pearson VUE testing centers or online proctoring" },
+    { aspect: "Validity", details: "3 years from pass date" },
+  ];
+  const LabExam = [
+    { aspect: "Exam Code", details: "CCIE Enterprise Infrastructure v1.1 Lab" },
+    { aspect: "Duration", details: "8 hours" },
+    { aspect: "Exam Format", details: "Module 1 – Design (3 hours), Module 2 – Deploy, Operate and Optimize (5 hours)" },
+    { aspect: "Exam Type", details: "Hands-on practical lab examination" },
+    { aspect: "Tasks ", details: "Configuration, troubleshooting, optimization scenarios" },
+    { aspect: "Technologies Tested ", details: "Dual stack solutions (IPv4 and IPv6), SD-Access, automation" },
+    { aspect: "Cost", details: "$1,600 USD (Cisco facilities) / $1,900 USD (Mobile lab locations) " },
+    { aspect: "Retake Policy", details: "Must wait 30 days between attempts" },
+    { aspect: "Validity", details: "3 years from pass date" },
+  ];
+
+  const pricingPlans = [
+    {
+      tierName: "Fast Track",
+      tierSubtitle: "Basic training + labs for a quick start",
+      price: "$1,299",
+      pricePeriod: "Starter Pack",
+      duration: "2 Weeks",
+      durationBadge: "Duration: 2 Weeks",
+      features: [
+        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>24 hours</span> instructor-led training",
+        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>32 hours</span> hands-on lab access",
+        "Mock Exams",
+        "Self Study Toolkit",
+        "Instructor Support via Email ",
+        "Certificate of Completion"
+      ],
+      buttonText: "Get Started",
+      buttonClass: "bg-gradient-to-r from-blue-500 to-blue-700",
+      paymentOptions: "💳 Credit Card | 🏦 Bank Transfer"
+    },
+    {
+      tierName: "Pro Track",
+      tierSubtitle: "Extended labs + full materials + instructor support",
+      price: "$1,999",
+      pricePeriod: "Advanced Pack(Most Popular)",
+      duration: " 6 Weeks",
+      durationBadge: "Duration: 6 Weeks",
+      features: [
+        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>48hours</span> instructor-led training ",
+        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>64 hours</span> hands-on lab access",
+        "Mock Exams",
+        "Self Study Toolkit",
+        "Full Instructor Support (Email + Messaging + 5 hours of support calls)",
+        "Certificate with Exam Readiness Rating",
+      ],
+      buttonText: "Choose Professional",
+      buttonClass: "bg-gradient-to-r from-red-500 to-red-700",
+      paymentOptions: "💳 Credit Card | 🏦 Bank Transfer | 📅 One Time Payment Or 3 Equal Installments",
+      popular: true
+    },
+    {
+      tierName: "Master Track",
+      tierSubtitle: "Intensive training + deep labs + full mentoring",
+      price: "$2,499",
+      pricePeriod: "Expert Pack",
+      duration: " 9 Weeks",
+      durationBadge: "Duration: 9 Weeks",
+      features: [
+        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>96 hours</span> instructor-led training",
+        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>128 hours</span> hands-on lab access",
+        "Mock Exams",
+        "Self Study Toolkit", ,
+        "1:1 mentorship + 20 hours of support calls",
+        "Certificate with Exam Readiness Rating + Personalised improvement notes"
+      ],
+      buttonText: "Go Master Track",
+      buttonClass: "bg-gradient-to-r from-yellow-500 to-yellow-700",
+      paymentOptions: "💳 One-time payment OR 3 equal installments<br>Credit Card | Bank Transfer"
+    }
+  ];
+
+  const faqData = [
+    {
+      question: "What prerequisites do I need?",
+      answer: "Basic networking knowledge (CCNA level) is recommended. We provide a pre-assessment to help determine your readiness."
+    },
+    {
+      question: "Can I upgrade my plan later?",
+      answer: "Yes! You can upgrade to a higher tier at any time. We'll credit your previous payment toward the new plan."
+    },
+    {
+      question: "What if I fail the CCIE exam?",
+      answer: "Pro Track and Master Track students get continued support for additional attempts. We also provide personalized remediation plans."
+    },
+    {
+      question: "Are payment plans available?",
+      answer: "Yes! Pro Track and Master Track both offer 3 equal installment payment plans with 0% interest for your convenience."
+    },
+    {
+      question: "What equipment do I need?",
+      answer: "All lab equipment is provided remotely. You only need a reliable internet connection and a computer capable of running remote desktop sessions."
+    }
+  ];
+
+  return (
+    <>
+      <Helmet>
+        <title>CCIE Enterprise Infrastructure v1.1 Training & Certification | CCIELab.Net</title>
+        <meta name="description" content="CCIE Enterprise Infrastructure Training v1.1 with 24/7 Hands-on Lab Practices, CCIE Certified Instructors with Proven Expertise and Interactive Bootcamps." />
+        <meta property="og:title" content="CCIE Enterprise Infrastructure v1.1 Training & Certification | CCIELab.Net| CCIELab.Net" />
+        <meta property="og:description" content="CCIE Enterprise Infrastructure Training v1.1 with 24/7 Hands-on Lab Practices, CCIE Certified Instructors with Proven Expertise and Interactive Bootcamps." />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="min-h-screen pt-0 bg-background">
       {/* Hero Section */}
       <section className="relative pt-20 pb-32 overflow-hidden">
@@ -719,8 +948,8 @@ return(
             <p className="text-muted-foreground">
               Our curriculum covers all exam domains with in-depth practical labs and theory.
 
-            </p>
-          </div>
+              </p>
+            </div>
 
           <div className="max-w-4xl mx-auto">
             <Accordion>
@@ -746,43 +975,64 @@ return(
                 </ul>
               </Accordion.Item>
 
-              <Accordion.Item title="Transport Technologies and Solutions (20%)">
-                <ul className="space-y-3">
-                  {transportTopics.map((topic, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>{topic}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Accordion.Item>
+                <Accordion.Item title="Transport Technologies and Solutions (20%)">
+                  <ul className="space-y-3">
+                    {transportTopics.map((topic, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{topic}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion.Item>
 
-              <Accordion.Item title="Infrastructure Security and Services (25%)">
-                <ul className="space-y-3">
-                  {securityTopics.map((topic, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>{topic}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Accordion.Item>
-            </Accordion>
+                <Accordion.Item title="Infrastructure Security and Services (25%)">
+                  <ul className="space-y-3">
+                    {securityTopics.map((topic, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span>{topic}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion.Item>
+              </Accordion>
+            </div>
           </div>
-        </div>
-      </section>
- {/* Lab Topologies Carousel */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
-              Sample Topologies
-            </span>
-            <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
-            <p className="text-muted-foreground">
-              Get familiar with the diverse network topologies you'll work with during your CCIE Enterprise Infrastructure training.
-            </p>
+        </section>
+
+        {/* Certification Timeline */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Certification Path
+              </span>
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <img src="/ent_golden_icon.png" alt="CCIE Enterprise Logo" className="h-10 w-auto" />
+                <h2 className="text-3xl font-bold"><AuroraText>Your CCIE Enterprise Infrastructure Journey </AuroraText></h2>
+              </div>
+              <p className="text-muted-foreground">
+                Follow this structured path to achieve your CCIE Enterprise Infrastructure certification.
+              </p>
+            </div>
+
+            <CCIETimeline />
           </div>
+        </section>
+
+        {/* Lab Topologies Carousel */}
+        <section className="py-12 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
+                Sample Topologies
+              </span>
+              <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
+              <p className="text-muted-foreground">
+                Get familiar with the diverse network topologies you'll work with during your CCIE Enterprise Infrastructure training.
+              </p>
+            </div>
 
           <div className="max-w-5xl mx-auto">
             <div className="relative">

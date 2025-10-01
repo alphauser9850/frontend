@@ -4,6 +4,7 @@ import { cn } from '../lib/utils';
 import { ChevronDown, ChevronUp, Loader, CheckCircle, X } from 'lucide-react';
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
 import Stripe from '../components/PaymentGateways/Stripe';
+import { Link } from 'react-router-dom';
 
 interface PricingPlan {
   tierName: string;
@@ -381,7 +382,8 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               Processing...
             </>
           ) : (
-            'Proceed to Payment'
+            // 'Proceed to Payment'
+            'Proceed'
           )}
         </button>
       </div>
@@ -393,17 +395,25 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
     if (!selectedPaymentMethod) {
       return (
         <div className="flex flex-col gap-6">
+
+          <Link
+            to="https://ent.ccielab.net/register"
+            className="mt-6 py-3 px-4 rounded-lg text-center text-white w-full font-semibold transition-colors bg-blue-600 hover:bg-blue-700"
+          >
+            Register
+          </Link>
+
           {/* Order Summary */}
-          <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
+          {/* <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
             <h4 className={cn("font-semibold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>Order Summary</h4>
             <div className="flex justify-between items-center">
               <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan}</span>
               <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlanPrice}</span>
             </div>
-          </div>
+          </div> */}
 
           {/* Payment Method Selection */}
-          <div>
+          {/* <div>
             <h4 className={cn("font-semibold mb-3", isDarkMode ? "text-white" : "text-gray-800")}>Select Payment Method</h4>
             <div className="space-y-3">
               <label className={cn("flex items-center p-3 border rounded-lg cursor-pointer transition",
@@ -432,7 +442,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
                 <span className={isDarkMode ? "text-white" : "text-gray-800"}>Stripe</span>
               </label>
             </div>
-          </div>
+          </div> */}
         </div>
       );
     }
@@ -495,7 +505,9 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
             )}
           >
-            {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Complete Payment'}
+            {/* {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Complete Payment'} */}
+            {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Click to Register'}
+
             {currentStep === "payment" && !selectedPaymentMethod && (
               <button
                 type="button"
