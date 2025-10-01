@@ -4,7 +4,7 @@ import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
 import Stripe from '../components/PaymentGateways/Stripe';
-import { Link } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 interface Batch {
   startDate: string;
@@ -62,7 +62,7 @@ const tableHeaders = ["Class Start Date", "Instructor", "Time Zone", "Duration",
 const pricingPlans = [
   { name: "Fast Track", price: "$1,299" },
   { name: "Pro Track", price: "$1,999" },
-  { name: "Master Track", price: "$1,999" }
+  { name: "Master Track", price: "$2,499" }
 ];
 
 type ModalStep = 'form' | 'payment' | 'processing';
@@ -224,6 +224,12 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     };
   }, []);
 
+  // Phone number validation function
+  const validatePhoneNumber = (phone: string) => {
+    const cleaned = phone.replace(/[^\d+]/g, '');
+    return cleaned.replace('+', '').length >= 8;
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -231,9 +237,20 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     const formData = new FormData(e.target as HTMLFormElement);
     const formValues = Object.fromEntries(formData.entries());
 
+    // Combine country code and phone number
+    const fullPhoneNumber = `${selectedCountryCode}${formValues.phone}`;
+
+    // Validate phone number
+    if (!validatePhoneNumber(fullPhoneNumber)) {
+      alert('Please enter a valid phone number');
+      setIsProcessing(false);
+      return;
+    }
+
     const submissionData: any = {
       ...formValues,
       countryCode: selectedCountryCode,
+      phone: fullPhoneNumber, // This will now include country code
       classStartDate: selectedStartDate,
       instructor: batch.instructor,
       // timeZone: batch.time,
@@ -243,30 +260,62 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     setFormData(submissionData);
 
     try {
-      // Step 1: Create contact
-      const response = await fetch("/api/hubspot/create-contact", {
+      // Step 1: Check if contact already exists
+      const checkContactResponse = await fetch("/api/hubspot/get-contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          properties: {
-            email: submissionData.email,
-            firstname: submissionData.name,
-            phone: submissionData.phone,
-            course_name: selectedPlan?.name || submissionData.plan,
-            message: submissionData.message,
-            leads_status: 'NEW',
-            hs_lead_status: "NEW",
-            course_status: 'upcoming',
-            payment_status: 'Pending',
-            course_start_date: selectedStartDate,
-            instructor_name: batch.instructor,
-            // time_zone: batch.time
-          },
+          filterGroups: [
+            {
+              filters: [
+                {
+                  propertyName: "email",
+                  operator: "EQ",
+                  value: submissionData.email
+                }
+              ]
+            }
+          ],
+          properties: ["firstname", "lastname", "email", "phone", "id"]
         }),
       });
-      const data = await response.json();
-      const contactId = data?.data?.id;
-      if (!contactId) throw new Error("No contact ID returned from HubSpot");
+
+      const checkContactData = await checkContactResponse.json();
+
+      let contactId: string;
+
+      // If contact exists, use the existing contact ID
+      if (checkContactData.data && checkContactData.data.results && checkContactData.data.results.length > 0) {
+        contactId = checkContactData.data.results[0].id;
+        console.log("Contact already exists with ID:", contactId);
+      } else {
+        // If contact doesn't exist, create a new one
+        const createContactResponse = await fetch("/api/hubspot/create-contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            properties: {
+              email: submissionData.email,
+              firstname: submissionData.name,
+              phone: fullPhoneNumber, // Use the combined phone number here
+              course_name: selectedPlan?.name || submissionData.plan,
+              message: submissionData.message,
+              leads_status: 'NEW',
+              hs_lead_status: "NEW",
+              course_status: 'upcoming',
+              payment_status: 'Pending',
+              course_start_date: selectedStartDate,
+              instructor_name: batch.instructor,
+            },
+          }),
+        });
+
+        const createContactData = await createContactResponse.json();
+        contactId = createContactData?.data?.id;
+
+        if (!contactId) throw new Error("No contact ID returned from HubSpot");
+        console.log("New contact created with ID:", contactId);
+      }
 
       setContactId(contactId);
 
@@ -289,7 +338,16 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          properties: {
+          hubspot: {
+            contactId: contactId,
+            email: formData.email,
+            firstname: formData.name,
+            phone: formData.phone, // This now contains the full phone number with country code
+            course_name: selectedPlan?.name || formData.plan,
+            message: formData.message,
+            course_status: 'upcoming',
+            course_start_date: selectedStartDate,
+            instructor_name: batch.instructor,
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: selectedPlan.price.replace(/[^0-9.]/g, ""),
@@ -306,16 +364,19 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       console.error("Error updating enrollment:", err);
       alert('Payment successful but there was an error updating your enrollment. Please contact support.');
     }
-  }, [contactId, selectedPlan]);
+  }, [contactId, selectedPlan, selectedPaymentMethod, formData, batch.duration, selectedStartDate, batch.instructor]);
 
   const handlePaymentError = useCallback((error: any) => {
     console.error('Payment error:', error);
     alert(`Payment failed ❌ Please try again.`);
   }, []);
 
+  const navigate = useNavigate();
+
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);
-    onClose(); // Close the main enrollment modal
+    navigate("/welcome-onboard");
+    onClose();
   };
 
   const renderFormStep = () => (
@@ -456,9 +517,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
               Processing...
             </>
           ) : (
-            // 'Proceed to Payment'
-            'Proceed'
-
+            'Proceed to Pay'
           )}
         </button>
       </div>
@@ -470,15 +529,8 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     if (!selectedPaymentMethod) {
       return (
         <div className="flex flex-col gap-6">
-          <Link
-            to="https://ent.ccielab.net/register"
-            className="mt-6 py-3 px-4 rounded-lg text-center text-white w-full font-semibold transition-colors bg-blue-600 hover:bg-blue-700"
-          >
-            Register
-          </Link>
-
           {/* Order Summary */}
-          {/* <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
+          <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
             <h4 className={cn("font-semibold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>Order Summary</h4>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
@@ -494,10 +546,10 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
                 <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedStartDate}</span>
               </div>
             </div>
-          </div> */}
+          </div>
 
           {/* Payment Method Selection */}
-          {/* <div>
+          <div>
             <h4 className={cn("font-semibold mb-3", isDarkMode ? "text-white" : "text-gray-800")}>Select Payment Method</h4>
             <div className="space-y-3">
               <label className={cn("flex items-center p-3 border rounded-lg cursor-pointer transition",
@@ -526,7 +578,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
                 <span className={isDarkMode ? "text-white" : "text-gray-800"}>Stripe</span>
               </label>
             </div>
-          </div> */}
+          </div>
         </div>
       );
     }
@@ -546,38 +598,24 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     }
 
     // If Stripe is selected, show only Stripe UI
-    if (selectedPaymentMethod === 'stripe') {
+    if (selectedPaymentMethod === 'stripe' && selectedPlan) {
       return (
-        <div className="flex flex-col gap-6">
-          {/* Order Summary */}
-          <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <h4 className={cn("font-semibold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>Order Summary</h4>
-            <div className="flex justify-between items-center">
-              <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan?.name}</span>
-              <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlan?.price}</span>
-            </div>
-          </div>
-
-          {/* Stripe Payment */}
-          <div className={cn("p-6 text-center border rounded-lg", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <div className="mb-4">
-              <h4 className={cn("font-medium text-lg", isDarkMode ? "text-white" : "text-gray-800")}>
-                💳 Pay with Stripe
-              </h4>
-              <p className={cn("text-sm mt-1", isDarkMode ? "text-gray-400" : "text-gray-600")}>
-                Secure payment with credit/debit card
-              </p>
-            </div>
-
-            <div className={cn("p-4 rounded border", isDarkMode ? "bg-gray-600 border-gray-500" : "bg-white border-gray-300")}>
-              <p className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>
-                Stripe integration coming soon...
-              </p>
-              <p className={cn("text-xs mt-2", isDarkMode ? "text-gray-400" : "text-gray-500")}>
-                Please use PayPal for now or contact support for alternative payment methods.
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
+          <Stripe
+            contactId={Number(contactId)}
+            amount={Number(selectedPlan.price.replace(/[^0-9.]/g, ""))}
+            course={selectedPlan.name}
+            email={formData.email}
+            firstname={formData.name}
+            phone={formData.phone} // This now has full number with country code
+            course_name={selectedPlan.name}
+            course_status='upcoming'
+            message={formData.message}
+            duration={batch.duration}
+            course_start_date={selectedStartDate}
+            instructor_name={batch.instructor}
+            onClick={onClose}
+          />
         </div>
       );
     }
@@ -603,8 +641,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
               isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
             )}
           >
-            {/* {currentStep === 'form' ? `Enroll for ${selectedStartDate}` : 'Complete Payment'} */}
-            {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Click to Register'}
+            {currentStep === 'form' ? `Enroll for ${selectedStartDate}` : 'Complete Payment'}
 
             {currentStep === "payment" && !selectedPaymentMethod && (
               <button

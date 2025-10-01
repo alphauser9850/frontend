@@ -22,7 +22,7 @@ export const sendWelcomeEmail = async (name, email, packageName, duration) => {
     sendSmtpEmail.params = { name, package: packageName, duration };
 
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log("Email sent successfully:", response);
+    console.log("Email sent successfully:", response.data);
     return response;
   } catch (error) {
     console.error("Error sending email:", JSON.stringify(error, null, 2));
