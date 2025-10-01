@@ -43,16 +43,21 @@ const Header: React.FC = () => {
   const location = useLocation();
   const { user } = useAuthStore();
   const { isDarkMode, setTheme } = useThemeStore();
+
+  const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showCoursesMenu, setShowCoursesMenu] = useState(false);
 
-  // Handle scroll effect - improved to prevent menu disappearing
+  useEffect(() => {
+    setMounted(true);
+    console.log('isDarkMode',isDarkMode)
+  }, []);
+
   useEffect(() => {
     let ticking = false;
-    
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -63,12 +68,10 @@ const Header: React.FC = () => {
         ticking = true;
       }
     };
-    
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
     setShowCoursesMenu(false);
@@ -79,7 +82,6 @@ const Header: React.FC = () => {
   };
 
   const toggleTheme = () => {
-    // Toggle between light and dark mode
     setTheme(isDarkMode ? 'light' : 'dark');
   };
 
@@ -108,51 +110,40 @@ const Header: React.FC = () => {
     path: COURSE_PATHS.CCIE
   };
 
+  // SSR-safe dark mode check
+  const themeClass = mounted && isDarkMode;
+
   return (
     <header 
       className={cn(
         "sticky top-0 left-0 right-0 z-50 transition-all duration-300",
         scrolled 
           ? "bg-surface/95 backdrop-blur-md border-b border-border-subtle shadow-subtle py-3" 
-          : "bg-surface py-8"
+          : "bg-surface py-8",
+        themeClass ? "dark" : "light"
       )}
     >
-      {/* Remove animated dot pattern for solid background */}
-      
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Left: Logo and Navigation */}
+          {/* Left: Logo and Nav */}
           <div className="flex items-center gap-8 flex-shrink-0">
-            {/* Enhanced Logo */}
             <Link to="/" className="flex items-center gap-4 group logo">
               <div className="relative">
-                {/* Square overlay backgrounds */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-purple-600/25 to-blue-600/25 rounded-xl blur-lg scale-110 group-hover:scale-125 transition-all duration-500"></div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 via-pink-500/20 to-yellow-400/20 rounded-xl blur-xl scale-115 group-hover:scale-130 transition-all duration-700"></div>
-                
-                {/* Main logo container - square */}
-                <div className="relative h-24 w-24 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-primary/25 flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300">
-                  {/* Logo image - natural square */}
+                <div className={cn(
+                  "relative h-24 w-24 rounded-xl border flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300",
+                  themeClass ? "bg-gray-800 border-gray-700" : "bg-gradient-to-br from-primary/10 to-purple-600/10 border-primary/25"
+                )}>
                   <img 
                     src="/ccielab.net logo.jpeg" 
                     alt="CCIELAB.NET Logo" 
                     className="h-20 w-20 object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-300" 
                   />
-                  
-                  {/* Square animated borders */}
-                  <div className="absolute inset-0 rounded-xl border border-primary/30 group-hover:border-primary/60 transition-all duration-300"></div>
-                  <div className="absolute inset-1 rounded-lg border border-cyan-400/20 group-hover:border-cyan-400/40 transition-all duration-500"></div>
-                  
-                  {/* Square glow effects */}
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/8 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
-              
-              {/* Enhanced text */}
               <div className="flex flex-col">
-                <span className={cn(
-                  "font-bold text-2xl transition-colors text-text-primary group-hover:text-primary transition-colors duration-300"
-                )}>
+                <span className="font-bold text-2xl">
                   <AuroraText>CCIELAB.NET</AuroraText>
                 </span>
                 <span className="text-xs font-medium text-primary/70 uppercase tracking-wider">
@@ -160,113 +151,103 @@ const Header: React.FC = () => {
                 </span>
               </div>
             </Link>
-            {/* Navigation (left, next to logo) */}
-            <nav className="hidden md:flex items-center gap-6 ml-6 text-base font-roboto" style={{ fontFamily: 'Roboto, Arial, sans-serif' }}>
+
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex items-center gap-6 ml-6 text-base font-roboto">
               <div className="relative">
                 <button 
                   onClick={() => setShowCoursesMenu(!showCoursesMenu)}
                   onMouseEnter={() => setShowCoursesMenu(true)}
                   className={cn(
-                    "px-4 py-2 rounded-full font-bold transition-colors flex items-center gap-1.5 text-base",
+                    "px-4 py-2 rounded-full font-bold flex items-center gap-1.5",
                     location.pathname.includes('/courses') 
                       ? "bg-design-primary-accent text-white" 
-                      : "text-text-primary hover:bg-surface-variant"
+                      : themeClass ? "text-white hover:bg-gray-700" : "text-gray-900 hover:bg-gray-100"
                   )}
                 >
                   <BookOpen className="h-4 w-4" />
                   Courses
                   <ChevronDown className={cn("h-4 w-4 transition-transform", showCoursesMenu ? "rotate-180" : "")} />
                 </button>
-                {/* Mega Menu */}
                 {showCoursesMenu && (
                   <div 
-                    className="absolute top-full left-0 mt-2 w-[600px] bg-surface border border-border-subtle rounded-xl shadow-large p-4 grid grid-cols-2 gap-2 z-50"
+                    className={cn(
+                      "absolute top-full left-0 mt-2 w-[600px] border rounded-xl shadow-large p-4 grid grid-cols-2 gap-2 z-50",
+                      themeClass ? "bg-gray-900 border-gray-700" : "bg-white border-gray-100"
+                    )}
                     onMouseLeave={() => setShowCoursesMenu(false)}
                   >
                     {[ccieCourseItem].map((item, index) => (
                       <Link 
                         key={index}
                         to={item.path}
-                        className="flex items-start gap-3 p-3 rounded-lg hover:bg-surface-variant transition-colors"
+                        className={cn(
+                          "flex items-start gap-3 p-3 rounded-lg hover:bg-opacity-70 transition-colors",
+                          themeClass ? "hover:bg-gray-800 text-white" : "hover:bg-gray-100 text-gray-900"
+                        )}
                       >
                         <div className="p-2 rounded-full bg-design-primary-accent/10 text-design-primary-accent">
                           {item.icon}
                         </div>
                         <div>
-                          <h3 className="font-medium text-text-primary">{item.title}</h3>
-                          <p className="text-sm text-text-secondary">{item.description}</p>
+                          <h3>{item.title}</h3>
+                          <p className={themeClass ? "text-gray-400" : "text-gray-600"}>{item.description}</p>
                         </div>
                       </Link>
                     ))}
                   </div>
                 )}
               </div>
-              <Link 
-                to="/about" 
-                className={cn(
-                  "px-4 py-2 rounded-full font-bold transition-colors text-base",
-                  isActive('/about') 
-                    ? "bg-design-primary-accent text-white" 
-                    : "text-text-primary hover:bg-surface-variant"
-                )}
-              >
-                <span className="flex items-center gap-1.5"> 
-                  About Us
-                </span>
+              <Link to="/about" className={cn(
+                "px-4 py-2 rounded-full font-bold transition-colors",
+                location.pathname === "/about"
+                  ? "bg-design-primary-accent text-white"
+                  : themeClass ? "text-white hover:bg-gray-700" : "text-gray-900 hover:bg-gray-100"
+              )}>
+                About Us
               </Link>
-              <Link 
+               <Link 
                 to="/contact" 
                 className={cn(
                   "px-4 py-2 rounded-full font-bold transition-colors text-base",
-                  isActive('/contact') 
-                    ? "bg-design-primary-accent text-white" 
-                    : "text-text-primary hover:bg-surface-variant"
+                 location.pathname === "/contact"
+                  ? "bg-design-primary-accent text-white"
+                  : themeClass ? "text-white hover:bg-gray-700" : "text-gray-900 hover:bg-gray-100"
                 )}
               >
                 <span className="flex items-center gap-1.5">
                   Contact Us
                 </span>
               </Link>
-              <Link 
-                to="/blog" 
-                className={cn(
-                  "px-4 py-2 rounded-full font-bold transition-colors text-base",
-                  isActive('/blog') 
-                    ? "bg-design-primary-accent text-white" 
-                    : "text-text-primary hover:bg-surface-variant"
-                )}
-              >
-                <span className="flex items-center gap-1.5">
-                  Blogs
-                </span>
+              <Link to="/blog" className={cn(
+                "px-4 py-2 rounded-full font-bold transition-colors",
+                location.pathname === "/blog"
+                  ? "bg-design-primary-accent text-white"
+                  : themeClass ? "text-white hover:bg-gray-700" : "text-gray-900 hover:bg-gray-100"
+              )}>
+                Blog
               </Link>
             </nav>
           </div>
-          {/* Right: Theme Toggle, Login, Register */}
+
+          {/* Right: Theme + Auth */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Theme Toggle */}
             <button 
               onClick={toggleTheme}
               className={cn(
-                "p-2 rounded-full transition-colors hover:bg-surface-variant text-text-primary"
+                "p-2 rounded-full hover:bg-gray-200",
+                themeClass ? "text-white hover:bg-gray-700" : "text-gray-900"
               )}
               aria-label="Toggle theme"
             >
-              {isDarkMode ? (
-                <Moon className="h-5 w-5" />
-              ) : (
-                <Sun className="h-5 w-5" />
-              )}
+              {themeClass ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             </button>
             {!user && (
               <>
-                <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer" className={cn(
-                  "px-4 py-2 rounded-full font-bold transition-colors text-base text-text-primary hover:bg-surface-variant"
-                )}>
-                  <span className="flex items-center gap-1.5">
-                    <LogIn className="h-4 w-4" />
-                    Login
-                  </span>
+                <a href="https://ent.ccielab.net/login" target="_blank" rel="noopener noreferrer"
+                  className={cn("px-4 py-2 rounded-full font-bold hover:bg-gray-200", themeClass ? "text-white hover:bg-gray-700" : "text-gray-900")}>
+                  <LogIn className="h-4 w-4 inline-block mr-1" />
+                  Login
                 </a>
                 <a href="https://ent.ccielab.net/register" target="_blank" rel="noopener noreferrer" className="contents">
                   <RainbowButton asChild={true}>
@@ -278,20 +259,20 @@ const Header: React.FC = () => {
                 </a>
               </>
             )}
+             <a
+      href="tel:+18777072243"
+      className="px-10 py-2 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700"
+    >
+      Call Us
+    </a>
           </div>
+
           {/* Mobile Menu Button */}
-          <button 
+          <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={cn(
-              "md:hidden p-2 rounded-md transition-colors text-text-primary hover:bg-surface-variant"
-            )}
-            aria-label="Toggle menu"
+            className={cn("md:hidden p-2 rounded-md", themeClass ? "text-white" : "text-gray-900")}
           >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </div>
@@ -415,4 +396,4 @@ const Header: React.FC = () => {
   );
 };
 
-export default Header; 
+export default Header;

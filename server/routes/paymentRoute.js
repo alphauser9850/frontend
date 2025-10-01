@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/paypalCreateOrder", controller.paypalCreateOrder);
 router.post("/paypalCaptureOrder", controller.paypalCaptureOrder);
-router.post("/create-payment-intent", controller.createStripeIntent);
-
+router.post("/generateStripePaymentLink", controller.generateStripePaymentLink)
+router.post("/getStripeWebhook", controller.receiveStripeWebHook);
 
 export default router;
