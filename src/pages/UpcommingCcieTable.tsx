@@ -598,7 +598,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     }
 
     // If Stripe is selected, show only Stripe UI
-    if (selectedPaymentMethod === 'stripe') {
+    if (selectedPaymentMethod === 'stripe' && selectedPlan) {
       return (
         <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
           <Stripe
