@@ -5,7 +5,6 @@ import { OnboardEmail } from '../utils/userOnbarded.js';
 dotenv.config();
 const HUBSPOT_TOKEN = process.env.HUBSPOT_TOKEN;
 
-
 export const getContact = async (req, res) => {
     try {
         const response = await axios.post("https://api.hubapi.com/crm/v3/objects/contacts/search",
