@@ -59,7 +59,7 @@ export const createContact = async (req, res) => {
     }
 }
 
-export const updateDetails = async (req, res) => {
+export const updateContact = async (req, res) => {
     try {
         await axios.patch(`https://api.hubapi.com/crm/v3/objects/contacts/${req.body.hubspot.contactId}`,
             {
@@ -123,13 +123,13 @@ export const updateDetails = async (req, res) => {
         await sendWelcomeEmail(name, email, packageName, duration);
         res.status(200).json({
             status: "Success",
-            data: null,
-            message: "Details Updated Successfully"
+            data: response.data,
+            message: "Contact Updated Successfully"
         });
     } catch (error) {
         return res.status(500).json({
             status: "Failure",
-            error: error,
+            error: error.response.data,
             message: "Internal Server Error"
         });
     }

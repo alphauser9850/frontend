@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import { 
   Mail, 
   Phone, 
@@ -19,7 +19,7 @@ import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { submitFormToN8n, ContactFormData } from '../services/formService';
 import { cn } from '../lib/utils';
 import Breadcrumbs from '../components/Breadcrumbs';
-
+import { Helmet } from 'react-helmet-async';
 // Contact information
 const contactInfo = [
   {
@@ -34,8 +34,8 @@ const contactInfo = [
     icon: <Phone className="h-6 w-6" />,
     title: "Call Us",
     description: "Speak with our team",
-    value: "+1 (555) 123-4567",
-    link: "tel:+15551234567",
+    value: "+1 877 707 2243",
+    link: "tel:+18777072243",
     color: "text-green-500"
   },
   {
@@ -276,31 +276,9 @@ const ContactPage: React.FC = () => {
       <Helmet>
         <title>Contact Us | Get in Touch with CCIE Lab</title>
         <meta name="description" content="Have questions about CCIE training or enrollment? Contact CCIE Lab today. Our support team is here to assist you with course details, queries, and scheduling." />
-         
-        <meta name="robots" content="index, follow" />
         <meta property="og:title" content="Contact Us | Get in Touch with CCIE Lab" />
         <meta property="og:description" content="Have questions about CCIE training or enrollment? Contact CCIE Lab today. Our support team is here to assist you with course details, queries, and scheduling." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ccielab.net/contact" />
-        <link rel="canonical" href="https://ccielab.net/contact" />
-        
-        {/* Structured Data */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ContactPage",
-            "name": "Contact CCIE LAB",
-            "description": "Contact our team for Cisco certification training and support",
-            "url": "https://ccielab.net/contact",
-            "mainEntity": {
-              "@type": "Organization",
-              "name": "CCIE LAB",
-              "email": "info@ccielab.net",
-              "telephone": "+1 (555) 123-4567",
-              "url": "https://ccielab.net"
-            }
-          })}
-        </script>
       </Helmet>
         <div className='container mx-auto px-4'>
        <Breadcrumbs items={[

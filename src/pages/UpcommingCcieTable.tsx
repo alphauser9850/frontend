@@ -253,6 +253,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       phone: fullPhoneNumber, // This will now include country code
       classStartDate: selectedStartDate,
       instructor: batch.instructor,
+      // timeZone: batch.time,
       payment_status: "pending",
     };
 
@@ -322,8 +323,8 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       setCurrentStep('payment');
 
     } catch (err) {
-      console.error("Error processing contact:", err);
-      alert('Error submitting form. Please try again.');
+      console.error("Error submitting to HubSpot:", err);
+      // alert('Error submitting form. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -333,8 +334,8 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     if (!contactId || !selectedPlan) return;
 
     try {
-      await fetch(`/api/hubspot/update-details`, {
-        method: "POST",
+      await fetch(`/api/hubspot/update-contact/${contactId}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           hubspot: {
@@ -351,15 +352,9 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
             hs_lead_status: "Enroll",
             paid_amount: selectedPlan.price.replace(/[^0-9.]/g, ""),
             payment_status: "Completed",
-            payment_id: paymentData.data?.id || paymentData.id,
-            payment_type: selectedPaymentMethod,
+            payment_id: paymentData.data.id,
+            payment_type: "paypal",
           },
-          email: {
-            name: formData.name,
-            email: formData.email,
-            packageName: selectedPlan.name,
-            duration: batch.duration
-          }
         }),
       });
       // Show success dialog
@@ -591,7 +586,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     // If PayPal is selected, show only PayPal UI
     if (selectedPaymentMethod === 'paypal' && selectedPlan) {
       return (
-        <div className="flex flex-col gap-6 overflow-y-auto p-2 rounded-lg">
+        <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto p-2 rounded-lg">
           <PayPalCheckout
             amount={selectedPlan.price.replace(/[^0-9.]/g, "")}
             course={selectedPlan.name}
@@ -603,7 +598,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
     }
 
     // If Stripe is selected, show only Stripe UI
-    if (selectedPaymentMethod === 'stripe' && selectedPlan) {
+    if (selectedPaymentMethod === 'stripe') {
       return (
         <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
           <Stripe

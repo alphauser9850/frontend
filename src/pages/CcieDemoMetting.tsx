@@ -1,7 +1,7 @@
 import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
 import { PopupModal } from "react-calendly";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, Loader } from "lucide-react";
 
 // Country code options
@@ -17,17 +17,17 @@ const countryOptions = [
     { code: "+65", short: "SG" },
     { code: "+60", short: "MY" },
 ];
-
 const CCIeDemoMeeting = () => {
-    const { isDarkMode } = useThemeStore();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
-    const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
-    const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
+  	const { isDarkMode } = useThemeStore();
+  	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
+    	const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+    	const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
+    	const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+    	const [isProcessing, setIsProcessing] = useState(false);
+    	const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
 
-    const [formData, setFormData] = useState({
+    	const [formData, setFormData] = useState({
         firstname: "",
         lastname: "",
         email: "",
@@ -39,6 +39,10 @@ const CCIeDemoMeeting = () => {
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
+  useEffect(() => {
+    // ✅ Runs only on client (avoids SSR crash)
+    setRootElement(document.getElementById("root"));
+  }, []);
 
     const validateForm = () => {
         const newErrors: Record<string, string> = {};
@@ -165,7 +169,7 @@ const CCIeDemoMeeting = () => {
         });
     };
 
-    return (
+ return (
         <>
             <section
                 className={cn(
@@ -420,7 +424,7 @@ const CCIeDemoMeeting = () => {
                     url={clendely_id}
                     open={isCalendlyOpen}
                     onModalClose={handleCalendlyClose}
-                    rootElement={document.getElementById("root")!}
+                    rootElement={rootElement}
                     prefill={{
                         name: `${formData.firstname} ${formData.lastname}`,
                         email: formData.email,
