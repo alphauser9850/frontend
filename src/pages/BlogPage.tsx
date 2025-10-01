@@ -1,11 +1,12 @@
 import React from 'react';
 import { AuroraText } from '../components/magicui';
 import Breadcrumbs from '../components/Breadcrumbs';
-import SEOHeadings from '../components/SEOHeadings';
-
+// import SEOHeadings from '../components/SEOHeadings';
+import { Link } from 'react-router-dom';
 const blogPosts = [
   {
     id: 1,
+    slug: 'understanding-mtu-layer2-vs-layer3',
     title: 'Understanding MTU: Layer 2 vs Layer 3',
     category: 'Networking',
     image: '/mtu-layer2-layer3.png',
@@ -16,6 +17,7 @@ const blogPosts = [
   },
   {
     id: 2,
+    slug: 'cisco-modeling-labs-cml-free-tier',
     title: 'Cisco Modeling Labs (CML) Free Tier: What You Need to Know',
     category: 'Cisco',
     image: '/cml-free-tier.png',
@@ -26,6 +28,7 @@ const blogPosts = [
   },
   {
     id: 3,
+    slug: 'coming-soon-more-networking-insights',
     title: 'Coming Soon: More Networking Insights',
     category: 'Announcement',
     image: '/coming-soon.png',
@@ -39,60 +42,62 @@ const blogPosts = [
 const BlogPage: React.FC = () => {
   return (
     <>
-    <div className='container mx-auto px-4'>
-     <Breadcrumbs items={[
+      <div className='container mx-auto px-4'>
+        <Breadcrumbs items={[
           { label: 'Home', href: '/' },
           { label: 'Blogs' }
         ]} />
       </div>
-    <div className="min-h-screen pt-20 bg-background text-foreground pb-20">
-      {/* SEO Optimized Headings */}
-      <SEOHeadings
-        title="CCIE Training Blog | Networking Insights & Cisco Technologies"
-        description="Expert insights on CCIE training, networking technologies, Cisco certifications, and hands-on lab guides from certified CCIE instructors."
-        canonicalUrl="https://www.ccielab.net/blog" 
-      />
-      
-      <section className="container mx-auto px-4 md:px-8 lg:px-16">
-       
-        <h1 className=" blogTitle text-4xl md:text-5xl font-bold text-center mb-10">
-          <AuroraText>Blogs</AuroraText>
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-          {blogPosts.map((post) => (
-            <div
-              key={post.id}
-              className="w-full max-w-sm bg-card rounded-2xl shadow-md border border-border transition-transform hover:scale-105 hover:shadow-lg flex flex-col"
-            >
-              <div className="rounded-t-2xl overflow-hidden bg-muted flex items-center justify-center h-44">
-                <img
-                  src={post.image}
-                  alt={`${post.title} - CCIE Enterprise Infrastructure Training Blog`}
-                  className="object-cover object-top"
-                  style={{ filter: 'var(--blog-img-filter, none)' }}
-                />
-              </div>
-              <div className="flex flex-col flex-1 blogDesc p-6">
-                <span className="categotyBadge  inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                  {post.category}
-                </span>
-                <div className="dFlex postMeta pb-6">
-                  <span>{post.author}</span> 
-                  <span>{post.date}</span> 
+      <div className="min-h-screen pt-20 bg-background text-foreground pb-20">
+        {/* SEO Optimized Headings */}
+        {/* <SEOHeadings
+          title="CCIE Training Blog | Networking Insights & Cisco Technologies"
+          description="Expert insights on CCIE training, networking technologies, Cisco certifications, and hands-on lab guides from certified CCIE instructors."
+          canonicalUrl="https://www.ccielab.net/blog"
+          h1Text="CCIE Training Blog"
+          h1ClassName="text-4xl md:text-5xl font-bold text-center mb-10"
+        /> */}
+
+        <section className="container mx-auto px-4 md:px-8 lg:px-16">
+
+          <h1 className=" blogTitle text-4xl md:text-5xl font-bold text-center mb-10">
+            <AuroraText>Blogs</AuroraText>
+          </h1>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+            {blogPosts.map((post) => (
+              <Link
+                to={`/blog/${post.slug}`}
+                key={post.id}
+                className="w-full max-w-sm bg-card rounded-2xl shadow-md border border-border transition-transform hover:scale-105 hover:shadow-lg flex flex-col cursor-pointer"
+              >
+                <div className="rounded-t-2xl overflow-hidden bg-muted flex items-center justify-center h-44">
+                  <img
+                    src={post.image}
+                    alt={`${post.title} - CCIE Enterprise Infrastructure Training Blog`}
+                    className="object-cover object-top"
+                    style={{ filter: 'var(--blog-img-filter, none)' }}
+                  />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-foreground">
-                  {post.title}
-                </h3>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                  
-                  <span className='readBadge'>{post.readTime}</span>
+                <div className="flex flex-col flex-1 blogDesc p-6">
+                  <span className="categotyBadge inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                    {post.category}
+                  </span>
+                  <div className="dFlex postMeta pb-6">
+                    <span>{post.author}</span>
+                    <span>{post.date}</span>
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 text-foreground">
+                    {post.title}
+                  </h3>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+                    <span className='readBadge'>{post.readTime}</span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
     </>
   );
 };

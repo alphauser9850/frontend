@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, Phone, Youtube, Linkedin, Instagram, Twitter, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom'; 
 import { AuroraText } from './magicui';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faYoutube , faTumblrSquare ,faLinkedin, faInstagram,faReddit,faQuora,faTumblr,faFacebook,faTwitter,faPinterest } from '@fortawesome/free-brands-svg-icons'
 
 const Footer: React.FC = () => {
   return (
@@ -54,7 +55,8 @@ const Footer: React.FC = () => {
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
                 aria-label="YouTube"
               >
-                <Youtube className="h-5 w-5" />
+                
+                <FontAwesomeIcon icon={faYoutube} />
               </a>
               <a 
                 href="https://www.linkedin.com/company/ccie-lab" 
@@ -62,8 +64,8 @@ const Footer: React.FC = () => {
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
                 aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
+              > 
+                 <FontAwesomeIcon icon={faLinkedin} />
               </a>
               <a 
                 href="https://www.instagram.com/ccie.lab/" 
@@ -71,8 +73,8 @@ const Footer: React.FC = () => {
                 rel="noopener noreferrer"
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
                 aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
+              > 
+                <FontAwesomeIcon icon={faInstagram} />
               </a>
               <a 
                 href="https://x.com/CcielabNet" 
@@ -81,7 +83,43 @@ const Footer: React.FC = () => {
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
                 aria-label="Twitter"
               >
-                <Twitter className="h-5 w-5" />
+               <FontAwesomeIcon icon={faTwitter} />
+              </a>
+               <a 
+                href="https://www.reddit.com/r/ccielab/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
+                aria-label="Twitter"
+              >
+               <FontAwesomeIcon icon={faReddit} />
+              </a>
+               <a 
+                href="https://ccielab.quora.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
+                aria-label="Twitter"
+              >
+               <FontAwesomeIcon icon={faQuora} />
+              </a>
+              <a 
+                href="https://www.tumblr.com/ccielab" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
+                aria-label="Twitter"
+              >
+               <FontAwesomeIcon icon={faTumblrSquare} />
+              </a>
+              <a 
+                href="https://www.pinterest.com/ccielabnet/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
+                aria-label="Twitter"
+              >
+               <FontAwesomeIcon icon={faPinterest} />
               </a>
             </div>
           </div>
@@ -137,7 +175,7 @@ const Footer: React.FC = () => {
                 support@ccielab.net
               </a>
               <p className="text-muted-foreground">
-                +1 760 858 0505
+                +1 877 707 2243 
               </p>
               <p className="text-muted-foreground">
                 2175 Goodyear Ave. Ste 110 Ventura CA 93003

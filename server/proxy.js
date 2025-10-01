@@ -1,125 +1,116 @@
-import express from 'express';
-// import { createProxyMiddleware } from 'http-proxy-middleware';
-import cors from 'cors';
-// import { supabase } from '../src/lib/supabase.js';
-
+import express from "express";
+import compression from "compression";
+import cors from "cors";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath, pathToFileURL } from "url";
 import router from "./routes/index.js";
-
-const app = express();
+ 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+ 
+const isProd = process.env.NODE_ENV === "production";
 const PORT = process.env.PORT || 3001;
-
-// Enable CORS
-app.use(cors());
-
-// Parse JSON request body
-app.use(express.json());
-
-// Authentication middleware
-// const authenticate = async (req, res, next) => {
-//   const authHeader = req.headers.authorization;
-
-//   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-//     return res.status(401).json({ error: 'Unauthorized: No token provided' });
-//   }
-
-//   const token = authHeader.split(' ')[1];
-
-//   try {
-//     // Verify the token with Supabase
-//     const { data, error } = await supabase.auth.getUser(token);
-
-//     if (error || !data.user) {
-//       return res.status(401).json({ error: 'Unauthorized: Invalid token' });
-//     }
-
-//     // Store user info in request for later use
-//     req.user = data.user;
-//     next();
-//   } catch (error) {
-//     console.error('Authentication error:', error);
-//     return res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
-
-// Authorization middleware to check if user has access to the requested server
-// const authorizeServerAccess = async (req, res, next) => {
-//   const { serverId } = req.params;
-//   const userId = req.user.id;
-
-//   if (!serverId) {
-//     return res.status(400).json({ error: 'Server ID is required' });
-//   }
-
-//   try {
-//     // Check if user has approved access to this server
-//     const { data, error } = await supabase
-//       .from('server_assignments')
-//       .select('*')
-//       .eq('server_id', serverId)
-//       .eq('user_id', userId)
-//       .eq('status', 'approved')
-//       .single();
-
-//     if (error || !data) {
-//       return res.status(403).json({ error: 'Forbidden: You do not have access to this server' });
-//     }
-
-//     // Get the server details
-//     const { data: serverData, error: serverError } = await supabase
-//       .from('servers')
-//       .select('*')
-//       .eq('id', serverId)
-//       .single();
-
-//     if (serverError || !serverData) {
-//       return res.status(404).json({ error: 'Server not found' });
-//     }
-
-//     // Store server info in request for the proxy
-//     req.targetServer = serverData;
-//     next();
-//   } catch (error) {
-//     console.error('Authorization error:', error);
-//     return res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
-
-// Proxy middleware setup
-// app.use('/api/proxy/:serverId/*', authenticate, authorizeServerAccess, (req, res, next) => {
-//   const targetUrl = req.targetServer.url;
-//   const pathRewrite = {
-//     [`^/api/proxy/${req.params.serverId}`]: '',
-//   };
-
-//   // Create a proxy for this specific request
-//   const proxy = createProxyMiddleware({
-//     target: targetUrl,
-//     changeOrigin: true,
-//     pathRewrite,
-//     onProxyRes: (proxyRes, req, res) => {
-//       // Add headers to prevent direct access
-//       proxyRes.headers['X-Frame-Options'] = 'SAMEORIGIN';
-//       proxyRes.headers['Content-Security-Policy'] = "frame-ancestors 'self'";
-//     },
-//     onError: (err, req, res) => {
-//       console.error('Proxy error:', err);
-//       res.status(500).json({ error: 'Proxy error', message: err.message });
-//     },
-//   });
-
-//   // Execute the proxy
-//   proxy(req, res, next);
-// });
-
-// Health check endpoint
-
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
-
-app.use('/api', router);
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Proxy server running on port ${PORT}`);
-});
+ 
+async function startServer() {
+  const app = express();
+ 
+  // Common middleware
+  app.use(compression());
+  app.use(cors());
+  app.use(express.json());
+ 
+  /** ------------------------
+   * API ROUTES (Backend only)
+   * ------------------------ */
+  app.get("/api/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
+  });
+ 
+  app.use("/api", router);
+ 
+  /** ------------------------
+   * FRONTEND SSR HANDLING
+   * ------------------------ */
+  if (!isProd) {
+    // Development mode with Vite middleware
+    const { createServer: createViteServer } = await import("vite");
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: "custom",
+    });
+ 
+    app.use(vite.middlewares);
+ 
+    app.use(async (req, res, next) => {
+      try {
+        let template = await fs.readFile(
+          path.resolve(__dirname, "../index.html"),
+          "utf-8"
+        );
+ 
+        template = await vite.transformIndexHtml(req.originalUrl, template);
+        const { render } = await vite.ssrLoadModule("/src/entry-server.tsx");
+        const { appHtml, helmetHead } = await render(req.originalUrl);
+ 
+        const html = template
+          .replace("<!--app-html-->", appHtml)
+          .replace("<!--app-head-->", helmetHead);
+ 
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (e) {
+        vite.ssrFixStacktrace(e);
+        next(e);
+      }
+    });
+  } else {
+    // Production mode: serve prebuilt assets
+    const clientDist = path.resolve(__dirname, "../dist/client");
+    const ssrDist = path.resolve(__dirname, "../dist/server/entry-server.js");
+ 
+    app.use(express.static(clientDist, { index: false }));
+ 
+    let render;
+    try {
+      const ssrModule = await import(pathToFileURL(ssrDist).href);
+      render = ssrModule.render;
+    } catch (err) {
+      console.error(
+        `Failed to load SSR bundle: ${ssrDist}\n` +
+          `Did you forget to run "npm run build:server"?`
+      );
+      console.error(err);
+      render = () => ({ appHtml: "", helmetHead: "" }); // fallback
+    }
+ 
+    app.use(async (req, res) => {
+      try {
+        const template = await fs.readFile(
+          path.resolve(clientDist, "index.html"),
+          "utf-8"
+        );
+ 
+        const { appHtml, helmetHead } = render(req.originalUrl);
+        const html = template
+          .replace("<!--app-html-->", appHtml)
+          .replace("<!--app-head-->", helmetHead);
+ 
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (e) {
+        console.error(e);
+        res.status(500).end("Internal Server Error");
+      }
+    });
+  }
+ 
+  /** ------------------------
+   * START SERVER
+   * ------------------------ */
+  app.listen(PORT, () => {
+    console.log(
+      `✅ Server running in ${isProd ? "production" : "development"} mode at http://localhost:${PORT}`
+    );
+  });
+}
+ 
+startServer();
