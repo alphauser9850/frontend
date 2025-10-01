@@ -4,7 +4,7 @@ import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
 import Stripe from '../components/PaymentGateways/Stripe';
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 interface Batch {
   startDate: string;
@@ -517,7 +517,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
               Processing...
             </>
           ) : (
-            'Proceed'
+            'Proceed to Pay'
           )}
         </button>
       </div>

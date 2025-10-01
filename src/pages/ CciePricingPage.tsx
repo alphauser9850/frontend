@@ -4,7 +4,7 @@ import { cn } from '../lib/utils';
 import { ChevronDown, ChevronUp, Loader, CheckCircle, X } from 'lucide-react';
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
 import Stripe from '../components/PaymentGateways/Stripe';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 
 interface PricingPlan {
   tierName: string;
