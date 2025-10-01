@@ -60,7 +60,6 @@ export const createContact = async (req, res) => {
 }
 
 export const updateContact = async (req, res) => {
-export const updateContact = async (req, res) => {
     try {
         await axios.patch(`https://api.hubapi.com/crm/v3/objects/contacts/${req.body.hubspot.contactId}`,
             {
@@ -126,8 +125,7 @@ export const updateContact = async (req, res) => {
             status: "Success",
             data: response.data,
             message: "Contact Updated Successfully"
-            data: response.data,
-            message: "Contact Updated Successfully"
+          
         });
     } catch (error) {
         return res.status(500).json({

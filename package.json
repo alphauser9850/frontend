@@ -10,12 +10,6 @@
     "build": "npm run build:client && npm run build:server",
     "preview": "cross-env NODE_ENV=production node server/proxy.js",
     "start": "cross-env NODE_ENV=production node server/proxy.js"
-    "dev": "cross-env NODE_ENV=development node server/proxy.js",
-    "build:client": "vite build --outDir dist/client",
-    "build:server": "vite build --outDir dist/server --ssr src/entry-server.tsx",
-    "build": "npm run build:client && npm run build:server",
-    "preview": "cross-env NODE_ENV=production node server/proxy.js",
-    "start": "cross-env NODE_ENV=production node server/proxy.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.1",
