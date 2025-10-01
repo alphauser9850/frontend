@@ -761,6 +761,8 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
         </div>
       </div>
 
+      
+
       {showModal && selectedPlan && selectedPlanPrice && (
         <EnrollModal
           selectedPlan={selectedPlan}
