@@ -74,27 +74,56 @@ const CCIeDemoMeeting = () => {
 
         try {
             // Save contact to HubSpot with full phone number (country code + number)
-            const fullPhone = `${selectedCountryCode}${formData.phone}`;
-
-            const res = await fetch("/api/hubspot/create-contact", {
+            const checkContactResponse = await fetch("/api/hubspot/get-contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    properties: {
-                        ...formData,
-                        phone: fullPhone, // Save with country code
-                    }
+                    filterGroups: [
+                        {
+                            filters: [
+                                {
+                                    propertyName: "email",
+                                    operator: "EQ",
+                                    value: formData.email, // ✅ fixed (was submissionData)
+                                }
+                            ]
+                        }
+                    ],
+                    properties: ["firstname", "lastname", "email", "phone", "id"]
                 }),
             });
 
-            if (res.ok) {
-                // Close modal and open Calendly
-                setIsModalOpen(false);
-                setIsCalendlyOpen(true);
+            const checkContactData = await checkContactResponse.json();
+
+            let contactId: string | null = null;
+
+            if (checkContactData.data?.results?.length > 0) {
+                contactId = checkContactData.data.results[0].id;
+                console.log("Contact already exists with ID:", contactId);
             } else {
-                const errorData = await res.json();
-                console.error("HubSpot create contact failed:", errorData);
-                alert("Failed to save contact. Please try again.");
+                // Create new contact
+                const fullPhone = `${selectedCountryCode}${formData.phone}`;
+
+                const res = await fetch("/api/hubspot/create-contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        properties: {
+                            ...formData,
+                            phone: fullPhone, // Save with country code
+                        }
+                    }),
+                });
+
+                if (res.ok) {
+                    // Close modal and open Calendly
+                    setIsModalOpen(false);
+                    setIsCalendlyOpen(true);
+                } else {
+                    const errorData = await res.json();
+                    console.error("HubSpot create contact failed:", errorData);
+                    alert("Failed to save contact. Please try again.");
+                }
             }
         } catch (err) {
             console.error("API error:", err);

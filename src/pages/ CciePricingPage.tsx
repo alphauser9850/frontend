@@ -4,7 +4,7 @@ import { cn } from '../lib/utils';
 import { ChevronDown, ChevronUp, Loader, CheckCircle, X } from 'lucide-react';
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
 import Stripe from '../components/PaymentGateways/Stripe';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface PricingPlan {
   tierName: string;
@@ -15,9 +15,7 @@ interface PricingPlan {
   features: string[];
   buttonText: string;
   buttonClass: string;
-  paymentOptions: string;
   popular?: boolean;
-  // Add duration property to the interface
   duration?: string;
 }
 
@@ -29,7 +27,13 @@ interface PricingCardProps extends PricingPlan {
   onPlanSelect: (planName: string, planPrice: string, duration?: string) => void;
 }
 
-const countryOptions = [
+interface CountryOption {
+  code: string;
+  name: string;
+  short: string;
+}
+
+const countryOptions: CountryOption[] = [
   { code: "+1", name: "United States", short: "US" },
   { code: "+91", name: "India", short: "IN" },
   { code: "+44", name: "United Kingdom", short: "GB" },
@@ -56,6 +60,15 @@ interface SuccessDialogProps {
   isDarkMode: boolean;
   planName: string;
   planPrice: string;
+}
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  course: string;
+  message?: string;
+  price: string;
 }
 
 // Success Dialog Component
@@ -116,14 +129,15 @@ function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: Suc
 type ModalStep = 'form' | 'payment' | 'processing';
 
 function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, onClose, isDarkMode }: EnrollModalProps) {
-  const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCountryCode, setSelectedCountryCode] = useState<string>(countryOptions[0].code);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>('form');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'paypal' | 'stripe' | null>(null);
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<FormData | null>(null);
   const [contactId, setContactId] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -137,16 +151,17 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
     setIsProcessing(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const formValues = Object.fromEntries(formData.entries());
+    const formValues = Object.fromEntries(formData.entries()) as unknown as FormData;
 
-    const submissionData: any = {
+    const submissionData: FormData & { countryCode: string; selectedPlan: string; payment_status: string } = {
       ...formValues,
       countryCode: selectedCountryCode,
       selectedPlan: selectedPlan,
       payment_status: "pending",
     };
 
-    setFormData(submissionData);
+    setFormData(formValues);
+    const fullPhoneNumber = `${selectedCountryCode}${formValues.phone}`;
 
     try {
       // Step 1: Check if contact already exists using your existing get-contact endpoint
@@ -169,6 +184,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
         }),
       });
 
+      if (!checkContactResponse.ok) {
+        throw new Error(`HTTP error! status: ${checkContactResponse.status}`);
+      }
+
       const checkContactData = await checkContactResponse.json();
 
       let contactId: string;
@@ -186,9 +205,9 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             properties: {
               email: submissionData.email,
               firstname: submissionData.name,
-              phone: submissionData.phone,
+              phone: fullPhoneNumber,
               course_name: submissionData.course,
-              message: submissionData.message,
+              message: submissionData.message || '',
               leads_status: 'NEW',
               hs_lead_status: "NEW",
               course_status: 'ongoing',
@@ -196,6 +215,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             },
           }),
         });
+
+        if (!createContactResponse.ok) {
+          throw new Error(`HTTP error! status: ${createContactResponse.status}`);
+        }
 
         const createContactData = await createContactResponse.json();
         contactId = createContactData?.data?.id;
@@ -218,9 +241,11 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
   };
 
   const handlePaymentSuccess = useCallback(async (paymentData: any) => {
-    if (!contactId) return;
+    if (!contactId || !formData) return;
 
     try {
+      const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
+
       await fetch(`/api/hubspot/update-details`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -229,22 +254,22 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             contactId: contactId,
             email: formData.email,
             firstname: formData.name,
-            phone: formData.phone,
+            phone: fullPhoneNumber,
             course_name: formData.course,
-            message: formData.message,
+            message: formData.message || '',
             course_status: 'ongoing',
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: selectedPlanPrice.replace(/[^0-9.]/g, ""),
             payment_status: "Completed",
-            payment_id: paymentData.data.id,
-            payment_type: "paypal",
+            payment_id: paymentData.data?.id || paymentData.id,
+            payment_type: selectedPaymentMethod,
           },
           email: {
             name: formData.name,
             email: formData.email,
             packageName: formData.course,
-            duration: selectedPlanDuration // Use the passed duration
+            duration: selectedPlanDuration
           }
         }),
       });
@@ -255,7 +280,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
       console.error("Error updating enrollment:", err);
       alert('Payment successful but there was an error updating your enrollment. Please contact support.');
     }
-  }, [contactId, selectedPlanPrice, selectedPlanDuration, formData]);
+  }, [contactId, selectedPlanPrice, selectedPlanDuration, formData, selectedPaymentMethod, selectedCountryCode]);
 
   const handlePaymentError = useCallback((error: any) => {
     console.error('Payment error:', error);
@@ -264,7 +289,8 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
 
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);
-    onClose(); // Close the main enrollment modal
+    navigate("/welcome-onboard");
+    onClose();
   };
 
   const renderFormStep = () => (
@@ -304,7 +330,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             required
             value={selectedCountryCode}
             onChange={(e) => setSelectedCountryCode(e.target.value)}
-            onClick={() => setIsOpen(!isOpen)}
+            onFocus={() => setIsOpen(true)}
             onBlur={() => setIsOpen(false)}
           >
             {countryOptions.map((country) => (
@@ -382,7 +408,6 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               Processing...
             </>
           ) : (
-            // 'Proceed to Payment'
             'Proceed'
           )}
         </button>
@@ -395,25 +420,17 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
     if (!selectedPaymentMethod) {
       return (
         <div className="flex flex-col gap-6">
-
-          <Link
-            to="https://ent.ccielab.net/register"
-            className="mt-6 py-3 px-4 rounded-lg text-center text-white w-full font-semibold transition-colors bg-blue-600 hover:bg-blue-700"
-          >
-            Register
-          </Link>
-
           {/* Order Summary */}
-          {/* <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
+          <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
             <h4 className={cn("font-semibold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>Order Summary</h4>
             <div className="flex justify-between items-center">
               <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan}</span>
               <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlanPrice}</span>
             </div>
-          </div> */}
+          </div>
 
           {/* Payment Method Selection */}
-          {/* <div>
+          <div>
             <h4 className={cn("font-semibold mb-3", isDarkMode ? "text-white" : "text-gray-800")}>Select Payment Method</h4>
             <div className="space-y-3">
               <label className={cn("flex items-center p-3 border rounded-lg cursor-pointer transition",
@@ -442,7 +459,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
                 <span className={isDarkMode ? "text-white" : "text-gray-800"}>Stripe</span>
               </label>
             </div>
-          </div> */}
+          </div>
         </div>
       );
     }
@@ -462,7 +479,9 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
     }
 
     // If Stripe is selected, show only Stripe UI
-    if (selectedPaymentMethod === 'stripe') {
+    if (selectedPaymentMethod === 'stripe' && formData) {
+      const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
+
       return (
         <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
           <Stripe
@@ -472,17 +491,17 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             course_status='ongoing'
             email={formData.email}
             firstname={formData.name}
-            phone={formData.phone}
+            phone={fullPhoneNumber}
             course_name={formData.course}
-            message={formData.message}
+            message={formData.message || ''}
             onClick={onClose}
-            duration={selectedPlanDuration} // Pass the duration here too
+            duration={selectedPlanDuration}
           />
-
         </div>
-
       );
     }
+
+    return null;
   };
 
   return (
@@ -495,7 +514,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
       >
         <div
           className={cn(
-            "p-6 rounded-lg w-full max-w-md mx-4",
+            "p-6 rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto",
             isDarkMode ? "bg-gray-800 border border-gray-600" : "bg-gray-100 border-gray-400"
           )}
         >
@@ -505,8 +524,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
             )}
           >
-            {/* {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Complete Payment'} */}
-            {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Click to Register'}
+            {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Complete Payment'}
 
             {currentStep === "payment" && !selectedPaymentMethod && (
               <button
@@ -545,13 +563,77 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
   );
 }
 
-// Rest of the component remains the same...
+// Pricing Card Component
+const PricingCard: React.FC<PricingCardProps> = ({
+  tierName,
+  tierSubtitle,
+  price,
+  pricePeriod,
+  durationBadge,
+  features,
+  buttonText,
+  buttonClass,
+  popular = false,
+  duration,
+  onPlanSelect
+}) => {
+  const { isDarkMode } = useThemeStore();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  return (
+    <div
+      className={cn(
+        "rounded-2xl p-8 md:p-10 shadow-xl relative transition-all duration-300 ease-in-out border",
+        isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-gray-900"
+      )}
+      style={{
+        transform: isHovered ? 'translateY(-10px)' : 'translateY(0)',
+        boxShadow: isHovered ? '0 30px 60px rgba(0,0,0,0.15)' : '0 20px 40px rgba(0,0,0,0.1)'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {popular && (
+        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#ff6b6b] to-[#ee5a24] text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+          Most Popular
+        </div>
+      )}
+
+      <div className="text-center mb-8">
+        <h3 className={cn("text-2xl font-bold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>{tierName}</h3>
+        <p className={cn("mb-4", isDarkMode ? "text-gray-300" : "text-gray-600")}>{tierSubtitle}</p>
+        <div className={cn("text-4xl font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{price}</div>
+        <div className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>{pricePeriod}</div>
+        <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold inline-block mt-5">
+          {durationBadge}
+        </div>
+      </div>
+
+      <ul className="my-8 space-y-4">
+        {features.map((feature: string, index: number) => (
+          <li key={index} className={cn("flex items-start py-3 border-b last:border-b-0", isDarkMode ? "border-gray-600" : "border-gray-100")}>
+            <span className="text-green-500 font-bold mr-3 text-lg">✓</span>
+            <span className={cn(isDarkMode ? "text-gray-300" : "text-gray-700")} dangerouslySetInnerHTML={{ __html: feature }} />
+          </li>
+        ))}
+      </ul>
+
+      <button
+        className={`w-full py-4 rounded-xl font-semibold text-white uppercase tracking-wider transition-all duration-300 ${buttonClass} hover:shadow-xl hover:-translate-y-1`}
+        onClick={() => onPlanSelect(tierName, price, duration)}
+      >
+        {buttonText}
+      </button>
+    </div>
+  );
+};
+
 const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricingPlans }) => {
   const { isDarkMode } = useThemeStore();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [selectedPlanPrice, setSelectedPlanPrice] = useState<string | null>(null);
   const [selectedPlanDuration, setSelectedPlanDuration] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const pricingPlans = propPricingPlans || [];
 
@@ -576,91 +658,24 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
     setSelectedPlanDuration(null);
   };
 
-  // Pricing Card Component 
-  const PricingCard: React.FC<PricingCardProps> = ({
-    tierName,
-    tierSubtitle,
-    price,
-    pricePeriod,
-    durationBadge,
-    features,
-    buttonText,
-    buttonClass,
-    popular = false,
-    paymentOptions,
-    duration,
-    onPlanSelect
-  }) => {
-    const [isHovered, setIsHovered] = useState<boolean>(false);
-
-    return (
-      <div
-        className={cn(
-          "rounded-2xl p-8 md:p-10 shadow-xl relative transition-all duration-300 ease-in-out border",
-          isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-gray-900"
-        )}
-        style={{
-          transform: isHovered ? 'translateY(-10px)' : 'translateY(0)',
-          boxShadow: isHovered ? '0 30px 60px rgba(0,0,0,0.15)' : '0 20px 40px rgba(0,0,0,0.1)'
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {popular && (
-          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#ff6b6b] to-[#ee5a24] text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-            Most Popular
-          </div>
-        )}
-
-        <div className="text-center mb-8">
-          <h3 className={cn("text-2xl font-bold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>{tierName}</h3>
-          <p className={cn("mb-4", isDarkMode ? "text-gray-300" : "text-gray-600")}>{tierSubtitle}</p>
-          <div className={cn("text-4xl font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{price}</div>
-          <div className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>{pricePeriod}</div>
-          <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold inline-block mt-5">
-            {durationBadge}
-          </div>
-        </div>
-
-        <ul className="my-8 space-y-4">
-          {features.map((feature: string, index: number) => (
-            <li key={index} className={cn("flex items-start py-3 border-b last:border-b-0", isDarkMode ? "border-gray-600" : "border-gray-100")}>
-              <span className="text-green-500 font-bold mr-3 text-lg">✓</span>
-              <span className={cn(isDarkMode ? "text-gray-300" : "text-gray-700")} dangerouslySetInnerHTML={{ __html: feature }} />
-            </li>
-          ))}
-        </ul>
-
-        <button
-          className={`w-full py-4 rounded-xl font-semibold text-white uppercase tracking-wider transition-all duration-300 ${buttonClass} hover:shadow-xl hover:-translate-y-1`}
-          onClick={() => onPlanSelect(tierName, price, duration)}
-        >
-          {buttonText}
-        </button>
-
-        <div className={cn("text-center text-sm mt-4", isDarkMode ? "text-gray-400" : "text-gray-600")} dangerouslySetInnerHTML={{ __html: paymentOptions }} />
-      </div>
-    );
-  };
-
   return (
-    <div className={cn("min-h-screen p-4")}>
+    <div className={cn("min-h-screen p-4", isDarkMode ? "bg-gray-900" : "bg-gray-50")}>
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
-        <div className="text-center text-white mb-12 ">
+        <div className="text-center mb-12">
           {/* Success Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border ", isDarkMode ? "bg-black text-white border-gray-100/20 " : "bg-white text-blue-600")}>
+            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-blue-600")}>
               <div className="text-2xl font-bold">Highest</div>
-              <div className={cn("text-sm opacity-80 ", isDarkMode ? " text-white" : " text-gray-600")}>Pass Rate</div>
+              <div className={cn("text-sm opacity-80", isDarkMode ? "text-white" : "text-gray-600")}>Pass Rate</div>
             </div>
-            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border ", isDarkMode ? "bg-black text-white border-gray-100/20 " : "bg-white text-blue-600")}>
+            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-blue-600")}>
               <div className="text-2xl font-bold">500+</div>
-              <div className={cn("text-sm opacity-80 ", isDarkMode ? " text-white" : " text-gray-600")}>Certified Students</div>
+              <div className={cn("text-sm opacity-80", isDarkMode ? "text-white" : "text-gray-600")}>Certified Students</div>
             </div>
-            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border ", isDarkMode ? "bg-black text-white border-gray-100/20 " : "bg-white text-blue-600")}>
+            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-blue-600")}>
               <div className="text-2xl font-bold">24/7</div>
-              <div className={cn("text-sm opacity-80 ", isDarkMode ? " text-white" : " text-gray-600")}>Expert Support</div>
+              <div className={cn("text-sm opacity-80", isDarkMode ? "text-white" : "text-gray-600")}>Expert Support</div>
             </div>
           </div>
         </div>
@@ -704,7 +719,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
                   ? "bg-gray-900 border-gray-700 hover:border-blue-500"
                   : "bg-gray-50 border-gray-200 hover:border-blue-600"
               )}
-              onClick={() => handleLabAccessSelect(10, "199")}
+              onClick={() => handleLabAccessSelect(10, "$199")}
             >
               <span className='bg-blue-100 text-blue-700 px-1 rounded'>Duration: 10 hours</span>
               <div
@@ -727,7 +742,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
                   ? "bg-gray-900 border-gray-700 hover:border-blue-500"
                   : "bg-gray-50 border-gray-200 hover:border-blue-600"
               )}
-              onClick={() => handleLabAccessSelect(25, "499")}
+              onClick={() => handleLabAccessSelect(25, "$499")}
             >
               <span className='bg-blue-100 text-blue-700 px-1 rounded'>Duration: 30 hours</span>
               <div
@@ -744,15 +759,6 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
             </div>
           </div>
         </div>
-
-        {/* Guarantee Section */}
-        {/* <div className={cn("rounded-2xl p-8 text-center shadow-xl mt-12", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-gray-900")}>
-          <h3 className={cn("text-2xl font-bold mb-4", isDarkMode ? "text-white" : "text-gray-800")}>🛡️ 1-Week Money-Back Guarantee</h3>
-          <p className={cn(isDarkMode ? "text-gray-300" : "text-gray-600")}>
-            Not satisfied with your training? Get a full refund within 1-Week, no questions asked.
-            We're confident in our training quality and your success.
-          </p>
-        </div> */}
       </div>
 
       {showModal && selectedPlan && selectedPlanPrice && (

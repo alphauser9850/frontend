@@ -42,6 +42,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
 import TermsPage from './pages/TermsPage';
 import BlogPage from './pages/BlogPage';
+import PaymentSuccessful from './components/ui/PaymentSuccessful';
 
 // Add notification sound
 const addNotificationSound = () => {
@@ -216,6 +217,8 @@ function App() {
             <Route path="/courses/ccna" element={<CCNAPage />} />
             <Route path="/courses/ccnp" element={<CCNPPage />} />
             <Route path="/training/ccie-enterprise-infrastructure" element={<CCIEPage />} />
+            <Route path="/welcome-onboard" element={<PaymentSuccessful />} />
+
             <Route path="/courses/ccie" element={<Navigate to="/training/ccie-enterprise-infrastructure" replace />} />
             <Route path="/courses/ccie-wireless" element={<CCIEWirelessPage />} />
             <Route path="/courses/sd-wan" element={<SDWANPage />} />

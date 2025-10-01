@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, BarChart, CheckCircle, ChevronRight, Layers, Network, Globe, Workflow, Lightbulb, Zap, Mail, Phone, User, ArrowLeft, ArrowRight, Send, MapPin, MessageCircle, Linkedin, CheckCheckIcon } from 'lucide-react';
-import { AuroraText, Particles, ShineBorder, AnimatedDotPattern, MagicCard, BorderBeam } from '../components/magicui';
+import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, BarChart, CheckCircle,  Layers, Network, Globe, Workflow, ArrowLeft, ArrowRight, Send, MapPin, MessageCircle, Linkedin, CheckCheckIcon } from 'lucide-react';
+import { AuroraText, Particles, ShineBorder } from '../components/magicui';
 import { cn } from '../lib/utils';
 import { CCIETimeline } from '../components/CCIETimeline';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
-import Accordion from '../components/ui/Accordion';
 import { CheckCircle2 } from 'lucide-react';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';
@@ -16,6 +15,7 @@ import { FAqs } from '../components/ui/Faqs';
 import { useThemeStore } from '../store/themeStore';
 import CciePricingPage from './ CciePricingPage';
 import { Helmet } from 'react-helmet-async';
+import CCIESyllabus from '../components/ui/SyllabusAccordion';
 
 // Sample lab topologies data
 const labTopologies = [
@@ -49,54 +49,6 @@ const labTopologies = [
     description: "Enterprise security architecture with ISE, firewalls and segmentation",
     image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
   }
-];
-
-// CCIE Syllabus Topics
-const networkInfrastructureTopics = [
-  "Switch Administration (MAC address table, Errdisable recovery, L2 MTU)",
-  "Layer 2 Protocols (CDP, LLDP, UDLD)",
-  "VLAN Technologies (Access/Trunk ports, Native VLAN, VLAN pruning, Voice VLAN)",
-  "EtherChannel (LACP, Static, L2/L3, Load balancing, MEC use cases)",
-  "Spanning Tree Protocol (PVST+, Rapid-PVST+, MST, PortFast, BPDU Guard, Loop Guard, Root Guard)",
-  "Routing Concepts (Admin Distance, Static Routing, Policy-Based Routing, VRF-Lite, Route Leaking, Filtering, Redistribution, Authentication, BFD, L3 MTU)",
-  "EIGRP (Adjacencies, Best Path Selection, Metrics, Operations, Topology Table, Packet Types, SIA, Named Mode, Scalability/Optimization)",
-  "OSPFv2/v3 (Adjacencies, AF Support, Area Types, Path Preference, Operations, GTSM, Optimization/Scalability, LSA Throttling, SPF tuning)",
-  "BGP (IBGP/EBGP Peerings, Templates, Dynamic Neighbors, AS Numbers, Path Selection, Policy Control, Attribute Manipulation, Route Reflectors, Aggregation, Soft Reconfig, Route Refresh)",
-  "Multicast (IGMPv2/v3, IGMP Snooping, PIM Sparse Mode, Auto-RP, BSR, Anycast RP, SSM, RP Mapping, MSDP, Multipath)"
-];
-
-const softwareDefinedTopics = [
-  "Cisco SD-Access (Underlay – manual, LAN automation, PnP, Device Discovery, Extended Nodes)",
-  "SD-Access Overlay (LISP, BGP Control Planes, VXLAN, TrustSec Policy Plane, L2 Flooding, Multicast)",
-  "Fabric Design (Single-Site, Multi-Site, Fabric-in-a-Box)",
-  "Fabric Deployment (Host Onboarding, Auth Templates, Port Config, Border Priorities, Device Additions)",
-  "Fabric Border Handoff (SDA/SD-WAN/IP Transit Integration, Peer Device, L2 Border Handoff)",
-  "Segmentation (Macro via VN, Micro via SGT/SGACL)",
-  "Cisco SD-WAN (Controller Architecture – vManage, vBond, vSmart)",
-  "SD-WAN Underlay (WAN Edge Cloud/Hardware Deployments, Configurations, TLOC Extension)",
-  "OMP (Attributes, IPsec Key Management, Route Aggregation, Redistribution, SDA Integration)",
-  "Configuration Templates (CLI, Feature, Device Templates)",
-  "Policies (Centralized Data/Control/Application-Aware, Localized ACL/Route Policies)"
-];
-
-const transportTopics = [
-  "GRE Tunnels (Static Point-to-Point)",
-  "MPLS Operations (Label Stack, LSR, LSP, LDP, MPLS Ping, Traceroute)",
-  "MPLS L3VPN (PE-CE Routing with BGP, MP-BGP VPNv4/v6)",
-  "DMVPN (Phase 3, Dual Hub, NHRP, IPsec/IKEv2 with PSK)"
-];
-
-const securityAndServicesTopics = [
-  "Device Security (Control Plane Policing/Protection, AAA)",
-  "Switch Security (VACL/PACL, Storm Control, DHCP Snooping/Opt82, IP Source Guard, DAI, Port Security)",
-  "Router Security (IPv4/IPv6 ACLs, uRPF, IPv6 Filters)",
-  "IPv6 Infrastructure Security (RA Guard, DHCP Guard, Binding Table, Device Tracking, ND Inspection, Source Guard)",
-  "System Management (Console/VTY, SSH/SCP, RESTCONF, NETCONF, SNMP v2c/v3, Syslog/Debugs)",
-  "QoS (DiffServ Architecture, Classification, NBAR, DSCP Marking, Policing/Shaping, Congestion Mgmt, HQoS, MQC)",
-  "Network Services (HSRP, VRRP, IPv6 RS/RA Redundancy, NTP, PTP, DHCPv4/v6, NAT/PAT – Static/Dynamic/Policy/VRF-aware)",
-  "Network Optimization (IP SLA, Object Tracking, Flexible NetFlow)",
-  "Network Operations (SPAN, RSPAN, ERSPAN, Embedded Packet Capture, Packet Trace, Conditional Debugger)",
-  "Infrastructure Automation & Programmability (JSON, XML, YAML, Jinja, EEM Applets, Guest Shell, Python, vManage API, DNA Center API, Model-Driven Telemetry)"
 ];
 
 
@@ -415,7 +367,6 @@ const CCIEPage: React.FC = () => {
       ],
       buttonText: "Get Started",
       buttonClass: "bg-gradient-to-r from-blue-500 to-blue-700",
-      paymentOptions: "💳 Credit Card | 🏦 Bank Transfer"
     },
     {
       tierName: "Pro Track",
@@ -434,7 +385,6 @@ const CCIEPage: React.FC = () => {
       ],
       buttonText: "Choose Professional",
       buttonClass: "bg-gradient-to-r from-red-500 to-red-700",
-      paymentOptions: "💳 Credit Card | 🏦 Bank Transfer | 📅 One Time Payment Or 3 Equal Installments",
       popular: true
     },
     {
@@ -454,7 +404,6 @@ const CCIEPage: React.FC = () => {
       ],
       buttonText: "Go Master Track",
       buttonClass: "bg-gradient-to-r from-yellow-500 to-yellow-700",
-      paymentOptions: "💳 One-time payment OR 3 equal installments<br>Credit Card | Bank Transfer"
     }
   ];
 
@@ -780,65 +729,19 @@ const CCIEPage: React.FC = () => {
                 Our curriculum covers all exam domains with in-depth practical labs and theory.
 
               </p>
-             <p className='text-justify'>
-              <strong>Exam Description:  </strong>  The CCIE Enterprise Infrastructure (v1.1) Lab Exam is an eight-hour, hands-on
-              exam that requires that a candidate plan, design, operate, and optimize dual-stack solutions (IPv4
-              and IPv6) for complex enterprise networks.
-              Candidates are expected to program and automate the network within their exam, as per exam
-              topics below.
-              The following topics are general guidelines for the content likely to be included on the exam. Your
-              knowledge, skills, and abilities on these topics will be tested throughout the entire network lifecycle, 
-unless explicitly specified otherwise within this document.
-             </p>
+              <p className='text-justify'>
+                <strong>Exam Description:  </strong>  The CCIE Enterprise Infrastructure (v1.1) Lab Exam is an eight-hour, hands-on
+                exam that requires that a candidate plan, design, operate, and optimize dual-stack solutions (IPv4
+                and IPv6) for complex enterprise networks.
+                Candidates are expected to program and automate the network within their exam, as per exam
+                topics below.
+                The following topics are general guidelines for the content likely to be included on the exam. Your
+                knowledge, skills, and abilities on these topics will be tested throughout the entire network lifecycle,
+                unless explicitly specified otherwise within this document.
+              </p>
             </div>
+            <CCIESyllabus />
 
-            <div className="max-w-4xl mx-auto">
-              <Accordion>
-                <Accordion.Item title="Network Infrastructure (30%)" defaultOpen={true}>
-                  <ul className="space-y-3">
-                    {networkInfrastructureTopics.map((topic, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Accordion.Item>
-
-                <Accordion.Item title="Software Defined Infrastructure (25%)">
-                  <ul className="space-y-3">
-                    {softwareDefinedTopics.map((topic, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Accordion.Item>
-
-                <Accordion.Item title="Transport Technologies and Solutions (15%)">
-                  <ul className="space-y-3">
-                    {transportTopics.map((topic, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Accordion.Item>
-
-                <Accordion.Item title="Infrastructure Security and Services (15%)">
-                  <ul className="space-y-3">
-                    {securityAndServicesTopics.map((topic, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span>{topic}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Accordion.Item>
-              </Accordion>
-            </div>
           </div>
         </section>
 
