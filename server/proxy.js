@@ -1,74 +1,116 @@
 import express from "express";
-import fs from "fs";
+import compression from "compression";
+import cors from "cors";
+import fs from "fs/promises";
 import path from "path";
-import { fileURLToPath } from "url";
-import { createServer as createViteServer } from "vite";
-import https from "https";
+import { fileURLToPath, pathToFileURL } from "url";
 import router from "./routes/index.js";
-
+ 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const app = express();
-const PORT = 3443;
-
-// ----------------------
-// Middleware
-// ----------------------
-app.use(express.json());
-
-// API routes
-app.get("/api/health", (req, res) => res.status(200).json({ status: "ok" }));
-app.use("/api", router);
-
-// ----------------------
-// Vite Dev Server + SSR
-// ----------------------
-(async () => {
-  const vite = await createViteServer({
-    server: {
-      middlewareMode: true,
-      https: {
-        key: fs.readFileSync(path.resolve(__dirname, "../certs/key.pem")),
-        cert: fs.readFileSync(path.resolve(__dirname, "../certs/cert.pem")),
-      },
-      hmr: { protocol: "wss", host: "localhost", port: 24678 },
-    },
-    appType: "custom",
+ 
+const isProd = process.env.NODE_ENV === "production";
+const PORT = process.env.PORT || 3001;
+ 
+async function startServer() {
+  const app = express();
+ 
+  // Common middleware
+  app.use(compression());
+  app.use(cors());
+  app.use(express.json());
+ 
+  /** ------------------------
+   * API ROUTES (Backend only)
+   * ------------------------ */
+  app.get("/api/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
   });
-
-  // Vite middleware
-  app.use(vite.middlewares);
-
-  // SSR middleware for all non-API routes
-  app.use(async (req, res) => {
-    if (req.path.startsWith("/api")) return;
-
+ 
+  app.use("/api", router);
+ 
+  /** ------------------------
+   * FRONTEND SSR HANDLING
+   * ------------------------ */
+  if (!isProd) {
+    // Development mode with Vite middleware
+    const { createServer: createViteServer } = await import("vite");
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: "custom",
+    });
+ 
+    app.use(vite.middlewares);
+ 
+    app.use(async (req, res, next) => {
+      try {
+        let template = await fs.readFile(
+          path.resolve(__dirname, "../index.html"),
+          "utf-8"
+        );
+ 
+        template = await vite.transformIndexHtml(req.originalUrl, template);
+        const { render } = await vite.ssrLoadModule("/src/entry-server.tsx");
+        const { appHtml, helmetHead } = await render(req.originalUrl);
+ 
+        const html = template
+          .replace("<!--app-html-->", appHtml)
+          .replace("<!--app-head-->", helmetHead);
+ 
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (e) {
+        vite.ssrFixStacktrace(e);
+        next(e);
+      }
+    });
+  } else {
+    // Production mode: serve prebuilt assets
+    const clientDist = path.resolve(__dirname, "../dist/client");
+    const ssrDist = path.resolve(__dirname, "../dist/server/entry-server.js");
+ 
+    app.use(express.static(clientDist, { index: false }));
+ 
+    let render;
     try {
-      let template = fs.readFileSync(path.resolve(__dirname, "../index.html"), "utf-8");
-      template = await vite.transformIndexHtml(req.originalUrl, template);
-
-      const mod = await vite.ssrLoadModule("/src/entry-server.tsx");
-      const { appHtml, helmetHead } = await mod.render(req.originalUrl);
-
-      const html = template
-        .replace("<!--app-html-->", appHtml)
-        .replace("<!--app-head-->", helmetHead);
-
-      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      const ssrModule = await import(pathToFileURL(ssrDist).href);
+      render = ssrModule.render;
     } catch (err) {
-      vite.ssrFixStacktrace(err);
-      console.error("SSR Error:", err);
-      res.status(500).end("SSR Error");
+      console.error(
+        `Failed to load SSR bundle: ${ssrDist}\n` +
+          `Did you forget to run "npm run build:server"?`
+      );
+      console.error(err);
+      render = () => ({ appHtml: "", helmetHead: "" }); // fallback
     }
+ 
+    app.use(async (req, res) => {
+      try {
+        const template = await fs.readFile(
+          path.resolve(clientDist, "index.html"),
+          "utf-8"
+        );
+ 
+        const { appHtml, helmetHead } = render(req.originalUrl);
+        const html = template
+          .replace("<!--app-html-->", appHtml)
+          .replace("<!--app-head-->", helmetHead);
+ 
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      } catch (e) {
+        console.error(e);
+        res.status(500).end("Internal Server Error");
+      }
+    });
+  }
+ 
+  /** ------------------------
+   * START SERVER
+   * ------------------------ */
+  app.listen(PORT, () => {
+    console.log(
+      `✅ Server running in ${isProd ? "production" : "development"} mode at http://localhost:${PORT}`
+    );
   });
-
-  // Start HTTPS server
-  https.createServer(
-    {
-      key: fs.readFileSync(path.resolve(__dirname, "../certs/key.pem")),
-      cert: fs.readFileSync(path.resolve(__dirname, "../certs/cert.pem")),
-    },
-    app
-  ).listen(PORT, () => console.log(`Dev server running at https://localhost:${PORT}`));
-})();
+}
+ 
+startServer();
