@@ -53,59 +53,51 @@ const labTopologies = [
 
 // CCIE Syllabus Topics
 const networkInfrastructureTopics = [
-  "Layer 2 Technologies (VLANs, STP, EtherChannel, LACP)",
-  "Layer 3 Technologies (OSPF v2/v3, EIGRP, BGP)",
-  "First Hop Redundancy Protocols (HSRP, VRRP, GLBP)",
-  "IPv4 and IPv6 Addressing and Routing",
-  "Route Redistribution and Path Selection",
-  "Network Services (DHCP, DNS, NTP)",
-  "Network Management Protocols (SNMP, Syslog, NetFlow)",
-  "QoS Implementation and Verification",
-  "Network Virtualization (VRF, GRE)",
-  "High Availability and Resilience"
+  "Switch Administration (MAC address table, Errdisable recovery, L2 MTU)",
+  "Layer 2 Protocols (CDP, LLDP, UDLD)",
+  "VLAN Technologies (Access/Trunk ports, Native VLAN, VLAN pruning, Voice VLAN)",
+  "EtherChannel (LACP, Static, L2/L3, Load balancing, MEC use cases)",
+  "Spanning Tree Protocol (PVST+, Rapid-PVST+, MST, PortFast, BPDU Guard, Loop Guard, Root Guard)",
+  "Routing Concepts (Admin Distance, Static Routing, Policy-Based Routing, VRF-Lite, Route Leaking, Filtering, Redistribution, Authentication, BFD, L3 MTU)",
+  "EIGRP (Adjacencies, Best Path Selection, Metrics, Operations, Topology Table, Packet Types, SIA, Named Mode, Scalability/Optimization)",
+  "OSPFv2/v3 (Adjacencies, AF Support, Area Types, Path Preference, Operations, GTSM, Optimization/Scalability, LSA Throttling, SPF tuning)",
+  "BGP (IBGP/EBGP Peerings, Templates, Dynamic Neighbors, AS Numbers, Path Selection, Policy Control, Attribute Manipulation, Route Reflectors, Aggregation, Soft Reconfig, Route Refresh)",
+  "Multicast (IGMPv2/v3, IGMP Snooping, PIM Sparse Mode, Auto-RP, BSR, Anycast RP, SSM, RP Mapping, MSDP, Multipath)"
 ];
 
 const softwareDefinedTopics = [
-  "Cisco SD-WAN Architecture and Components",
-  "SD-WAN Control and Data Plane Operations",
-  "SD-WAN Policies and Templates",
-  "OMP Routing Protocol",
-  "Cisco SD-Access Fabric Architecture",
-  "LISP and VXLAN in SD-Access",
-  "DNA Center for Automation and Assurance",
-  "Policy Implementation in SD-Access",
-  "Cisco ACI Concepts and Architecture",
-  "Multi-site and Multi-domain SD-WAN"
+  "Cisco SD-Access (Underlay – manual, LAN automation, PnP, Device Discovery, Extended Nodes)",
+  "SD-Access Overlay (LISP, BGP Control Planes, VXLAN, TrustSec Policy Plane, L2 Flooding, Multicast)",
+  "Fabric Design (Single-Site, Multi-Site, Fabric-in-a-Box)",
+  "Fabric Deployment (Host Onboarding, Auth Templates, Port Config, Border Priorities, Device Additions)",
+  "Fabric Border Handoff (SDA/SD-WAN/IP Transit Integration, Peer Device, L2 Border Handoff)",
+  "Segmentation (Macro via VN, Micro via SGT/SGACL)",
+  "Cisco SD-WAN (Controller Architecture – vManage, vBond, vSmart)",
+  "SD-WAN Underlay (WAN Edge Cloud/Hardware Deployments, Configurations, TLOC Extension)",
+  "OMP (Attributes, IPsec Key Management, Route Aggregation, Redistribution, SDA Integration)",
+  "Configuration Templates (CLI, Feature, Device Templates)",
+  "Policies (Centralized Data/Control/Application-Aware, Localized ACL/Route Policies)"
 ];
 
 const transportTopics = [
-  "MPLS Fundamentals (LDP/TDP)",
-  "MPLS VPN (L2VPN/L3VPN)",
-  "MPLS Traffic Engineering",
-  "VPN Technologies (DMVPN, GETVPN, FlexVPN)",
-  "IPsec VPN Implementation and Troubleshooting",
-  "Multicast Routing (PIM - ASM, SSM, Bidir)",
-  "IGMP/MLD for Multicast Group Management",
-  "Multicast Security and Filtering",
-  "WAN Optimization Techniques",
-  "Traffic Engineering and Path Selection"
+  "GRE Tunnels (Static Point-to-Point)",
+  "MPLS Operations (Label Stack, LSR, LSP, LDP, MPLS Ping, Traceroute)",
+  "MPLS L3VPN (PE-CE Routing with BGP, MP-BGP VPNv4/v6)",
+  "DMVPN (Phase 3, Dual Hub, NHRP, IPsec/IKEv2 with PSK)"
 ];
 
-const securityTopics = [
-  "Device Security (Control Plane Policing, Management Plane Protection)",
-  "Network Security (ACLs, Zone-Based Firewall)",
-  "802.1X Implementation and Troubleshooting",
-  "MACsec for Layer 2 Security",
-  "Infrastructure Security Best Practices",
-  "QoS Implementation for Voice and Video",
-  "Python Scripting for Network Automation",
-  "REST APIs and API Security",
-  "NETCONF/RESTCONF Protocols",
-  "YANG Data Models",
-  "JSON/XML for Data Representation",
-  "Puppet for Configuration Management"
+const securityAndServicesTopics = [
+  "Device Security (Control Plane Policing/Protection, AAA)",
+  "Switch Security (VACL/PACL, Storm Control, DHCP Snooping/Opt82, IP Source Guard, DAI, Port Security)",
+  "Router Security (IPv4/IPv6 ACLs, uRPF, IPv6 Filters)",
+  "IPv6 Infrastructure Security (RA Guard, DHCP Guard, Binding Table, Device Tracking, ND Inspection, Source Guard)",
+  "System Management (Console/VTY, SSH/SCP, RESTCONF, NETCONF, SNMP v2c/v3, Syslog/Debugs)",
+  "QoS (DiffServ Architecture, Classification, NBAR, DSCP Marking, Policing/Shaping, Congestion Mgmt, HQoS, MQC)",
+  "Network Services (HSRP, VRRP, IPv6 RS/RA Redundancy, NTP, PTP, DHCPv4/v6, NAT/PAT – Static/Dynamic/Policy/VRF-aware)",
+  "Network Optimization (IP SLA, Object Tracking, Flexible NetFlow)",
+  "Network Operations (SPAN, RSPAN, ERSPAN, Embedded Packet Capture, Packet Trace, Conditional Debugger)",
+  "Infrastructure Automation & Programmability (JSON, XML, YAML, Jinja, EEM Applets, Guest Shell, Python, vManage API, DNA Center API, Model-Driven Telemetry)"
 ];
-
 
 
 
@@ -279,7 +271,7 @@ const CCIEPage: React.FC = () => {
   const features = [
     {
       icon: <Play className="h-6 w-6 text-primary" />,
-      title: "1 Year Access to Live Recording:",
+      title: " Access to Live Recorded Videos",
       description: "Access comprehensive recorded sessions covering all CCIE Enterprise Infrastructure topics. Review complex concepts anytime, anywhere with lifetime access to expert-led training content."
     },
     {
@@ -788,6 +780,16 @@ const CCIEPage: React.FC = () => {
                 Our curriculum covers all exam domains with in-depth practical labs and theory.
 
               </p>
+             <p className='text-justify'>
+              <strong>Exam Description:  </strong>  The CCIE Enterprise Infrastructure (v1.1) Lab Exam is an eight-hour, hands-on
+              exam that requires that a candidate plan, design, operate, and optimize dual-stack solutions (IPv4
+              and IPv6) for complex enterprise networks.
+              Candidates are expected to program and automate the network within their exam, as per exam
+              topics below.
+              The following topics are general guidelines for the content likely to be included on the exam. Your
+              knowledge, skills, and abilities on these topics will be tested throughout the entire network lifecycle, 
+unless explicitly specified otherwise within this document.
+             </p>
             </div>
 
             <div className="max-w-4xl mx-auto">
@@ -814,7 +816,7 @@ const CCIEPage: React.FC = () => {
                   </ul>
                 </Accordion.Item>
 
-                <Accordion.Item title="Transport Technologies and Solutions (20%)">
+                <Accordion.Item title="Transport Technologies and Solutions (15%)">
                   <ul className="space-y-3">
                     {transportTopics.map((topic, index) => (
                       <li key={index} className="flex items-start gap-3">
@@ -825,9 +827,9 @@ const CCIEPage: React.FC = () => {
                   </ul>
                 </Accordion.Item>
 
-                <Accordion.Item title="Infrastructure Security and Services (25%)">
+                <Accordion.Item title="Infrastructure Security and Services (15%)">
                   <ul className="space-y-3">
-                    {securityTopics.map((topic, index) => (
+                    {securityAndServicesTopics.map((topic, index) => (
                       <li key={index} className="flex items-start gap-3">
                         <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
                         <span>{topic}</span>
