@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
             <p className="text-muted-foreground mb-6">
               Creating transformative online CCIE training experiences that empower network engineers to excel.
             </p>
-            <div className="flex space-x-3">
+            <div className="flex space-x-">
               <a 
                 href="https://www.youtube.com/@ccielab" 
                 target="_blank" 
