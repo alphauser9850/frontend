@@ -1,14 +1,18 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
 import { ChevronDown, ChevronUp, Loader, CheckCircle, X } from 'lucide-react';
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
 import Stripe from '../components/PaymentGateways/Stripe';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface PricingPlan {
   tierName: string;
   tierSubtitle: string;
+  startDate: {
+    date: string;
+    time: string[];
+  }[];
   price: string;
   pricePeriod: string;
   durationBadge: string;
@@ -32,7 +36,12 @@ interface CountryOption {
   name: string;
   short: string;
 }
-
+const availableSlots = [
+  { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
+  { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
+  { date: "December 16, 2025", time: ["2 PM - 6 PM (GMT)", "9 AM - 1 PM (EST)", "6 AM - 10 AM (PST)", "7:30 PM - 11:30 PM (IST)"] },
+  { date: "January 6, 2026", time: ["6 PM - 10 PM (PST)", "9 PM - 1 AM (EST)", "2 AM - 6 AM (GMT)", "7:30 AM - 11:30 AM (IST)"] }
+];
 const countryOptions: CountryOption[] = [
   { code: "+1", name: "United States", short: "US" },
   { code: "+91", name: "India", short: "IN" },
@@ -52,6 +61,7 @@ interface EnrollModalProps {
   selectedPlanDuration?: string;
   onClose: () => void;
   isDarkMode: boolean;
+  pricingPlans: PricingPlan[];
 }
 
 interface SuccessDialogProps {
@@ -69,6 +79,9 @@ interface FormData {
   course: string;
   message?: string;
   price: string;
+  course_start_date: string;
+  course_start_time: string;
+  course_time_zone: string;
 }
 
 // Success Dialog Component
@@ -128,7 +141,7 @@ function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: Suc
 
 type ModalStep = 'form' | 'payment' | 'processing';
 
-function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, onClose, isDarkMode }: EnrollModalProps) {
+function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, onClose, isDarkMode, pricingPlans }: EnrollModalProps) {
   const [selectedCountryCode, setSelectedCountryCode] = useState<string>(countryOptions[0].code);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>('form');
@@ -137,7 +150,31 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
   const [contactId, setContactId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
+
+  // Date and time selection state
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedTime, setSelectedTime] = useState<string>('');
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+
   const navigate = useNavigate();
+
+  // Extract unique dates from availableSlots
+  const availableDates = Array.from(
+    new Set(availableSlots.map(slot => slot.date))
+  );
+
+  // Update available times when date changes
+  useEffect(() => {
+    if (selectedDate) {
+      const selectedSlot = availableSlots.find(slot => slot.date === selectedDate);
+      setAvailableTimes(selectedSlot ? selectedSlot.time : []);
+      // Don't reset selectedTime here - let user keep their selection
+    } else {
+      setAvailableTimes([]);
+      setSelectedTime('');
+    }
+  }, [selectedDate]);
 
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -146,22 +183,56 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
     };
   }, []);
 
+  const validateForm = (formValues: any): boolean => {
+    const errors: { [key: string]: string } = {};
+
+    if (!formValues.name?.trim()) errors.name = 'Name is required';
+    if (!formValues.email?.trim()) errors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formValues.email)) errors.email = 'Email is invalid';
+
+    if (!formValues.phone?.trim()) errors.phone = 'Phone is required';
+    else if (!/^\d{8,10}$/.test(formValues.phone)) errors.phone = 'Phone must be 8-10 digits';
+
+    if (!selectedDate) errors.date = 'Start date is required';
+    if (!selectedTime) errors.time = 'Time slot is required';
+    if (!formValues.message?.trim()) errors.message = 'Message is required';
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProcessing(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
     const formValues = Object.fromEntries(formData.entries()) as unknown as FormData;
 
-    const submissionData: FormData & { countryCode: string; selectedPlan: string; payment_status: string } = {
+    // Validate form
+    if (!validateForm(formValues)) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    // FIX: Use the complete selected time string instead of splitting it
+    const submissionData: FormData & {
+      countryCode: string;
+      selectedPlan: string;
+      payment_status: string;
+    } = {
       ...formValues,
       countryCode: selectedCountryCode,
       selectedPlan: selectedPlan,
       payment_status: "pending",
+      course_start_date: selectedDate,
+      // FIX: Send the complete time string as selected by user
+      course_start_time: selectedTime, // e.g., "9 AM - 1 PM (IST)"
+      // FIX: Also send the complete time string for timezone field
+      course_time_zone: selectedTime, // e.g., "9 AM - 1 PM (IST)"
     };
 
-    setFormData(formValues);
-    const fullPhoneNumber = `${selectedCountryCode}${formValues.phone}`;
+    setFormData(submissionData);
+    const fullPhoneNumber = `${selectedCountryCode}${submissionData.phone}`;
 
     try {
       // Step 1: Check if contact already exists using your existing get-contact endpoint
@@ -208,6 +279,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               phone: fullPhoneNumber,
               course_name: submissionData.course,
               message: submissionData.message || '',
+              course_start_date: submissionData.course_start_date,
+              // FIX: Use the complete time string
+              course_start_time: submissionData.course_start_time, // e.g., "9 AM - 1 PM (IST)"
+              course_time_zone: submissionData.course_time_zone, // e.g., "9 AM - 1 PM (IST)"
               leads_status: 'NEW',
               hs_lead_status: "NEW",
               course_status: 'ongoing',
@@ -234,7 +309,8 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
 
     } catch (err) {
       console.error("Error processing contact:", err);
-      alert('Error submitting form. Please try again.');
+      // Don't use alert - you can set an error state instead
+      setFormErrors({ submit: 'Error submitting form. Please try again.' });
     } finally {
       setIsProcessing(false);
     }
@@ -257,6 +333,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             phone: fullPhoneNumber,
             course_name: formData.course,
             message: formData.message || '',
+            course_start_date: formData.course_start_date,
+            // FIX: Use the complete time strings
+            course_start_time: formData.course_start_time, // e.g., "9 AM - 1 PM (IST)"
+            course_time_zone: formData.course_time_zone, // e.g., "9 AM - 1 PM (IST)"
             course_status: 'ongoing',
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
@@ -269,7 +349,11 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             name: formData.name,
             email: formData.email,
             packageName: formData.course,
-            duration: selectedPlanDuration
+            duration: selectedPlanDuration,
+            course_start_date: formData.course_start_date,
+            // FIX: Use the complete time strings in email too
+            course_start_time: formData.course_start_time,
+            course_time_zone: formData.course_time_zone,
           }
         }),
       });
@@ -278,13 +362,14 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
 
     } catch (err) {
       console.error("Error updating enrollment:", err);
-      alert('Payment successful but there was an error updating your enrollment. Please contact support.');
+      // Don't use alert - handle errors gracefully
+      setFormErrors({ payment: 'Payment successful but there was an error updating your enrollment. Please contact support.' });
     }
   }, [contactId, selectedPlanPrice, selectedPlanDuration, formData, selectedPaymentMethod, selectedCountryCode]);
 
   const handlePaymentError = useCallback((error: any) => {
     console.error('Payment error:', error);
-    alert(`Payment failed ❌ Please try again.`);
+    setFormErrors({ payment: 'Payment failed. Please try again.' });
   }, []);
 
   const handleSuccessDialogClose = () => {
@@ -293,110 +378,226 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
     onClose();
   };
 
-  const renderFormStep = () => (
-    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white text-gray-800 border-gray-300"
-        )}
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white border-gray-300 text-gray-800"
-        )}
-        required
-      />
+  const handleInputChange = (field: string) => {
+    // Clear error when user starts typing
+    if (formErrors[field]) {
+      setFormErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
 
-      {/* Phone with country code */}
-      <div className="flex items-center rounded-lg overflow-hidden w-full max-w-sm shadow-sm">
-        <div className="relative w-1/2">
+  const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDate(e.target.value);
+    if (formErrors.date) {
+      setFormErrors(prev => ({ ...prev, date: '' }));
+    }
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedTime(e.target.value);
+    if (formErrors.time) {
+      setFormErrors(prev => ({ ...prev, time: '' }));
+    }
+  };
+
+  const renderFormStep = () => (
+    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4" noValidate>
+      {/* Name Field */}
+      <div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name *"
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-gray-800 border-gray-300",
+            formErrors.name && "border-red-500"
+          )}
+          required
+          onChange={() => handleInputChange('name')}
+        />
+        {formErrors.name && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+        )}
+      </div>
+
+      {/* Email Field */}
+      <div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email *"
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white border-gray-300 text-gray-800",
+            formErrors.email && "border-red-500"
+          )}
+          required
+          onChange={() => handleInputChange('email')}
+        />
+        {formErrors.email && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+        )}
+      </div>
+
+      {/* Date Selection Dropdown */}
+      <div>
+        <div className="relative">
           <select
+            value={selectedDate}
+            onChange={handleDateChange}
             className={cn(
-              "block w-full p-2 appearance-none outline-none cursor-pointer border",
+              "w-full p-2 rounded border appearance-none",
               isDarkMode ? "bg-gray-700 text-white border-gray-600"
-                : "bg-white text-gray-800 border-gray-300"
+                : "bg-white text-gray-800 border-gray-300",
+              formErrors.date && "border-red-500"
             )}
             required
-            value={selectedCountryCode}
-            onChange={(e) => setSelectedCountryCode(e.target.value)}
-            onFocus={() => setIsOpen(true)}
-            onBlur={() => setIsOpen(false)}
           >
-            {countryOptions.map((country) => (
-              <option key={country.code} value={country.code}>
-                {country.code} ({country.short})
-              </option>
+            <option value="">Select Start Date *</option>
+            {availableDates.map((date) => (
+              <option key={date} value={date}>{date}</option>
             ))}
           </select>
-          <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-            {isOpen ? (
-              <ChevronUp className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
-            ) : (
-              <ChevronDown className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
-            )}
-          </span>
+          <ChevronDown className={cn(
+            "absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4",
+            isDarkMode ? "text-gray-300" : "text-gray-600"
+          )} />
         </div>
-        <div className={cn("h-6 border-l", isDarkMode ? "border-gray-600" : "border-gray-300")}></div>
-        <input
-          type="tel"
-          name="phone"
-          placeholder="91234 56789"
-          className={cn(
-            "flex-1 px-3 py-2 outline-none border border-l-0",
-            isDarkMode ? "bg-gray-700 text-white border-gray-600"
-              : "bg-white text-gray-800 border-gray-300"
-          )}
-          maxLength={10}
-          pattern="[0-9]{8,10}"
-          required
-        />
+        {formErrors.date && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.date}</p>
+        )}
+      </div>
+
+      {/* Time Selection Dropdown */}
+      <div>
+        <div className="relative">
+          <select
+            value={selectedTime}
+            onChange={handleTimeChange}
+            disabled={!selectedDate}
+            className={cn(
+              "w-full p-2 rounded border appearance-none",
+              isDarkMode ? "bg-gray-700 text-white border-gray-600"
+                : "bg-white text-gray-800 border-gray-300",
+              formErrors.time && "border-red-500",
+              !selectedDate ? "opacity-50 cursor-not-allowed" : ""
+            )}
+            required
+          >
+            <option value="">Select Time Slot *</option>
+            {availableTimes.map((time) => (
+              <option key={time} value={time}>{time}</option>
+            ))}
+          </select>
+          <ChevronDown className={cn(
+            "absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none w-4 h-4",
+            isDarkMode ? "text-gray-300" : "text-gray-600"
+          )} />
+        </div>
+        {formErrors.time && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.time}</p>
+        )}
+      </div>
+
+      {/* Phone with country code */}
+      <div>
+        <div className="flex items-center rounded-lg overflow-hidden w-full shadow-sm">
+          <div className="relative w-1/2">
+            <select
+              className={cn(
+                "block w-full p-2 appearance-none outline-none cursor-pointer border",
+                isDarkMode ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-white text-gray-800 border-gray-300"
+              )}
+              required
+              value={selectedCountryCode}
+              onChange={(e) => setSelectedCountryCode(e.target.value)}
+              onFocus={() => setIsOpen(true)}
+              onBlur={() => setIsOpen(false)}
+            >
+              {countryOptions.map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.code} ({country.short})
+                </option>
+              ))}
+            </select>
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+              {isOpen ? (
+                <ChevronUp className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
+              ) : (
+                <ChevronDown className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
+              )}
+            </span>
+          </div>
+          <div className={cn("h-6 border-l", isDarkMode ? "border-gray-600" : "border-gray-300")}></div>
+          <input
+            type="tel"
+            name="phone"
+            placeholder="91234 56789 *"
+            className={cn(
+              "flex-1 px-3 py-2 outline-none border border-l-0",
+              isDarkMode ? "bg-gray-700 text-white border-gray-600"
+                : "bg-white text-gray-800 border-gray-300",
+              formErrors.phone && "border-red-500"
+            )}
+            maxLength={10}
+            pattern="[0-9]{8,10}"
+            required
+            onChange={() => handleInputChange('phone')}
+          />
+        </div>
+        {formErrors.phone && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>
+        )}
       </div>
 
       {/* Selected course */}
-      <input
-        type="text"
-        name="course"
-        value={selectedPlan}
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white text-gray-800 border-gray-300"
-        )}
-        readOnly
-      />
+      <div>
+        <input
+          type="text"
+          name="course"
+          value={selectedPlan}
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-gray-800 border-gray-300"
+          )}
+          readOnly
+        />
+      </div>
 
       <input type="hidden" name="price" value={selectedPlanPrice} />
+      <input type="hidden" name="course_start_date" value={selectedDate} />
+      <input type="hidden" name="course_start_time" value={selectedTime} />
 
-      <textarea
-        name="message"
-        placeholder="Message"
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white text-gray-800 border-gray-300"
+      {/* Message Field */}
+      <div>
+        <textarea
+          name="message"
+          placeholder="Message *"
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-gray-800 border-gray-300",
+            formErrors.message && "border-red-500"
+          )}
+          required
+          onChange={() => handleInputChange('message')}
+        />
+        {formErrors.message && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.message}</p>
         )}
-      ></textarea>
+      </div>
 
-      <div className="flex justify-between pt-4">
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition"
-          disabled={isProcessing}
-        >
-          Cancel
-        </button>
+      {/* Submit error */}
+      {formErrors.submit && (
+        <p className="text-red-500 text-sm">{formErrors.submit}</p>
+      )}
+
+      <div className="flex justify-end pt-4">
+       
         <button
           type="submit"
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition flex items-center gap-2"
@@ -408,7 +609,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               Processing...
             </>
           ) : (
-            'Proceed'
+            'Proceed to Pay'
           )}
         </button>
       </div>
@@ -427,6 +628,18 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan}</span>
               <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlanPrice}</span>
             </div>
+            {selectedDate && (
+              <div className="flex justify-between items-center mt-2">
+                <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>Start Date:</span>
+                <span className={cn("font-medium", isDarkMode ? "text-white" : "text-gray-800")}>{selectedDate}</span>
+              </div>
+            )}
+            {selectedTime && (
+              <div className="flex justify-between items-center mt-2">
+                <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>Time Slot:</span>
+                <span className={cn("font-medium", isDarkMode ? "text-white" : "text-gray-800")}>{selectedTime}</span>
+              </div>
+            )}
           </div>
 
           {/* Payment Method Selection */}
@@ -460,6 +673,11 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               </label>
             </div>
           </div>
+
+          {/* Payment error */}
+          {formErrors.payment && (
+            <p className="text-red-500 text-sm">{formErrors.payment}</p>
+          )}
         </div>
       );
     }
@@ -496,6 +714,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             message={formData.message || ''}
             onClick={onClose}
             duration={selectedPlanDuration}
+            // FIX: Use the complete time strings
+            course_start_date={selectedDate}
+            course_start_time={selectedTime} // e.g., "9 AM - 1 PM (IST)"
+            course_time_zone={selectedTime} // e.g., "9 AM - 1 PM (IST)"
           />
         </div>
       );
@@ -526,13 +748,13 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
           >
             {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Complete Payment'}
 
-            {currentStep === "payment" && !selectedPaymentMethod && (
+            {!selectedPaymentMethod && (
               <button
                 type="button"
                 onClick={onClose}
-                className="px-2 py-0 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
+                className="px-2 -py-0.5 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
               >
-                Cancel
+                X
               </button>
             )}
             {currentStep === 'payment' && selectedPaymentMethod && (
@@ -563,7 +785,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
   );
 }
 
-// Pricing Card Component
+// Pricing Card Component (unchanged)
 const PricingCard: React.FC<PricingCardProps> = ({
   tierName,
   tierSubtitle,
@@ -628,6 +850,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
   );
 };
 
+// CciePricingPage component (unchanged)
 const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricingPlans }) => {
   const { isDarkMode } = useThemeStore();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
@@ -761,8 +984,6 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
         </div>
       </div>
 
-      
-
       {showModal && selectedPlan && selectedPlanPrice && (
         <EnrollModal
           selectedPlan={selectedPlan}
@@ -770,6 +991,7 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
           selectedPlanDuration={selectedPlanDuration || undefined}
           onClose={handleCloseModal}
           isDarkMode={isDarkMode}
+          pricingPlans={pricingPlans}
         />
       )}
     </div>

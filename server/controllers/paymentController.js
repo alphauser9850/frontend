@@ -5,19 +5,11 @@ import {
     LogLevel,
     OrdersController,
 } from "@paypal/paypal-server-sdk";
-import axios from "axios";
 import stripe from "stripe";
-import dotenv from 'dotenv';
-dotenv.config();
+import { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, STRIPE_SECRET_KEY } from "../env.js";
 
-const stripeGateway = process.env.STRIPE_SECRET_KEY 
-  ? new stripe(process.env.STRIPE_SECRET_KEY)
-  : null;
+const stripeGateway = new stripe(STRIPE_SECRET_KEY);
 
-const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET
-
-const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
-const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
 
 const client = new Client({
     clientCredentialsAuthCredentials: {
@@ -121,99 +113,43 @@ export const paypalCaptureOrder = async (req, res) => {
     }
 };
 
-export const generateStripePaymentLink = async (req, res) => {
+export const createStripeIntent = async (req, res) => {
     try {
-        const { amount, clientId, course, url } = req.body;
+        const { amount, course } = req.body;
 
-        const response = await stripeGateway.paymentLinks.create({
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: course,
-                            description: `Enrollment in ${course}`
-                        },
-                        unit_amount: amount * 100
-                    },
-                    quantity: 1
-                }
-            ],
+        // Validate required fields
+        if (!amount || !course) {
+            return res.status(400).json({
+                status: "Failure",
+                message: "Amount and course are required"
+            });
+        }
+
+        const paymentIntent = await stripeGateway.paymentIntents.create({
+            amount: Math.round(amount * 100), // Convert to cents and ensure integer
+            currency: "usd",
+            automatic_payment_methods: { enabled: true }, // Remove duplicate line
+            description: course,
             metadata: {
-                client_Id: clientId,
-                amount: amount
-            },
-
-            after_completion: {
-                type: 'redirect',
-                redirect: {
-                    url: url
-                }
+                course: course
             }
         });
 
         res.status(200).json({
             status: "Success",
-            data: response,
-            message: "Payment link generated successfully"
-        })
+            data: {
+                clientSecret: paymentIntent.client_secret,
+                paymentIntentId: paymentIntent.id
+            },
+            message: "PaymentIntent created successfully"
+        });
+
     } catch (error) {
+        console.error("Stripe Error:", error);
         res.status(500).json({
             status: "Failure",
-            data: error,
-            message: "Internal Server Error"
+            error: error,
+            message: "Internal Server Error",
         });
     }
-}
-
-export const receiveStripeWebHook = async (req, res) => {
-    const sig = req.headers['stripe-signature'];
-    let event;
-
-    try {
-        // Verify webhook signature
-        event = stripeGateway.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET);
-        console.log('✅ Webhook signature verified');
-    } catch (err) {
-        console.error('❌ Webhook signature verification failed:', err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
-    try {
-        console, log(event);
-
-        if (event.type == "checkout.session.completed") {
-            await axios.patch(`/api/hubspot/update-contact/${contactId}`, {
-                properties: {
-                    leads_status: "ENROLLED",
-                    hs_lead_status: "Enroll",
-                    paid_amount: event.object.amount_total,
-                    payment_status: "Completed",
-                    payment_id: event.object.payment_intent,
-                    payment_type: "stripe",
-                },
-            }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-            res.status(200).json({
-                status: "Success",
-                data: req.body,
-                message: "Payment Success"
-            });
-            axios.patch()
-        } else {
-            res.status(500).json({
-                status: "Failed",
-                data: error,
-                message: "Payment Failed"
-            });
-        }
-
-    } catch (error) {
-        console.error('❌ Error processing webhook:', error);
-        res.status(500).json({ error: 'Webhook processing failed' });
-    }
-}
-
-
+};

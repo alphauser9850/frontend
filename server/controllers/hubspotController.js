@@ -1,9 +1,8 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
 import { sendWelcomeEmail } from '../utils/welcomeEmail.js';
 import { OnboardEmail } from '../utils/userOnbarded.js';
-dotenv.config();
-const HUBSPOT_TOKEN = process.env.HUBSPOT_TOKEN;
+import { HUBSPOT_TOKEN } from '../env.js';
+
 
 export const getContact = async (req, res) => {
     try {
@@ -58,7 +57,7 @@ export const createContact = async (req, res) => {
     }
 }
 
-export const updateContact = async (req, res) => {
+export const updateDetails = async (req, res) => {
     try {
         await axios.patch(`https://api.hubapi.com/crm/v3/objects/contacts/${req.body.hubspot.contactId}`,
             {
@@ -81,6 +80,8 @@ export const updateContact = async (req, res) => {
                     pipeline: "default",
                     dealstage: "2009368270",
                     email: req.body.hubspot.email,
+                    course_time_zone:req.body.hubspot.course_time_zone||'',
+                    course_start_time:req.body.hubspot.course_start_time||'',
                     name: req.body.hubspot.firstname,
                     contact_number: req.body.hubspot.phone,
                     course_name: req.body.hubspot.course_name,
@@ -122,7 +123,7 @@ export const updateContact = async (req, res) => {
         await sendWelcomeEmail(name, email, packageName, duration);
         res.status(200).json({
             status: "Success",
-            data: response.data,
+            data: null,
             message: "Contact Updated Successfully"
           
         });
