@@ -86,7 +86,7 @@ export const userOnboardEmail = (params) => {
              
                 <li>📊 <strong>Status:</strong> ${params.course_status}</li>
                 <li>📍 <strong>Lead Status:</strong> ${params.lead_status}</li>
-                <li>💰 <strong>Amount Paid:</strong> ${params.amount}</li>
+                <li>💰 <strong>Amount Paid:</strong> $${params.amount}</li>
                 <li>✅ <strong>Payment Status:</strong> ${params.payment_status}</li>
                 <li>🧾 <strong>Payment ID:</strong> ${params.payment_id}</li>
                 <li>💳 <strong>Payment Method:</strong> ${params.payment_type}</li>

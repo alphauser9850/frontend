@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post('/create-contact', controller.createContact);
 router.post('/get-contact', controller.getContact);
-router.patch('/update-contact/:id', controller.updateContact);
+router.post('/update-details', controller.updateDetails);
 
 export default router;

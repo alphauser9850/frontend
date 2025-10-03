@@ -18,6 +18,7 @@ const features = [
                 </li>
             </ul>
         ),
+        image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
     },
     {
         title: "Bootcamp: Intensive Exam Practice",
@@ -35,6 +36,7 @@ const features = [
                 </li>
             </ul>
         ),
+        image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
     },
     {
         title: "Support: Expert Guidance During Lab Practice",
@@ -52,6 +54,7 @@ const features = [
                 </li>
             </ul>
         ),
+        image: "https://images.unsplash.com/photo-1581094794329-c6d3d7f3ad0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
     },
     {
         title: "Why Students Love Our Labs",
@@ -64,8 +67,8 @@ const features = [
                 <li>Affordable: Rack rentals as low as $15 per hour.</li>
             </ul>
         ),
+        image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
     },
-   
 ];
 
 const CCIELabInfrastructure = () => {
@@ -81,7 +84,7 @@ const CCIELabInfrastructure = () => {
         >
             <div className="max-w-7xl mx-auto">
 
-                {/* Top Row - 6 Boxes */}
+                {/* Top Row - Feature Boxes */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mb-8">
                     {features.map((feature, index) => (
                         <div
@@ -103,33 +106,34 @@ const CCIELabInfrastructure = () => {
                     ))}
                 </div>
 
-                {/* Dynamic Content */}
+                {/* Dynamic Content with Image Inside */}
                 <div
                     className={cn(
-                        "border p-6 rounded-lg transition-colors duration-300",
+                        "border rounded-lg transition-colors duration-300 overflow-hidden",
                         isDarkMode
                             ? "bg-gray-800 border-gray-700 text-gray-200"
                             : "bg-gray-50 border-gray-300 text-gray-800"
                     )}
                 >
-                    <p >
-                        {features[activeIndex].content}
-                    </p>
+                    <div className="flex flex-col lg:flex-row">
+                        {/* Content Section */}
+                        <div className="p-6 lg:flex-1">
+                            {features[activeIndex].content}
+                        </div>
+                        
+                        {/* Image Section - Inside the same container */}
+                        <div className="lg:w-96 xl:w-1/3 p-6 lg:p-0 lg:pt-6 lg:pr-6 lg:pb-6">
+                            <div className="w-full h-44 lg:h-full rounded-lg overflow-hidden">
+                                <img
+                                    src={features[activeIndex].image}
+                                    alt={features[activeIndex].title}
+                                    className="w-full w-full lg:w-96 lg:h-64 object-fill"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* <div className="text-center mt-8">
-                    <p
-                        className={cn(
-                            "italic",
-                            isDarkMode ? "text-gray-300" : "text-gray-700"
-                        )}
-                    >
-                        <span className="font-bold text-sm md:text-base">Outcome for you: </span> With our lab
-                        infrastructure, students master advanced enterprise networks, gain
-                        practical skills, and step into the CCIE exam with complete
-                        confidence.
-                    </p>
-                </div> */}
             </div>
         </section>
     );

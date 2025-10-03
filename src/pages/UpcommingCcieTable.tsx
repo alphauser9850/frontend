@@ -4,7 +4,7 @@ import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
 import Stripe from '../components/PaymentGateways/Stripe';
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Batch {
   startDate: string;
@@ -30,6 +30,7 @@ interface EnrollModalProps {
   batches: Batch[];
   onClose: () => void;
   isDarkMode: boolean;
+  selectedTimeZone: string;
 }
 
 interface UpcomingCcieTableProps {
@@ -123,17 +124,22 @@ function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: Suc
 }
 
 function Filters({ onFilterChange }: FiltersProps) {
+  // Set PST as default on component mount
+  React.useEffect(() => {
+    onFilterChange("timeZone", "PST");
+  }, [onFilterChange]);
+
   return (
     <div className="flex gap-4 mb-4">
       <select
         className="border p-2 rounded"
         onChange={(e) => onFilterChange("timeZone", e.target.value)}
+        defaultValue="PST"
       >
-        <option value="">All Time Zones</option>
+        <option value="PST">PST</option>
         <option value="IST">IST</option>
         <option value="EST">EST</option>
         <option value="GMT">GMT</option>
-        <option value="PST">PST</option>
       </select>
     </div>
   );
@@ -205,7 +211,7 @@ function BatchTable({ data, onEnroll, isDarkMode }: TableProps) {
   );
 }
 
-function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) {
+function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: EnrollModalProps) {
   const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(batch.startDate);
@@ -217,12 +223,51 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<{ name: string, price: string } | null>(null);
 
+  // Filter batches by selected timezone
+  const filteredBatches = useMemo(() => {
+    return batches.filter(b => b.time.includes(selectedTimeZone));
+  }, [batches, selectedTimeZone]);
+
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
     };
   }, []);
+
+  // Function to extract time range from batch time
+  const extractTimeRange = (timeString: string): string => {
+    // Extract time range like "9 AM - 1 PM (IST)" or "7:30 PM - 11:30 PM (PST)"
+    const timeRangeMatch = timeString.match(/^([0-9:]+ [AP]M - [0-9:]+ [AP]M) \(([A-Z]{2,4})\)$/);
+    if (timeRangeMatch) {
+      return timeRangeMatch[1]; // Returns "9 AM - 1 PM" or "7:30 PM - 11:30 PM"
+    }
+    
+    // Fallback: try to extract just the time part if format is different
+    const fallbackMatch = timeString.match(/^([0-9:]+ [AP]M)/);
+    return fallbackMatch ? fallbackMatch[1] : '6:00 PM - 10:00 PM'; // default fallback
+  };
+
+  // Function to extract time zone from batch time
+  const extractTimeZone = (timeString: string): string => {
+    // Extract time zone from string like "9 AM - 1 PM (IST)" or "7:30 PM - 11:30 PM (PST)"
+    const timeZoneMatch = timeString.match(/\(([A-Z]{2,4})\)$/);
+    return timeZoneMatch ? timeZoneMatch[1] : selectedTimeZone || 'PST';
+  };
+
+  // Function to get the full time string for both fields
+  const getFullTimeString = (timeString: string): string => {
+    // For formats like "9 AM - 1 PM (IST)" or "7:30 PM - 11:30 PM (PST)"
+    const fullTimeMatch = timeString.match(/^([0-9:]+ [AP]M - [0-9:]+ [AP]M) \(([A-Z]{2,4})\)$/);
+    if (fullTimeMatch) {
+      return timeString; // Return the full string as is
+    }
+    
+    // If format is different, construct it from parts
+    const timeRange = extractTimeRange(timeString);
+    const timeZone = extractTimeZone(timeString);
+    return `${timeRange} (${timeZone})`;
+  };
 
   // Phone number validation function
   const validatePhoneNumber = (phone: string) => {
@@ -247,14 +292,20 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       return;
     }
 
+    // Extract time information
+    const fullTimeString = getFullTimeString(batch.time);
+    const courseTimeZone = fullTimeString; // Use full string for both fields
+    const courseStartTime = fullTimeString; // Use full string for both fields
+
     const submissionData: any = {
       ...formValues,
       countryCode: selectedCountryCode,
-      phone: fullPhoneNumber, // This will now include country code
+      phone: fullPhoneNumber,
       classStartDate: selectedStartDate,
       instructor: batch.instructor,
-      // timeZone: batch.time,
       payment_status: "pending",
+      course_time_zone: courseTimeZone,
+      course_start_time: courseStartTime,
     };
 
     setFormData(submissionData);
@@ -297,7 +348,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
             properties: {
               email: submissionData.email,
               firstname: submissionData.name,
-              phone: fullPhoneNumber, // Use the combined phone number here
+              phone: fullPhoneNumber,
               course_name: selectedPlan?.name || submissionData.plan,
               message: submissionData.message,
               leads_status: 'NEW',
@@ -305,6 +356,8 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
               course_status: 'upcoming',
               payment_status: 'Pending',
               course_start_date: selectedStartDate,
+              course_time_zone: courseTimeZone,
+              course_start_time: courseStartTime,
               instructor_name: batch.instructor,
             },
           }),
@@ -324,7 +377,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
 
     } catch (err) {
       console.error("Error submitting to HubSpot:", err);
-      // alert('Error submitting form. Please try again.');
+      alert('Error submitting form. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -332,6 +385,11 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
 
   const handlePaymentSuccess = useCallback(async (paymentData: any) => {
     if (!contactId || !selectedPlan) return;
+
+    // Extract time information again for consistency
+    const fullTimeString = getFullTimeString(batch.time);
+    const courseTimeZone = fullTimeString; // Use full string for both fields
+    const courseStartTime = fullTimeString; // Use full string for both fields
 
     try {
       await fetch(`/api/hubspot/update-contact/${contactId}`, {
@@ -342,11 +400,13 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
             contactId: contactId,
             email: formData.email,
             firstname: formData.name,
-            phone: formData.phone, // This now contains the full phone number with country code
+            phone: formData.phone,
             course_name: selectedPlan?.name || formData.plan,
             message: formData.message,
             course_status: 'upcoming',
             course_start_date: selectedStartDate,
+            course_time_zone: courseTimeZone,
+            course_start_time: courseStartTime,
             instructor_name: batch.instructor,
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
@@ -364,7 +424,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       console.error("Error updating enrollment:", err);
       alert('Payment successful but there was an error updating your enrollment. Please contact support.');
     }
-  }, [contactId, selectedPlan, selectedPaymentMethod, formData, batch.duration, selectedStartDate, batch.instructor]);
+  }, [contactId, selectedPlan, formData, selectedStartDate, batch.instructor, batch.time]);
 
   const handlePaymentError = useCallback((error: any) => {
     console.error('Payment error:', error);
@@ -380,7 +440,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
   };
 
   const renderFormStep = () => (
-    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4" noValidate>
       <input
         type="text"
         name="name"
@@ -391,6 +451,11 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
             : "bg-white text-gray-800 border-gray-300"
         )}
         required
+        onInvalid={(e) => {
+          e.preventDefault();
+          (e.target as HTMLInputElement).setCustomValidity('Please fill out this field.');
+        }}
+        onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
       />
       <input
         type="email"
@@ -402,6 +467,16 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
             : "bg-white border-gray-300 text-gray-800"
         )}
         required
+        onInvalid={(e) => {
+          e.preventDefault();
+          const input = e.target as HTMLInputElement;
+          if (input.validity.valueMissing) {
+            input.setCustomValidity('Please fill out this field.');
+          } else if (input.validity.typeMismatch) {
+            input.setCustomValidity('Please enter a valid email address.');
+          }
+        }}
+        onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
       />
 
       {/* Phone with country code */}
@@ -446,6 +521,16 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
           maxLength={10}
           pattern="[0-9]{8,10}"
           required
+          onInvalid={(e) => {
+            e.preventDefault();
+            const input = e.target as HTMLInputElement;
+            if (input.validity.valueMissing) {
+              input.setCustomValidity('Please fill out this field.');
+            } else if (input.validity.patternMismatch) {
+              input.setCustomValidity('Please enter a valid phone number (8-10 digits).');
+            }
+          }}
+          onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
         />
       </div>
 
@@ -459,8 +544,13 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
         onChange={(e) => {
           const plan = pricingPlans.find(p => p.price === e.target.value);
           setSelectedPlan(plan || null);
+          (e.target as HTMLSelectElement).setCustomValidity('');
         }}
         required
+        onInvalid={(e) => {
+          e.preventDefault();
+          (e.target as HTMLSelectElement).setCustomValidity('Please select a pricing plan.');
+        }}
       >
         <option value="">Choose Pricing Plan</option>
         {pricingPlans.map((plan) => (
@@ -473,14 +563,23 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
       <select
         name="startDate"
         value={selectedStartDate}
-        onChange={(e) => setSelectedStartDate(e.target.value)}
+        onChange={(e) => {
+          setSelectedStartDate(e.target.value);
+          (e.target as HTMLSelectElement).setCustomValidity('');
+        }}
         className={cn(
           "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
+          isDarkMode
+            ? "bg-gray-700 text-white border-gray-600"
+            : "bg-white text-gray-800 border-gray-300"
         )}
         required
+        onInvalid={(e) => {
+          e.preventDefault();
+          (e.target as HTMLSelectElement).setCustomValidity('Please select a start date.');
+        }}
       >
-        {batches.map((b, index) => (
+        {filteredBatches.map((b, index) => (
           <option key={index} value={b.startDate}>
             {b.startDate}
           </option>
@@ -497,15 +596,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
         )}
       />
 
-      <div className="flex justify-between pt-4">
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition"
-          disabled={isProcessing}
-        >
-          Cancel
-        </button>
+      <div className="flex justify-end pt-4">
         <button
           type="submit"
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition flex items-center gap-2"
@@ -540,11 +631,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
               <div className="flex justify-between items-center">
                 <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>Price:</span>
                 <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlan?.price}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>Start Date:</span>
-                <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedStartDate}</span>
-              </div>
+              </div>      
             </div>
           </div>
 
@@ -607,12 +694,14 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
             course={selectedPlan.name}
             email={formData.email}
             firstname={formData.name}
-            phone={formData.phone} // This now has full number with country code
+            phone={formData.phone}
             course_name={selectedPlan.name}
             course_status='upcoming'
             message={formData.message}
             duration={batch.duration}
             course_start_date={selectedStartDate}
+            course_time_zone={getFullTimeString(batch.time)}
+            course_start_time={getFullTimeString(batch.time)}
             instructor_name={batch.instructor}
             onClick={onClose}
           />
@@ -642,15 +731,15 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
             )}
           >
             {currentStep === 'form' ? `Enroll for ${selectedStartDate}` : 'Complete Payment'}
-
-            {currentStep === "payment" && !selectedPaymentMethod && (
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-2 py-0 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
-              >
-                Cancel
-              </button>
+            
+            {!selectedPaymentMethod && (
+             <button
+              type="button"
+              onClick={onClose}
+              className="px-2 -py-0.5 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
+            >
+              X
+            </button>
             )}
             {currentStep === 'payment' && selectedPaymentMethod && (
               <button
@@ -682,7 +771,8 @@ function EnrollModal({ batch, batches, onClose, isDarkMode }: EnrollModalProps) 
 
 function UpcomingCcieTable({ batches }: UpcomingCcieTableProps) {
   const { isDarkMode } = useThemeStore();
-  const [filters, setFilters] = useState({ timeZone: "", type: "" });
+  // Set PST as the initial filter value
+  const [filters, setFilters] = useState({ timeZone: "PST", type: "" });
   const [selectedBatch, setSelectedBatch] = useState<Batch | null>(null);
 
   const filteredData = useMemo(() => {
@@ -719,6 +809,7 @@ function UpcomingCcieTable({ batches }: UpcomingCcieTableProps) {
         <EnrollModal
           batch={selectedBatch}
           batches={batches}
+          selectedTimeZone={filters.timeZone}
           onClose={handleCloseModal}
           isDarkMode={isDarkMode}
         />

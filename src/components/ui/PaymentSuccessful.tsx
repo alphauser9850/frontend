@@ -1,7 +1,7 @@
 import { useThemeStore } from "../../store/themeStore";
 import { cn } from "../../lib/utils";
 import { PopupModal } from "react-calendly";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Loader, Calendar, Play, BookOpen, Clock, Users } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
@@ -28,6 +28,10 @@ const PaymentSuccessful = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [videoPlaying, setVideoPlaying] = useState(false);
     const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const [formData, setFormData] = useState({
         firstname: "",
