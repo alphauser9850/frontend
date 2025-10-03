@@ -4,6 +4,7 @@ import { PopupModal } from "react-calendly";
 import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Loader, Calendar, Play, BookOpen, Clock, Users } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
 
 // Country code options
 const countryOptions = [
@@ -19,18 +20,31 @@ const countryOptions = [
     { code: "+60", short: "MY" },
 ];
 
+// Start dates with time slots
+const startDates = [
+    { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
+    { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
+    { date: "December 16, 2025", time: ["2 PM - 6 PM (GMT)", "9 AM - 1 PM (EST)", "6 AM - 10 AM (PST)", "7:30 PM - 11:30 PM (IST)"] },
+    { date: "January 6, 2026", time: ["6 PM - 10 PM (PST)", "9 PM - 1 AM (EST)", "2 AM - 6 AM (GMT)", "7:30 AM - 11:30 AM (IST)"] }
+];
+
 const PaymentSuccessful = () => {
+    const navigate = useNavigate();
     const { isDarkMode } = useThemeStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
     const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
     const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
     const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [videoPlaying, setVideoPlaying] = useState(false);
+    const [availableTimes, setAvailableTimes] = useState<string[]>([]);
     const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        // ✅ Runs only on client (avoids SSR crash)
+        setRootElement(document.getElementById("root"));
     }, []);
 
     const [formData, setFormData] = useState({
@@ -40,6 +54,8 @@ const PaymentSuccessful = () => {
         phone: "",
         message: "",
         course_name: "",
+        course_start_date: "",
+        course_start_time: "",
         leads_status: "NEW",
         hs_lead_status: "NEW",
     });
@@ -54,6 +70,8 @@ const PaymentSuccessful = () => {
         if (!formData.email.trim()) newErrors.email = "Email is required";
         if (!formData.phone.trim()) newErrors.phone = "Phone is required";
         if (!formData.course_name) newErrors.course_name = "Course selection is required";
+        if (!formData.course_start_date) newErrors.course_start_date = "Date selection is required";
+        if (!formData.course_start_time) newErrors.course_start_time = "Time selection is required";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -67,6 +85,13 @@ const PaymentSuccessful = () => {
         if (errors[name]) {
             setErrors({ ...errors, [name]: "" });
         }
+    };
+
+    const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const date = e.target.value;
+        setFormData({ ...formData, course_start_date: date, course_start_time: "" });
+        const slot = startDates.find((s) => s.date === date);
+        setAvailableTimes(slot ? slot.time : []);
     };
 
     const handleScheduleClick = async (e: React.FormEvent) => {
@@ -90,7 +115,7 @@ const PaymentSuccessful = () => {
                                 {
                                     propertyName: "email",
                                     operator: "EQ",
-                                    value: formData.email, // ✅ fixed (was submissionData)
+                                    value: formData.email,
                                 }
                             ]
                         }
@@ -141,7 +166,6 @@ const PaymentSuccessful = () => {
         }
     };
 
-
     const handleModalClose = () => {
         setIsModalOpen(false);
         // Reset form
@@ -152,11 +176,14 @@ const PaymentSuccessful = () => {
             phone: "",
             message: "",
             course_name: "",
+            course_start_date: "",
+            course_start_time: "",
             leads_status: "NEW",
             hs_lead_status: "NEW",
         });
         setErrors({});
         setSelectedCountryCode(countryOptions[0].code);
+        setAvailableTimes([]);
     };
 
     const handleCalendlyClose = () => {
@@ -169,6 +196,8 @@ const PaymentSuccessful = () => {
             phone: "",
             message: "",
             course_name: "",
+            course_start_date: "",
+            course_start_time: "",
             leads_status: "NEW",
             hs_lead_status: "NEW",
         });
@@ -221,23 +250,6 @@ const PaymentSuccessful = () => {
                 <div className="container mx-auto px-4 py-12">
                     {/* Header Section */}
                     <div className="text-center mb-16" style={{ animation: 'fadeInDown 0.8s ease-out' }}>
-                        {/* <div className={cn(
-                            "inline-flex items-center gap-3 px-8 py-4 rounded-full border-2 mb-8 animate-pulse",
-                            isDarkMode 
-                                ? "bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/30" 
-                                : "bg-gradient-to-r from-yellow-400/20 to-red-400/20 border-yellow-400/30"
-                        )}>
-                            <span className="text-2xl">🎉</span>
-                            <p className={cn(
-                                "text-lg font-semibold bg-clip-text text-transparent",
-                                isDarkMode 
-                                    ? "bg-gradient-to-r from-yellow-400 to-orange-400" 
-                                    : "bg-gradient-to-r from-yellow-500 to-red-500"
-                            )}>
-                                PAYMENT SUCCESSFUL
-                            </p>
-                        </div> */}
-
                         <h1
                             className={cn(
                                 "text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent",
@@ -423,10 +435,14 @@ const PaymentSuccessful = () => {
                                 <p className={cn("text-sm mb-4", isDarkMode ? "text-yellow-300" : "text-yellow-600")}>
                                     ⏱️ Your lab hours will be credited within <strong>24 hours</strong> after account creation.
                                 </p>
-                                <button className={cn(
-                                    "px-6 py-3 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg",
-                                    themeStyles.button.secondary
-                                )}>
+
+                                <button
+                                    onClick={() => window.open("https://ent.ccielab.net/register", "_blank", "noopener,noreferrer")}
+                                    className={cn(
+                                        "px-6 py-3 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg",
+                                        themeStyles.button.secondary
+                                    )}
+                                >
                                     🔐 Create Lab Account
                                     <span>→</span>
                                 </button>
@@ -474,7 +490,6 @@ const PaymentSuccessful = () => {
                             <p className={cn("mb-6", themeStyles.text.secondary)}>
                                 Watch this quick tutorial to learn how to access your labs, schedule sessions, and make the most of your training.
                             </p>
-
                             <div className="relative rounded-xl overflow-hidden shadow-2xl mb-6 bg-black">
                                 <div className="aspect-video bg-gradient-to-br from-black to-indigo-900 flex items-center justify-center h-72">
                                     {!videoPlaying ? (
@@ -500,12 +515,14 @@ const PaymentSuccessful = () => {
                                             </div>
                                         </div>
                                     ) : (
-                                        <iframe
+                                        <video
                                             className="w-full h-full"
-                                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                            allowFullScreen
-                                        />
+                                            controls
+                                            autoPlay
+                                            src="/Welcome-onboard.mp4"
+                                        >
+                                            Your browser does not support the video tag.
+                                        </video>
                                     )}
                                 </div>
                             </div>
@@ -539,8 +556,14 @@ const PaymentSuccessful = () => {
                             📧 Email us at:{" "}
                             <a
                                 href="mailto:support@ccielab.net"
+                                onClick={(e) => {
+                                    // Fallback: copy email if mailto doesn't work
+                                    if (!navigator.userAgent.includes('Mobi')) {
+                                        console.log('Email link clicked');
+                                    }
+                                }}
                                 className={cn(
-                                    "font-semibold transition-colors",
+                                    "font-semibold transition-colors underline",
                                     isDarkMode ? "text-blue-300 hover:text-blue-200" : "text-blue-600 hover:text-blue-500"
                                 )}
                             >
@@ -571,11 +594,19 @@ const PaymentSuccessful = () => {
                     >
                         <h3
                             className={cn(
-                                "text-lg font-semibold mb-4 pb-2 border-b",
-                                isDarkMode ? "border-gray-600" : "border-gray-300"
+                                "text-lg font-semibold mb-4 pb-2 border-b flex justify-between",
+                                isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
                             )}
                         >
-                            Schedule a Demo Session
+                            Schedule Your Onboarding Call
+                            <button
+                                type="button"
+                                onClick={handleModalClose}
+                                disabled={isProcessing}
+                                className="px-2 -py-0.5 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
+                            >
+                                X
+                            </button>
                         </h3>
 
                         <form onSubmit={handleScheduleClick} className="flex flex-col gap-4">
@@ -586,10 +617,10 @@ const PaymentSuccessful = () => {
                                 formData.phone &&
                                 formData.course_name && (
                                     <div className={cn(
-                                        "p-3 rounded-lg mb-2 text-sm border",
+                                        "p-3 rounded-lg mb-2 text-sm",
                                         isDarkMode
-                                            ? "bg-blue-900/30 border-blue-700 text-blue-300"
-                                            : "bg-blue-50 border-blue-200 text-blue-800"
+                                            ? "bg-blue-900/30 border border-blue-700 text-blue-300"
+                                            : "bg-blue-50 border border-blue-200 text-blue-800"
                                     )}>
                                         ℹ️ Your details will be prefilled in the scheduling form. Please do not modify them.
                                     </div>
@@ -604,9 +635,9 @@ const PaymentSuccessful = () => {
                                     onChange={handleChange}
                                     required
                                     className={cn(
-                                        "w-full p-2 rounded border transition-colors duration-300",
+                                        "w-full p-2 rounded border",
                                         errors.firstname ? "border-red-500" : "",
-                                        themeStyles.input
+                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
                                     )}
                                 />
                                 {errors.firstname && (
@@ -623,9 +654,9 @@ const PaymentSuccessful = () => {
                                     onChange={handleChange}
                                     required
                                     className={cn(
-                                        "w-full p-2 rounded border transition-colors duration-300",
+                                        "w-full p-2 rounded border",
                                         errors.lastname ? "border-red-500" : "",
-                                        themeStyles.input
+                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
                                     )}
                                 />
                                 {errors.lastname && (
@@ -642,9 +673,9 @@ const PaymentSuccessful = () => {
                                     onChange={handleChange}
                                     required
                                     className={cn(
-                                        "w-full p-2 rounded border transition-colors duration-300",
+                                        "w-full p-2 rounded border",
                                         errors.email ? "border-red-500" : "",
-                                        themeStyles.input
+                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
                                     )}
                                 />
                                 {errors.email && (
@@ -658,8 +689,9 @@ const PaymentSuccessful = () => {
                                     <div className="relative w-1/3">
                                         <select
                                             className={cn(
-                                                "block w-full p-2 appearance-none outline-none cursor-pointer border transition-colors duration-300",
-                                                themeStyles.input
+                                                "block w-full p-2 appearance-none outline-none cursor-pointer border",
+                                                isDarkMode ? "bg-gray-700 text-white border-gray-600"
+                                                    : "bg-white text-gray-800 border-gray-300"
                                             )}
                                             value={selectedCountryCode}
                                             onChange={(e) => setSelectedCountryCode(e.target.value)}
@@ -674,13 +706,13 @@ const PaymentSuccessful = () => {
                                         </select>
                                         <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
                                             {isCountryDropdownOpen ? (
-                                                <ChevronUp className={cn("w-4 h-4", themeStyles.text.secondary)} />
+                                                <ChevronUp className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
                                             ) : (
-                                                <ChevronDown className={cn("w-4 h-4", themeStyles.text.secondary)} />
+                                                <ChevronDown className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
                                             )}
                                         </span>
                                     </div>
-                                    <div className={cn("h-6 border-l", themeStyles.border)}></div>
+                                    <div className={cn("h-6 border-l", isDarkMode ? "border-gray-600" : "border-gray-300")}></div>
                                     <input
                                         type="tel"
                                         name="phone"
@@ -688,9 +720,10 @@ const PaymentSuccessful = () => {
                                         value={formData.phone}
                                         onChange={handleChange}
                                         className={cn(
-                                            "flex-1 px-3 py-2 outline-none border border-l-0 transition-colors duration-300",
+                                            "flex-1 px-3 py-2 outline-none border border-l-0",
                                             errors.phone ? "border-red-500" : "",
-                                            themeStyles.input
+                                            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+                                                : "bg-white text-gray-800 border-gray-300"
                                         )}
                                         maxLength={10}
                                         pattern="[0-9]{8,10}"
@@ -702,6 +735,7 @@ const PaymentSuccessful = () => {
                                 )}
                             </div>
 
+                            {/* Course selection */}
                             <div>
                                 <select
                                     name="course_name"
@@ -709,9 +743,9 @@ const PaymentSuccessful = () => {
                                     onChange={handleChange}
                                     required
                                     className={cn(
-                                        "w-full p-2 rounded border transition-colors duration-300",
+                                        "w-full p-2 rounded border",
                                         errors.course_name ? "border-red-500" : "",
-                                        themeStyles.input
+                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
                                     )}
                                 >
                                     <option value="">Select Course *</option>
@@ -724,6 +758,58 @@ const PaymentSuccessful = () => {
                                 )}
                             </div>
 
+                            {/* Date dropdown */}
+                            <div>
+                                <select
+                                    name="course_start_date"
+                                    value={formData.course_start_date}
+                                    onChange={handleDateChange}
+                                    required
+                                    className={cn(
+                                        "w-full p-2 rounded border",
+                                        errors.course_start_date ? "border-red-500" : "",
+                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
+                                    )}
+                                >
+                                    <option value="">Select Date *</option>
+                                    {startDates.map((slot) => (
+                                        <option key={slot.date} value={slot.date}>
+                                            {slot.date}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.course_start_date && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.course_start_date}</p>
+                                )}
+                            </div>
+
+                            {/* Time dropdown */}
+                            {availableTimes.length > 0 && (
+                                <div>
+                                    <select
+                                        name="course_start_time"
+                                        value={formData.course_start_time}
+                                        onChange={handleChange}
+                                        required
+                                        className={cn(
+                                            "w-full p-2 rounded border",
+                                            errors.course_start_time ? "border-red-500" : "",
+                                            isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
+                                        )}
+                                    >
+                                        <option value="">Select Time *</option>
+                                        {availableTimes.map((time) => (
+                                            <option key={time} value={time}>
+                                                {time}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.course_start_time && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.course_start_time}</p>
+                                    )}
+                                </div>
+                            )}
+
                             <div>
                                 <textarea
                                     name="message"
@@ -732,29 +818,16 @@ const PaymentSuccessful = () => {
                                     onChange={handleChange}
                                     rows={4}
                                     className={cn(
-                                        "w-full p-2 rounded border resize-none transition-colors duration-300",
-                                        themeStyles.input
+                                        "w-full p-2 rounded border resize-none",
+                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
                                     )}
                                 />
                             </div>
 
-                            <div className="flex justify-between pt-4">
-                                <button
-                                    type="button"
-                                    onClick={handleModalClose}
-                                    className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-300"
-                                    disabled={isProcessing}
-                                >
-                                    Cancel
-                                </button>
+                            <div className="flex justify-end pt-4">
                                 <button
                                     type="submit"
-                                    className={cn(
-                                        "px-6 py-2 rounded transition-colors duration-300 flex items-center gap-2",
-                                        isDarkMode
-                                            ? "bg-gray-700 text-white hover:bg-gray-600"
-                                            : "bg-gray-800 text-white hover:bg-gray-700"
-                                    )}
+                                    className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition flex items-center gap-2"
                                     disabled={isProcessing}
                                 >
                                     {isProcessing ? (
@@ -778,14 +851,16 @@ const PaymentSuccessful = () => {
                     url={clendely_id}
                     open={isCalendlyOpen}
                     onModalClose={handleCalendlyClose}
-                    rootElement={document.getElementById("root")!}
+                    rootElement={rootElement!}
                     prefill={{
                         name: `${formData.firstname} ${formData.lastname}`,
                         email: formData.email,
                         customAnswers: {
                             a1: `${selectedCountryCode}${formData.phone}`,
-                            a3: formData.course_name,
-                            a4: formData.message,
+                            a2: formData.course_name,
+                            a3: formData.message,
+                            a4: `${formData.course_start_date}`,
+                            a5: `${formData.course_start_time}`
                         },
                     }}
                 />

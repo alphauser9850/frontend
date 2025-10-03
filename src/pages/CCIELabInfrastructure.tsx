@@ -18,7 +18,7 @@ const features = [
                 </li>
             </ul>
         ),
-        image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+        image: "/labInf1.png"
     },
     {
         title: "Bootcamp: Intensive Exam Practice",
@@ -36,7 +36,7 @@ const features = [
                 </li>
             </ul>
         ),
-        image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+        image: "/labInf2.png"
     },
     {
         title: "Support: Expert Guidance During Lab Practice",
@@ -54,7 +54,7 @@ const features = [
                 </li>
             </ul>
         ),
-        image: "https://images.unsplash.com/photo-1581094794329-c6d3d7f3ad0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+        image: "/labInf3.png"
     },
     {
         title: "Why Students Love Our Labs",
@@ -67,7 +67,7 @@ const features = [
                 <li>Affordable: Rack rentals as low as $15 per hour.</li>
             </ul>
         ),
-        image: "https://images.unsplash.com/photo-1535223289827-42f1e9919769?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+        image: "/labInf4.png"
     },
 ];
 
@@ -120,14 +120,14 @@ const CCIELabInfrastructure = () => {
                         <div className="p-6 lg:flex-1">
                             {features[activeIndex].content}
                         </div>
-                        
-                        {/* Image Section - Inside the same container */}
-                        <div className="lg:w-96 xl:w-1/3 p-6 lg:p-0 lg:pt-6 lg:pr-6 lg:pb-6">
-                            <div className="w-full h-44 lg:h-full rounded-lg overflow-hidden">
+
+                        {/* Image Section - Fixed */}
+                        <div className="lg:w-96 xl:w-1/3 p-6 flex items-center justify-center">
+                            <div className="w-full h-64 lg:h-72 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
                                 <img
                                     src={features[activeIndex].image}
                                     alt={features[activeIndex].title}
-                                    className="w-full w-full lg:w-96 lg:h-64 object-fill"
+                                    className="w-full h-full object-cover"
                                 />
                             </div>
                         </div>
