@@ -98,6 +98,89 @@ async function executeDeployment() {
   return results;
 }
 
+// Get commit history
+export const getCommitHistory = async (req, res) => {
+  try {
+    const { stdout } = await execAsync('cd /var/www/berkut-cloud && git log --oneline -10 --pretty=format:"%h|%s|%an|%ad" --date=iso');
+    
+    const commits = stdout.trim().split('\n').map(line => {
+      const [hash, message, author, timestamp] = line.split('|');
+      return {
+        hash,
+        message,
+        author,
+        timestamp
+      };
+    });
+    
+    res.status(200).json(commits);
+  } catch (error) {
+    console.error('Failed to get commit history:', error);
+    res.status(500).json({
+      message: 'Failed to retrieve commit history'
+    });
+  }
+};
+
+// Save deployment notes
+export const saveDeploymentNotes = async (req, res) => {
+  try {
+    const { notes, timestamp } = req.body;
+    
+    if (!notes) {
+      return res.status(400).json({
+        message: 'Notes are required'
+      });
+    }
+    
+    const deploymentNote = {
+      timestamp: timestamp || new Date().toISOString(),
+      notes,
+      deploymentId: `deploy_${Date.now()}`
+    };
+    
+    // Save to deployment history
+    const history = await loadDeploymentHistory();
+    if (!history.notes) {
+      history.notes = [];
+    }
+    
+    history.notes.unshift(deploymentNote);
+    
+    // Keep only last 20 notes
+    if (history.notes.length > 20) {
+      history.notes = history.notes.slice(0, 20);
+    }
+    
+    await saveDeploymentHistory(history);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Deployment notes saved successfully'
+    });
+  } catch (error) {
+    console.error('Failed to save deployment notes:', error);
+    res.status(500).json({
+      message: 'Failed to save deployment notes'
+    });
+  }
+};
+
+// Get deployment notes
+export const getDeploymentNotes = async (req, res) => {
+  try {
+    const history = await loadDeploymentHistory();
+    const notes = history.notes || [];
+    
+    res.status(200).json(notes);
+  } catch (error) {
+    console.error('Failed to get deployment notes:', error);
+    res.status(500).json({
+      message: 'Failed to retrieve deployment notes'
+    });
+  }
+};
+
 // API endpoint for deployment
 export const deployToProduction = async (req, res) => {
   try {
