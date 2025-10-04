@@ -43,6 +43,7 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
 import TermsPage from './pages/TermsPage';
 import BlogPage from './pages/BlogPage';
+import BlogDetailPage from './pages/BlogDetailPage';
 import PaymentSuccessful from './components/ui/PaymentSuccessful';
 import DeploymentPage from './pages/DeploymentPage';
 
@@ -203,6 +204,7 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogDetailPage />} />
             <Route path="/test" element={<TestPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/refund" element={<RefundPolicyPage />} />
