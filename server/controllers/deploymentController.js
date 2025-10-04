@@ -101,24 +101,42 @@ async function executeDeployment() {
 // Get commit history
 export const getCommitHistory = async (req, res) => {
   try {
-    const { stdout } = await execAsync('cd /var/www/berkut-cloud && git log --oneline -10 --pretty=format:"%h|%s|%an|%ad" --date=iso');
+    console.log('Fetching commit history...');
     
-    const commits = stdout.trim().split('\n').map(line => {
-      const [hash, message, author, timestamp] = line.split('|');
-      return {
-        hash,
-        message,
-        author,
-        timestamp
-      };
-    });
+    // First check if we're in a git repository
+    const { stdout: gitStatus } = await execAsync('cd /var/www/berkut-cloud && git status --porcelain');
+    console.log('Git status check passed');
     
+    // Use a simpler git log command that's more reliable
+    const { stdout } = await execAsync('cd /var/www/berkut-cloud && git log --oneline -10 --pretty=format:"%h|%s|%an|%ad" --date=short');
+    
+    console.log('Git log output:', stdout);
+    
+    if (!stdout.trim()) {
+      console.log('No git log output, returning empty array');
+      return res.status(200).json([]);
+    }
+    
+    const commits = stdout.trim().split('\n').filter(line => line.trim()).map(line => {
+      const parts = line.split('|');
+      if (parts.length >= 4) {
+        return {
+          hash: parts[0],
+          message: parts[1],
+          author: parts[2],
+          timestamp: parts[3]
+        };
+      }
+      return null;
+    }).filter(commit => commit !== null);
+    
+    console.log('Parsed commits:', commits.length);
     res.status(200).json(commits);
   } catch (error) {
     console.error('Failed to get commit history:', error);
-    res.status(500).json({
-      message: 'Failed to retrieve commit history'
-    });
+    console.error('Error details:', error.message);
+    // Return empty array instead of error to prevent frontend issues
+    res.status(200).json([]);
   }
 };
 
