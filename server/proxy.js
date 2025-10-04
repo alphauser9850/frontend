@@ -91,7 +91,12 @@ async function startServer() {
       render = () => ({ appHtml: "", helmetHead: "" }); // fallback
     }
 
-    app.use(async (req, res) => {
+    app.use(async (req, res, next) => {
+      // Skip API routes - let them be handled by the API router
+      if (req.path.startsWith('/api/')) {
+        return next();
+      }
+      
       try {
         const template = await fs.readFile(
           path.resolve(clientDist, "index.html"),
