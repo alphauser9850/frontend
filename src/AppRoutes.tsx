@@ -38,6 +38,7 @@ import LessonPage from "./pages/LessonPage";
 import AdminPage from "./pages/AdminPage";
 import CourseEditorPage from "./pages/CourseEditorPage";
 import TimeManagementPage from "./pages/TimeManagementPage";
+import AdminDeploymentPage from "./pages/AdminDeploymentPage";
 
 export function AppRoutes() {
   console.log("[AppRoutes] rendering AppRoutes...");
@@ -89,6 +90,7 @@ export function AppRoutes() {
         />
         <Route path="/admin/courses/new" element={<CourseEditorPage />} />
         <Route path="/admin/courses/:courseId/edit" element={<CourseEditorPage />} />
+        <Route path="/admin/deploy" element={<AdminDeploymentPage />} />
         <Route path="/time-management" element={<TimeManagementPage />} />
       </Route>
 
