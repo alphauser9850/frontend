@@ -98,6 +98,20 @@ async function executeDeployment() {
   return results;
 }
 
+// Test endpoint for debugging
+export const testCommitHistory = async (req, res) => {
+  try {
+    console.log('Test endpoint called');
+    res.status(200).json({ 
+      message: 'Test endpoint working',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Test endpoint error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Get commit history
 export const getCommitHistory = async (req, res) => {
   try {
