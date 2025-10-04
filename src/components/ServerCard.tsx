@@ -2,7 +2,7 @@ import React from 'react';
 import { Server, ExternalLink, Lock, X } from 'lucide-react';
 import { useServerStore } from '../store/serverStore';
 import { Link } from 'react-router-dom';
-import { Card } from './ui/Card';
+import { Card } from './ui/card';
 import { cn } from '../lib/utils';
 import { useThemeStore } from '../store/themeStore';
 

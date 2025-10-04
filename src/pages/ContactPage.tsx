@@ -14,7 +14,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { AuroraText, Particles, ShineBorder, BorderBeam } from '../components/magicui';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { submitFormToN8n, ContactFormData } from '../services/formService';
 import { cn } from '../lib/utils';

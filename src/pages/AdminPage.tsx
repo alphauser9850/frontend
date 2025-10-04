@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useAdminStore } from '../store/adminStore';
 import PageWrapper from '../components/PageWrapper';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Modal } from '../components/ui/Modal';
 import { 
   Server, Users, Plus, Edit, Trash, Check, X, UserPlus, 

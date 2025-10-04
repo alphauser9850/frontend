@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCourseStore, Course } from '../store/courseStore';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { BookOpen, ArrowRight, Clock, Award } from 'lucide-react';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';

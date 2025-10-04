@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useTimeStore } from '../store/timeStore';
 import { useThemeStore } from '../store/themeStore';
 import { Clock } from 'lucide-react';
-import { Card } from './ui/Card';
+import { Card } from './ui/card';
 import { cn } from '../lib/utils';
 
 const TimeBalanceCard: React.FC = () => {

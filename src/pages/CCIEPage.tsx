@@ -3,7 +3,7 @@ import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, 
 import { AuroraText, Particles, ShineBorder } from '../components/magicui';
 import { cn } from '../lib/utils';
 import { CCIETimeline } from '../components/CCIETimeline';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { CheckCircle2 } from 'lucide-react';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { CCIEFormData } from '../services/formService';

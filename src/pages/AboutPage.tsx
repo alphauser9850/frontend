@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, BarChart, CheckCircle, ChevronRight, Layers, Network, Globe, Workflow, Lightbulb, Zap, Mail, Phone, User, ArrowLeft, ArrowRight, Send, MapPin, MessageCircle, Linkedin, Heart, Target, Shield, Briefcase } from 'lucide-react';
 import { AuroraText, Particles, ShineBorder, AnimatedDotPattern, MagicCard, BorderBeam } from '../components/magicui';
 import { cn } from '../lib/utils';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { BorderBeamWrapper } from '../components/ui/BorderBeamWrapper';
 import { submitFormToN8n, AboutFormData } from '../services/formService';
 import { ContactSection } from '../components/ContactSection';

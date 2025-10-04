@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCourseStore, Course } from '../store/courseStore';
 import { BookOpen, Clock, Users, Star, Search, AlertCircle } from 'lucide-react';
 import PageWrapper from '../components/PageWrapper';
-import { Card } from '../components/ui/Card';
+import { Card } from '../components/ui/card';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
 import Breadcrumbs from '../components/Breadcrumbs';

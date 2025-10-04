@@ -4,7 +4,7 @@ import { useCourseStore, Module, Lesson } from '../store/courseStore';
 import { useThemeStore } from '../store/themeStore';
 import { BookOpen, ChevronRight, Clock, CheckCircle, ChevronDown, ChevronUp, Play, FileText, HelpCircle, Users } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { ShineBorder } from '../components/magicui';
 
 const CourseDetailPage: React.FC = () => {

@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/authStore';
 import { Navigate } from 'react-router-dom';
 import ServerCard from '../components/ServerCard';
 import PageWrapper from '../components/PageWrapper';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Server, AlertCircle, Search, Filter, Clock } from 'lucide-react';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';

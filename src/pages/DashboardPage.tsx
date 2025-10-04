@@ -4,7 +4,7 @@ import { useServerStore } from '../store/serverStore';
 import { useNotificationStore } from '../store/notificationStore';
 import ServerCard from '../components/ServerCard';
 import PageWrapper from '../components/PageWrapper';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Server, AlertCircle } from 'lucide-react';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';

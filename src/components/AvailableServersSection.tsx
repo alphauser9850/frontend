@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useServerStore } from '../store/serverStore';
 import ServerCard from './ServerCard';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/Card';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { Server, AlertCircle, Search, Filter } from 'lucide-react';
 import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
