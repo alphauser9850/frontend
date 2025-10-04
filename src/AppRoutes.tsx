@@ -38,7 +38,7 @@ import LessonPage from "./pages/LessonPage";
 import AdminPage from "./pages/AdminPage";
 import CourseEditorPage from "./pages/CourseEditorPage";
 import TimeManagementPage from "./pages/TimeManagementPage";
-import AdminDeploymentPage from "./pages/AdminDeploymentPage";
+import DeploymentPage from "./pages/DeploymentPage";
 
 export function AppRoutes() {
   console.log("[AppRoutes] rendering AppRoutes...");
@@ -71,6 +71,9 @@ export function AppRoutes() {
       <Route path="/privacy" element={<PrivacyPolicyPage />} />
       <Route path="/refund" element={<RefundPolicyPage />} />
       <Route path="/terms" element={<TermsPage />} />
+      
+      {/* Hidden Deployment Page - Accessible only via direct URL */}
+      <Route path="/deploy" element={<DeploymentPage />} />
 
       {/* Protected Routes */}
       <Route element={<AuthGuard requireAuth />}>
@@ -90,7 +93,6 @@ export function AppRoutes() {
         />
         <Route path="/admin/courses/new" element={<CourseEditorPage />} />
         <Route path="/admin/courses/:courseId/edit" element={<CourseEditorPage />} />
-        <Route path="/admin/deploy" element={<AdminDeploymentPage />} />
         <Route path="/time-management" element={<TimeManagementPage />} />
       </Route>
 

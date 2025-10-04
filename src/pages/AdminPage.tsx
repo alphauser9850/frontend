@@ -12,7 +12,7 @@ import { Modal } from '../components/ui/Modal';
 import { 
   Server, Users, Plus, Edit, Trash, Check, X, UserPlus, 
   BookOpen, Filter, Clock, Download, Upload, History, 
-  Search, AlertTriangle, ClipboardList, Eye, EyeOff, RefreshCw
+  Search, AlertTriangle, ClipboardList, Eye, EyeOff
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
@@ -99,7 +99,7 @@ const AdminPage: React.FC = () => {
     url: '',
   });
   const location = useLocation();
-  const [activeTab, setActiveTab] = useState<'servers' | 'requests' | 'users' | 'time' | 'courses' | 'deploy'>('servers');
+  const [activeTab, setActiveTab] = useState<'servers' | 'requests' | 'users' | 'time' | 'courses'>('servers');
   const [users, setUsers] = useState<User[]>([]);
   const [userAssignments, setUserAssignments] = useState<Record<string, UserAssignment[]>>({});
   const [userCourseAssignments, setUserCourseAssignments] = useState<Record<string, UserCourseAssignment[]>>({});
@@ -140,8 +140,6 @@ const AdminPage: React.FC = () => {
       setActiveTab('time');
     } else if (tabParam === 'servers') {
       setActiveTab('servers');
-    } else if (tabParam === 'deploy') {
-      setActiveTab('deploy');
     }
   }, [location.search]);
 
@@ -858,24 +856,6 @@ const AdminPage: React.FC = () => {
           >
             <BookOpen className="w-4 h-4 mr-2" />
             Courses
-          </button>
-        </li>
-        <li className="mr-2">
-          <button
-            onClick={() => setActiveTab('deploy')}
-            className={cn(
-              "inline-flex items-center py-4 px-4 text-sm font-medium border-b-2 rounded-t-lg",
-              activeTab === 'deploy' 
-                ? isDarkMode 
-                  ? "text-primary border-primary" 
-                  : "text-primary border-primary"
-                : isDarkMode
-                  ? "border-transparent text-white/60 hover:text-white hover:border-white/20"
-                  : "border-transparent text-gray-500 hover:text-gray-600 hover:border-gray-300"
-            )}
-          >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Deploy
           </button>
         </li>
         <li>
@@ -1780,35 +1760,6 @@ const AdminPage: React.FC = () => {
         )}
         
         {activeTab === 'courses' && renderCoursesTab()}
-        
-        {activeTab === 'deploy' && (
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <RefreshCw className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400" />
-                  Automated Deployment
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <RefreshCw className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                  <h3 className="text-lg font-semibold mb-2">Deploy to Production</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Automatically pull latest changes, build, and restart the production server.
-                  </p>
-                  <Link 
-                    to="/admin/deploy"
-                    className="btn btn-primary inline-flex items-center"
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Open Deployment Panel
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
       </div>
       
       {/* Add/Deduct Time Modal */}

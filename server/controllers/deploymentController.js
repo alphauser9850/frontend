@@ -5,147 +5,176 @@ import path from 'path';
 
 const execAsync = promisify(exec);
 
-// Deployment log file path
-const DEPLOYMENT_LOG_FILE = path.join(process.cwd(), 'deployment.log');
+// Deployment history file path
+const DEPLOYMENT_HISTORY_FILE = path.join(process.cwd(), 'deployment-history.json');
 
-// Store last deployment timestamp
-let lastDeploymentTimestamp = null;
+// Load deployment history
+async function loadDeploymentHistory() {
+  try {
+    const data = await fs.readFile(DEPLOYMENT_HISTORY_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    return { deployments: [] };
+  }
+}
 
+// Save deployment history
+async function saveDeploymentHistory(history) {
+  await fs.writeFile(DEPLOYMENT_HISTORY_FILE, JSON.stringify(history, null, 2));
+}
+
+// Add deployment record
+async function addDeploymentRecord(status, message) {
+  const history = await loadDeploymentHistory();
+  const record = {
+    timestamp: new Date().toISOString(),
+    status,
+    message
+  };
+  
+  history.deployments.unshift(record);
+  
+  // Keep only last 10 deployments
+  if (history.deployments.length > 10) {
+    history.deployments = history.deployments.slice(0, 10);
+  }
+  
+  await saveDeploymentHistory(history);
+  return record;
+}
+
+// Execute deployment commands
+async function executeDeployment() {
+  const commands = [
+    {
+      name: 'Git Pull',
+      command: 'cd /var/www/berkut-cloud && git pull origin main',
+      timeout: 30000
+    },
+    {
+      name: 'Build Application',
+      command: 'cd /var/www/berkut-cloud && sudo npm run build',
+      timeout: 120000
+    },
+    {
+      name: 'Restart Service',
+      command: 'sudo systemctl restart berkut-cloud.service',
+      timeout: 10000
+    },
+    {
+      name: 'Check Service Status',
+      command: 'sudo systemctl is-active berkut-cloud.service',
+      timeout: 5000
+    }
+  ];
+
+  const results = [];
+  
+  for (const cmd of commands) {
+    try {
+      console.log(`Executing: ${cmd.name}`);
+      const { stdout, stderr } = await execAsync(cmd.command, { 
+        timeout: cmd.timeout,
+        cwd: '/var/www/berkut-cloud'
+      });
+      
+      results.push({
+        step: cmd.name,
+        success: true,
+        output: stdout,
+        error: stderr
+      });
+      
+      console.log(`${cmd.name} completed successfully`);
+    } catch (error) {
+      console.error(`${cmd.name} failed:`, error);
+      results.push({
+        step: cmd.name,
+        success: false,
+        output: error.stdout || '',
+        error: error.message
+      });
+      
+      // If any step fails, stop the deployment
+      throw new Error(`${cmd.name} failed: ${error.message}`);
+    }
+  }
+  
+  return results;
+}
+
+// API endpoint for deployment
 export const deployToProduction = async (req, res) => {
   try {
-    const logs = [];
+    console.log('Starting production deployment...');
     
-    // Add timestamp to logs
-    const timestamp = new Date().toISOString();
-    logs.push(`[${timestamp}] Starting deployment process...`);
+    // Execute deployment steps
+    const results = await executeDeployment();
     
-    // Step 1: Navigate to project directory and pull latest changes
-    logs.push('Step 1: Pulling latest changes from repository...');
-    try {
-      const { stdout: pullOutput, stderr: pullError } = await execAsync(
-        'cd /var/www/berkut-cloud && git pull origin main'
-      );
-      logs.push(`Git pull output: ${pullOutput}`);
-      if (pullError) logs.push(`Git pull warnings: ${pullError}`);
-    } catch (error) {
-      logs.push(`Git pull failed: ${error.message}`);
-      throw new Error(`Git pull failed: ${error.message}`);
+    // Check if service is running
+    const serviceStatus = results.find(r => r.step === 'Check Service Status');
+    if (!serviceStatus || !serviceStatus.success) {
+      throw new Error('Service is not running after restart');
     }
     
-    // Step 2: Install dependencies (if package.json changed)
-    logs.push('Step 2: Installing dependencies...');
-    try {
-      const { stdout: installOutput, stderr: installError } = await execAsync(
-        'cd /var/www/berkut-cloud && npm ci --production'
-      );
-      logs.push(`Dependencies installed successfully`);
-      if (installError) logs.push(`Install warnings: ${installError}`);
-    } catch (error) {
-      logs.push(`Dependency installation failed: ${error.message}`);
-      // Don't throw here, continue with build
-    }
+    const message = `Deployment completed successfully. Service status: ${serviceStatus.output.trim()}`;
     
-    // Step 3: Build the application
-    logs.push('Step 3: Building application for production...');
-    try {
-      const { stdout: buildOutput, stderr: buildError } = await execAsync(
-        'cd /var/www/berkut-cloud && npm run build'
-      );
-      logs.push('Build completed successfully');
-      if (buildError) logs.push(`Build warnings: ${buildError}`);
-    } catch (error) {
-      logs.push(`Build failed: ${error.message}`);
-      throw new Error(`Build failed: ${error.message}`);
-    }
-    
-    // Step 4: Restart the service
-    logs.push('Step 4: Restarting production service...');
-    try {
-      const { stdout: restartOutput, stderr: restartError } = await execAsync(
-        'sudo systemctl restart berkut-cloud.service'
-      );
-      logs.push('Service restarted successfully');
-      if (restartError) logs.push(`Restart warnings: ${restartError}`);
-    } catch (error) {
-      logs.push(`Service restart failed: ${error.message}`);
-      throw new Error(`Service restart failed: ${error.message}`);
-    }
-    
-    // Step 5: Check service status
-    logs.push('Step 5: Verifying service status...');
-    try {
-      const { stdout: statusOutput, stderr: statusError } = await execAsync(
-        'sudo systemctl is-active berkut-cloud.service'
-      );
-      logs.push(`Service status: ${statusOutput.trim()}`);
-      
-      if (statusOutput.trim() !== 'active') {
-        throw new Error('Service is not active after restart');
-      }
-    } catch (error) {
-      logs.push(`Service status check failed: ${error.message}`);
-      throw new Error(`Service status check failed: ${error.message}`);
-    }
-    
-    // Update last deployment timestamp
-    lastDeploymentTimestamp = timestamp;
-    
-    // Save logs to file
-    await fs.writeFile(DEPLOYMENT_LOG_FILE, logs.join('\n'));
-    
-    logs.push(`[${timestamp}] Deployment completed successfully!`);
+    // Save deployment record
+    await addDeploymentRecord('success', message);
     
     res.status(200).json({
       success: true,
-      message: 'Deployment completed successfully',
-      timestamp,
-      logs
+      message,
+      results: results.map(r => ({
+        step: r.step,
+        success: r.success,
+        output: r.output.substring(0, 200) // Limit output length
+      }))
     });
     
   } catch (error) {
-    const timestamp = new Date().toISOString();
-    const errorLogs = [
-      `[${timestamp}] Deployment failed: ${error.message}`,
-      'Please check the logs and try again.'
-    ];
+    console.error('Deployment failed:', error);
     
-    // Save error logs
-    await fs.writeFile(DEPLOYMENT_LOG_FILE, errorLogs.join('\n'));
+    // Save failed deployment record
+    await addDeploymentRecord('error', error.message);
     
     res.status(500).json({
       success: false,
-      error: error.message,
-      timestamp,
-      logs: errorLogs
+      message: error.message
     });
   }
 };
 
+// API endpoint to get last deployment
 export const getLastDeployment = async (req, res) => {
   try {
-    res.status(200).json({
-      lastDeployment: lastDeploymentTimestamp,
-      success: true
-    });
+    const history = await loadDeploymentHistory();
+    const lastDeployment = history.deployments[0];
+    
+    if (!lastDeployment) {
+      return res.status(404).json({
+        message: 'No deployment history found'
+      });
+    }
+    
+    res.status(200).json(lastDeployment);
   } catch (error) {
+    console.error('Failed to get last deployment:', error);
     res.status(500).json({
-      error: 'Failed to get last deployment info',
-      success: false
+      message: 'Failed to retrieve deployment history'
     });
   }
 };
 
-export const getDeploymentLogs = async (req, res) => {
+// API endpoint to get deployment history
+export const getDeploymentHistory = async (req, res) => {
   try {
-    const logs = await fs.readFile(DEPLOYMENT_LOG_FILE, 'utf-8');
-    res.status(200).json({
-      logs: logs.split('\n'),
-      success: true
-    });
+    const history = await loadDeploymentHistory();
+    res.status(200).json(history);
   } catch (error) {
+    console.error('Failed to get deployment history:', error);
     res.status(500).json({
-      error: 'Failed to read deployment logs',
-      success: false
+      message: 'Failed to retrieve deployment history'
     });
   }
 };
