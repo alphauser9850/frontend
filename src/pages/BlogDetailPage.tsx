@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import Breadcrumbs from '../components/Breadcrumbs';
 // Mock blog data
 const blogPosts = [
     {
         id: 1,
+        slug: 'understanding-mtu-layer2-vs-layer3',
         title: 'Understanding MTU: Layer 2 vs Layer 3',
         category: 'Networking',
         image: '/mtu-layer2-layer3.png',
@@ -63,6 +65,7 @@ const blogPosts = [
     },
     {
         id: 2,
+        slug: 'cisco-modeling-labs-cml-free-tier',
         title: 'Cisco Modeling Labs (CML) Free Tier: What You Need to Know',
         category: 'Cisco',
         image: '/cml-free-tier.png',
@@ -73,6 +76,7 @@ const blogPosts = [
     },
     {
         id: 3,
+        slug: 'coming-soon-more-networking-insights',
         title: 'Coming Soon: More Networking Insights',
         category: 'Announcement',
         image: '/coming-soon.png',
@@ -85,7 +89,8 @@ const blogPosts = [
 
 
 function BlogDetailPage() {
-    const [post] = useState(blogPosts[0]); // For demo, we take the first post
+    const { slug } = useParams<{ slug: string }>();
+    const [post, setPost] = useState(blogPosts.find(p => p.slug === slug) || blogPosts[0]);
 
     const sanitizedContent = DOMPurify.sanitize(post.content);
 
@@ -96,7 +101,7 @@ function BlogDetailPage() {
                 <Breadcrumbs items={[
                     { label: 'Home', href: '/' },
                     { label: 'Blogs', href: '/blog' },
-                    { label: blogPosts[0].title, }
+                    { label: post.title, }
                 ]} />
             </div>
 
