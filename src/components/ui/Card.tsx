@@ -1,158 +1,78 @@
-import React from 'react';
-import { cn } from '../../lib/utils';
-import { BorderBeam } from '../magicui';
-import { useThemeStore } from '../../store/themeStore';
+import * as React from "react"
+import { cn } from "@/lib/utils"
 
-interface CardProps {
-  children: React.ReactNode;
-  className?: string;
-  withBeam?: boolean;
-  beamDuration?: number;
-  beamSize?: number;
-  beamDelay?: number;
-  beamClassName?: string;
-  gradientFrom?: string;
-  gradientTo?: string;
-}
-
-export const Card: React.FC<CardProps> = ({ 
-  children, 
-  className, 
-  withBeam = false,
-  beamDuration = 6,
-  beamSize = 300,
-  beamDelay = 0,
-  beamClassName,
-  gradientFrom,
-  gradientTo
-}) => {
-  const hasGradient = gradientFrom && gradientTo;
-  const { isDarkMode } = useThemeStore();
-  
-  return (
-    <div 
-      className={cn(
-        "shadow-md rounded-lg p-6 transition-colors duration-300 relative overflow-hidden",
-        isDarkMode 
-          ? "bg-black/40 backdrop-blur-sm border border-white/10 text-white" 
-          : "bg-card text-card-foreground",
-        hasGradient && "bg-gradient-to-br",
-        className
-      )}
-      style={
-        hasGradient 
-          ? { backgroundImage: `linear-gradient(to bottom right, ${gradientFrom}, ${gradientTo})` } 
-          : undefined
-      }
-    >
-      {children}
-      {withBeam && (
-        <>
-          <BorderBeam
-            duration={beamDuration}
-            size={beamSize}
-            delay={beamDelay}
-            className={cn("from-transparent via-primary/50 to-transparent", beamClassName)}
-          />
-          <BorderBeam
-            duration={beamDuration}
-            delay={beamDelay + beamDuration / 2}
-            size={beamSize}
-            className={cn("from-transparent via-secondary/50 to-transparent", beamClassName)}
-          />
-        </>
-      )}
-    </div>
-  );
-};
-
-interface CardHeaderProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const CardHeader: React.FC<CardHeaderProps> = ({ children, className }) => {
-  const { isDarkMode } = useThemeStore();
-  
-  return (
-    <div className={cn(
-      "mb-4", 
-      isDarkMode ? "border-white/10" : "border-border",
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-lg border bg-card text-card-foreground shadow-sm",
       className
-    )}>
-      {children}
-    </div>
-  );
-};
+    )}
+    {...props}
+  />
+))
+Card.displayName = "Card"
 
-interface CardTitleProps {
-  children: React.ReactNode;
-  className?: string;
-}
+const CardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    {...props}
+  />
+))
+CardHeader.displayName = "CardHeader"
 
-export const CardTitle: React.FC<CardTitleProps> = ({ children, className }) => {
-  const { isDarkMode } = useThemeStore();
-  
-  return (
-    <h3 className={cn(
-      "text-xl font-semibold items-center",
-      isDarkMode ? "text-white" : "text-card-foreground",
+const CardTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      "text-2xl font-semibold leading-none tracking-tight",
       className
-    )}>
-      {children}
-    </h3>
-  );
-};
+    )}
+    {...props}
+  />
+))
+CardTitle.displayName = "CardTitle"
 
-interface CardContentProps {
-  children: React.ReactNode;
-  className?: string;
-}
+const CardDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
+))
+CardDescription.displayName = "CardDescription"
 
-export const CardContent: React.FC<CardContentProps> = ({ children, className }) => {
-  return (
-    <div className={cn("", className)}>
-      {children}
-    </div>
-  );
-};
+const CardContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+))
+CardContent.displayName = "CardContent"
 
-interface CardBodyProps {
-  children: React.ReactNode;
-  className?: string;
-}
+const CardFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex items-center p-6 pt-0", className)}
+    {...props}
+  />
+))
+CardFooter.displayName = "CardFooter"
 
-export const CardBody: React.FC<CardBodyProps> = ({ children, className }) => {
-  return (
-    <div className={cn("", className)}>
-      {children}
-    </div>
-  );
-};
-
-interface CardFooterProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const CardFooter: React.FC<CardFooterProps> = ({ children, className }) => {
-  const { isDarkMode } = useThemeStore();
-  
-  return (
-    <div className={cn(
-      "mt-4 pt-4 border-t", 
-      isDarkMode ? "border-white/10" : "border-border", 
-      className
-    )}>
-      {children}
-    </div>
-  );
-};
-
-export default Object.assign(Card, {
-  Header: CardHeader,
-  Title: CardTitle,
-  Content: CardContent,
-  Body: CardBody,
-  Footer: CardFooter
-});
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
