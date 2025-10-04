@@ -57,11 +57,6 @@ async function executeDeployment() {
       timeout: 120000
     },
     {
-      name: 'Restart Service',
-      command: 'sudo systemctl restart berkut-cloud.service',
-      timeout: 10000
-    },
-    {
       name: 'Check Service Status',
       command: 'sudo systemctl is-active berkut-cloud.service',
       timeout: 5000
