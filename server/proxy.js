@@ -91,13 +91,13 @@ async function startServer() {
       render = () => ({ appHtml: "", helmetHead: "" }); // fallback
     }
 
-    // Handle API routes that weren't matched
-    app.use('/api/*', (req, res) => {
-      res.status(404).json({ error: 'API endpoint not found' });
-    });
-
     // Handle all other routes with SSR
     app.use(async (req, res) => {
+      // Skip API routes - let them be handled by the API router
+      if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ error: 'API endpoint not found' });
+      }
+      
       try {
         const template = await fs.readFile(
           path.resolve(clientDist, "index.html"),
