@@ -103,12 +103,8 @@ export const getCommitHistory = async (req, res) => {
   try {
     console.log('Fetching commit history...');
     
-    // First check if we're in a git repository
-    const { stdout: gitStatus } = await execAsync('cd /var/www/berkut-cloud && git status --porcelain');
-    console.log('Git status check passed');
-    
-    // Use a simpler git log command that's more reliable
-    const { stdout } = await execAsync('cd /var/www/berkut-cloud && git log --oneline -10 --pretty=format:"%h|%s|%an|%ad" --date=short');
+    // Try a simpler approach first - just get basic commit info
+    const { stdout } = await execAsync('cd /var/www/berkut-cloud && git log --oneline -10');
     
     console.log('Git log output:', stdout);
     
@@ -117,20 +113,21 @@ export const getCommitHistory = async (req, res) => {
       return res.status(200).json([]);
     }
     
+    // Parse the simple oneline format
     const commits = stdout.trim().split('\n').filter(line => line.trim()).map(line => {
-      const parts = line.split('|');
-      if (parts.length >= 4) {
-        return {
-          hash: parts[0],
-          message: parts[1],
-          author: parts[2],
-          timestamp: parts[3]
-        };
-      }
-      return null;
-    }).filter(commit => commit !== null);
+      const parts = line.split(' ');
+      const hash = parts[0];
+      const message = parts.slice(1).join(' ');
+      
+      return {
+        hash: hash.substring(0, 7), // Short hash
+        message: message,
+        author: 'Unknown', // We'll get this separately if needed
+        timestamp: new Date().toISOString().split('T')[0] // Today's date as fallback
+      };
+    });
     
-    console.log('Parsed commits:', commits.length);
+    console.log('Parsed commits:', commits.length, commits);
     res.status(200).json(commits);
   } catch (error) {
     console.error('Failed to get commit history:', error);

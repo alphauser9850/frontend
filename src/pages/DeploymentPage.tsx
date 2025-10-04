@@ -65,10 +65,16 @@ export default function DeploymentPage() {
 
   const fetchCommitHistory = async () => {
     try {
+      console.log('Fetching commit history...');
       const response = await fetch('/api/deployment/commits');
+      console.log('Commit history response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Commit history data:', data);
         setCommitHistory(data);
+      } else {
+        console.error('Commit history response not ok:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Failed to fetch commit history:', error);
