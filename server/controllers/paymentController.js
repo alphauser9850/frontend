@@ -8,10 +8,10 @@ import {
 import stripe from "stripe";
 import { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, STRIPE_SECRET_KEY } from "../env.js";
 
-const stripeGateway = new stripe(STRIPE_SECRET_KEY);
+const stripeGateway = STRIPE_SECRET_KEY ? new stripe(STRIPE_SECRET_KEY) : null;
 
 
-const client = new Client({
+const client = PAYPAL_CLIENT_ID && PAYPAL_CLIENT_SECRET ? new Client({
     clientCredentialsAuthCredentials: {
         oAuthClientId: PAYPAL_CLIENT_ID,
         oAuthClientSecret: PAYPAL_CLIENT_SECRET,
@@ -23,9 +23,9 @@ const client = new Client({
         logRequest: { logBody: true },
         logResponse: { logHeaders: true },
     },
-});
+}) : null;
 
-const ordersController = new OrdersController(client);
+const ordersController = client ? new OrdersController(client) : null;
 
 
 export const paypalCreateOrder = async (req, res) => {
