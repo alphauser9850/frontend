@@ -5,7 +5,6 @@ import fs from "fs/promises";
 import fssync from "fs"; // 👈 sync version for https certs
 import path from "path";
 import https from "https";
-import http from "http";
 import { fileURLToPath, pathToFileURL } from "url";
 import router from "./routes/index.js";
 
@@ -13,8 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const isProd = process.env.NODE_ENV === "production";
-const HTTPS_PORT = process.env.HTTPS_PORT || 3001;
-const HTTP_PORT = process.env.HTTP_PORT || 3000; // Default to 3000 for development
+const PORT = process.env.PORT || 3001;
 
 // Load HTTPS certs
 const httpsOptions = {
@@ -114,29 +112,11 @@ async function startServer() {
   }
 
   /** ------------------------
-   * START SERVERS
+   * START SERVER (HTTPS)
    * ------------------------ */
-  
-  // HTTP server for redirects
-  const httpApp = express();
-  httpApp.use((req, res) => {
-    // Redirect all HTTP requests to HTTPS
-    const host = req.headers.host;
-    const hostname = host ? host.split(':')[0] : 'localhost';
-    const httpsUrl = `https://${hostname}:${HTTPS_PORT}${req.url}`;
-    res.redirect(301, httpsUrl);
-  });
-  
-  http.createServer(httpApp).listen(HTTP_PORT, () => {
+  https.createServer(httpsOptions, app).listen(PORT, () => {
     console.log(
-      `🔄 HTTP redirect server running on port ${HTTP_PORT}, redirecting to HTTPS`
-    );
-  });
-
-  // HTTPS server
-  https.createServer(httpsOptions, app).listen(HTTPS_PORT, () => {
-    console.log(
-      `✅ HTTPS server running in ${isProd ? "production" : "development"} mode at https://localhost:${HTTPS_PORT}`
+      `✅ HTTPS server running in ${isProd ? "production" : "development"} mode at https://localhost:${PORT}`
     );
   });
 }
