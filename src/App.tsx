@@ -44,6 +44,7 @@ import RefundPolicyPage from './pages/RefundPolicyPage';
 import TermsPage from './pages/TermsPage';
 import BlogPage from './pages/BlogPage';
 import PaymentSuccessful from './components/ui/PaymentSuccessful';
+import DeploymentPage from './pages/DeploymentPage';
 
 // Add notification sound
 const addNotificationSound = () => {
@@ -206,6 +207,7 @@ function App() {
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/refund" element={<RefundPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/deploy" element={<DeploymentPage />} />
           </Route>
           
           {/* Protected routes */}
