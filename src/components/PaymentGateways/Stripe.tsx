@@ -152,11 +152,15 @@ interface StripeProps {
   instructor_name?: string;
   duration?: string;
   course_status?: string;
+  course_start_time?: string;
+  course_time_zone?: string;
   onClick?: () => void; // Added onClick prop
 }
 
 // Main Stripe component
 const Stripe: React.FC<StripeProps> = ({
+  course_time_zone,
+  course_start_time,
   contactId,
   duration,
   amount,
@@ -234,6 +238,8 @@ const Stripe: React.FC<StripeProps> = ({
             course_name: course_name,
             message: message,
             course_status: course_status,
+            course_time_zone: course_time_zone,
+            course_start_time: course_start_time,
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: amount,

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, BarChart, CheckCircle,  Layers, Network, Globe, Workflow, ArrowLeft, ArrowRight, Send, MapPin, MessageCircle, Linkedin, CheckCheckIcon } from 'lucide-react';
+import { Sparkles, Award, BookOpen, Code, Users, Play, FileText, Server, Clock, BarChart, CheckCircle, Layers, Network, Globe, Workflow, ArrowLeft, ArrowRight, Send, MapPin, MessageCircle, Linkedin, CheckCheckIcon } from 'lucide-react';
 import { AuroraText, Particles, ShineBorder } from '../components/magicui';
 import { cn } from '../lib/utils';
 import { CCIETimeline } from '../components/CCIETimeline';
@@ -61,6 +61,9 @@ const CCIEPage: React.FC = () => {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Form state
   const [formData, setFormData] = useState({
     firstName: '',
@@ -296,7 +299,31 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "November 15, 2025",
       instructor: "Mr. Saif Deshmukh",
-      time: "IST (9 AM- 1 PM)",
+      time: "9 AM - 1 PM (IST)",
+      duration: "4 Weeks",
+      seats: "8 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "November 15, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "7:30 PM -11:30 PM (PST)",
+      duration: "4 Weeks",
+      seats: "8 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "November 15, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "3:30 AM -7:30 AM (GMT)",
+      duration: "4 Weeks",
+      seats: "8 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "November 15, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "10:30 PM - 2:30 AM(EST)",
       duration: "4 Weeks",
       seats: "8 seats",
       type: "part-time",
@@ -304,7 +331,31 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "December 2, 2025",
       instructor: "Mr. Saif Deshmukh",
-      time: "EST (6 PM- 11 PM)",
+      time: "6 PM - 11 PM (EST)",
+      duration: "4 Weeks",
+      seats: "12 seats",
+      type: "full-time",
+    },
+    {
+      startDate: "December 2, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "3 PM - 8 PM (PST)", 
+      duration: "4 Weeks",
+      seats: "12 seats",
+      type: "full-time",
+    },
+    {
+      startDate: "December 2, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "11 PM - 4 AM (GMT)", 
+      duration: "4 Weeks",
+      seats: "12 seats",
+      type: "full-time",
+    },
+    {
+      startDate: "December 2, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "4:30 AM - 9:30 AM (IST)",
       duration: "4 Weeks",
       seats: "12 seats",
       type: "full-time",
@@ -312,7 +363,31 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "December 16, 2025",
       instructor: "Mr. Saif Deshmukh",
-      time: "GMT (2PM - 6PM)",
+      time:" 2 PM - 6 PM (GMT)", 
+      duration: "4 Weeks",
+      seats: "15 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "December 16, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "9 AM - 1 PM (EST)",
+      duration: "4 Weeks",
+      seats: "15 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "December 16, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time:  "6 AM - 10 AM (PST)", 
+      duration: "4 Weeks",
+      seats: "15 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "December 16, 2025",
+      instructor: "Mr. Saif Deshmukh",
+      time: "7:30 PM - 11:30 PM (IST)",
       duration: "4 Weeks",
       seats: "15 seats",
       type: "part-time",
@@ -320,11 +395,36 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "January 6, 2026",
       instructor: "Mr. Saif Deshmukh",
-      time: "PST (6 PM- 10 PM)",
+      duration: "3 Weeks",
+      time: "6 PM - 10 PM (PST)",
+      seats: " 20 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "January 6, 2026",
+      instructor: "Mr. Saif Deshmukh",
+      time:  "9 PM - 1 AM (EST)",
       duration: "3 Weeks",
       seats: " 20 seats",
       type: "part-time",
     },
+    {
+      startDate: "January 6, 2026",
+      instructor: "Mr. Saif Deshmukh",
+      time: "2 AM - 6 AM (GMT)", 
+      duration: "3 Weeks",
+      seats: " 20 seats",
+      type: "part-time",
+    },
+    {
+      startDate: "January 6, 2026",
+      instructor: "Mr. Saif Deshmukh",
+      time: "7:30 AM - 11:30 AM (IST)",
+      duration: "3 Weeks",
+      seats: " 20 seats",
+      type: "part-time",
+    },
+
   ];
   const WrittenExam = [
     { aspect: "Exam Code", details: "350-401 ENCOR" },
@@ -353,6 +453,23 @@ const CCIEPage: React.FC = () => {
     {
       tierName: "Fast Track",
       tierSubtitle: "Basic training + labs for a quick start",
+     startDate: [
+        { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
+        { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
+        {
+          date: "December 16, 2025", time: ["2 PM - 6 PM (GMT) ",
+            "9 AM - 1 PM (EST) ",
+            "6 AM - 10 AM (PST)",
+            "7:30 PM - 11:30 PM (IST)"]
+        },
+
+        {
+          date: "January 6, 2026", time: ["6 PM - 10 PM (PST)",
+            "9 PM - 1 AM (EST)",
+            "2 AM - 6 AM (GMT)",
+            "7:30 AM - 11:30 AM (IST)"]
+        }
+      ],
       price: "$1,299",
       pricePeriod: "Starter Pack",
       duration: "2 Weeks",
@@ -362,7 +479,7 @@ const CCIEPage: React.FC = () => {
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>32 hours</span> hands-on lab access",
         "Mock Exams",
         "Self Study Toolkit",
-        "Instructor Support via Email ",
+        "Instructor Support via Email",
         "Certificate of Completion"
       ],
       buttonText: "Get Started",
@@ -371,17 +488,34 @@ const CCIEPage: React.FC = () => {
     {
       tierName: "Pro Track",
       tierSubtitle: "Extended labs + full materials + instructor support",
+      startDate: [
+        { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
+        { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
+        {
+          date: "December 16, 2025", time: ["2 PM - 6 PM (GMT) ",
+            "9 AM - 1 PM (EST) ",
+            "6 AM - 10 AM (PST)",
+            "7:30 PM - 11:30 PM (IST)"]
+        },
+
+        {
+          date: "January 6, 2026", time: ["6 PM - 10 PM (PST)",
+            "9 PM - 1 AM (EST)",
+            "2 AM - 6 AM (GMT)",
+            "7:30 AM - 11:30 AM (IST)"]
+        }
+      ],
       price: "$1,999",
-      pricePeriod: "Advanced Pack(Most Popular)",
-      duration: " 6 Weeks",
+      pricePeriod: "Advanced Pack (Most Popular)",
+      duration: "6 Weeks",
       durationBadge: "Duration: 6 Weeks",
       features: [
-        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>48hours</span> instructor-led training ",
+        "<span class='bg-blue-100 text-blue-700 px-1 rounded'>48 hours</span> instructor-led training",
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>64 hours</span> hands-on lab access",
         "Mock Exams",
         "Self Study Toolkit",
         "Full Instructor Support (Email + Messaging + 5 hours of support calls)",
-        "Certificate with Exam Readiness Rating",
+        "Certificate with Exam Readiness Rating"
       ],
       buttonText: "Choose Professional",
       buttonClass: "bg-gradient-to-r from-red-500 to-red-700",
@@ -390,15 +524,32 @@ const CCIEPage: React.FC = () => {
     {
       tierName: "Master Track",
       tierSubtitle: "Intensive training + deep labs + full mentoring",
+    startDate: [
+        { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
+        { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
+        {
+          date: "December 16, 2025", time: ["2 PM - 6 PM (GMT) ",
+            "9 AM - 1 PM (EST) ",
+            "6 AM - 10 AM (PST)",
+            "7:30 PM - 11:30 PM (IST)"]
+        },
+
+        {
+          date: "January 6, 2026", time: ["6 PM - 10 PM (PST)",
+            "9 PM - 1 AM (EST)",
+            "2 AM - 6 AM (GMT)",
+            "7:30 AM - 11:30 AM (IST)"]
+        }
+      ],
       price: "$2,499",
       pricePeriod: "Expert Pack",
-      duration: " 9 Weeks",
+      duration: "9 Weeks",
       durationBadge: "Duration: 9 Weeks",
       features: [
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>96 hours</span> instructor-led training",
         "<span class='bg-blue-100 text-blue-700 px-1 rounded'>128 hours</span> hands-on lab access",
         "Mock Exams",
-        "Self Study Toolkit", ,
+        "Self Study Toolkit",
         "1:1 mentorship + 20 hours of support calls",
         "Certificate with Exam Readiness Rating + Personalised improvement notes"
       ],
@@ -406,7 +557,6 @@ const CCIEPage: React.FC = () => {
       buttonClass: "bg-gradient-to-r from-yellow-500 to-yellow-700",
     }
   ];
-
   const faqData = [
     {
       question: "What prerequisites do I need?",
@@ -453,68 +603,85 @@ const CCIEPage: React.FC = () => {
           />
 
           <div className="container mx-auto px-4 relative z-20">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="flex items-center gap-2 mb-6">
-                  <img
-                    src="/ent_golden_icon.png"
-                    alt="CCIE Logo"
-                    className="h-16 object-contain"
-                  />
-                </div>
+           <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 items-center gap-12">
+  {/* Left column (text) */}
+  <div>
+    <div className="flex items-center gap-2 mb-6">
+      <img
+        src="/ent_golden_icon.png"
+        alt="CCIE Logo"
+        className="h-16 object-contain"
+      />
+    </div>
 
-                <h1 className="text-4xl md:text-4xl font-bold mb-6 text-white">
-                  CCIE Enterprise Infrastructure Training v1.1
-                </h1>
+    <h1 className="text-4xl md:text-4xl font-bold mb-6 text-white max-w-5xl">
+      CCIE Enterprise Infrastructure Training v1.1
+    </h1>
 
-                <p className="text-base md:text-lg text-white/90 mb-8 ax-w-lg  text-justify">
-                  Become a CCIE Enterprise Infrastructure Expert. Our program is designed to help you pass the
-                  CCIE Enterprise Infrastructure exam faster, smarter, and with the right tools and resources.
-                </p>
-                <div className="space-y-3 mb-8">
-                  <div className="flex items-center gap-3 text-white/90 ">
-                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                    <span>24/7 access to fully equipped lab environments</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-white/90 ">
-                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                    <span>Realistic exam simulations and troubleshooting exercises</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-white/90 ">
-                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-                    <span>Personalised mentorship from certified experts with real-world training</span>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <ShineBorder>
-                    <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-medium text-lg">
-                      Join Waitlist
-                    </button>
-                  </ShineBorder>
+    <p className="text-base md:text-lg text-white/90 mb-8 max-w-lg text-justify">
+      Become a CCIE Enterprise Infrastructure Expert. Our program is designed
+      to help you pass the CCIE Enterprise Infrastructure exam faster, smarter,
+      and with the right tools and resources.
+    </p>
 
-                  <button className="px-8 py-3 rounded-full font-medium text-lg border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors">
-                    Learn More
-                  </button>
-                </div>
-              </div>
+    <div className="space-y-3 mb-8">
+      <div className="flex items-center gap-3 text-white/90">
+        <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+        <span>24/7 access to fully equipped lab environments</span>
+      </div>
+      <div className="flex items-center gap-3 text-white/90">
+        <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+        <span>Realistic exam simulations and troubleshooting exercises</span>
+      </div>
+      <div className="flex items-center gap-3 text-white/90">
+        <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+        <span>
+          Personalised mentorship from certified experts with real-world
+          training
+        </span>
+      </div>
+    </div>
 
-              {/* Right column with image and video */}
+    <div className="flex flex-col sm:flex-row items-center gap-4">
+      <ShineBorder>
+        <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-medium text-lg">
+          Join Waitlist
+        </button>
+      </ShineBorder>
 
-              <div className="space-y-6">
-                {/* Video with forced styles */}
-                <div className="w-full max-w-lg relative z-30">
-                  <div className="relative h-72 w-full aspect-video bg-black rounded-xl overflow-hidden">
-                    <iframe
-                      src="https://www.youtube.com/embed/kYpiyjWV3cY"
-                      title="CCIE Enterprise Infrastructure Lab Demonstration"
-                      className="w-full h-full relative z-30"
-                      frameBorder="0"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <button
+        onClick={() => {
+          const pricingSection = document.getElementById("pricing-plans");
+          if (pricingSection) {
+            pricingSection.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        }}
+        className="px-8 py-3 rounded-full font-medium text-lg border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors"
+      >
+        Learn More
+      </button>
+    </div>
+  </div>
+
+  {/* Right column (video) */}
+  <div className="flex justify-center">
+    <div className="w-full max-w-lg relative z-30">
+      <div className="relative w-full h-64 aspect-video bg-black rounded-xl overflow-hidden">
+        <iframe
+          src="https://www.youtube.com/embed/kYpiyjWV3cY"
+          title="CCIE Enterprise Infrastructure Lab Demonstration"
+          className="w-full h-full relative z-30"
+          frameBorder="0"
+          allowFullScreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
           </div>
         </section>
 
@@ -620,7 +787,7 @@ const CCIEPage: React.FC = () => {
         </section>
 
         {/*  CCIE Training Pricing Plans*/}
-        <section className="py-20">
+        <section id="pricing-plans" className="py-16">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center mb-16">
               <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
@@ -661,58 +828,97 @@ const CCIEPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="max-w-4xl mx-auto">
-              <BorderBeamWrapper beamColor="blue" duration={8}>
-                <div className="flex flex-col md:flex-row gap-8 items-start bg-background border border-border rounded-xl p-8 transition-all hover:shadow-md">
-                  <div className="flex-shrink-0">
+            <div className="max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-12 gap-8 items-start">
+                {/* Image Section - Modern Square Design */}
+                <div className="md:col-span-5 relative group">
+                  <div className="relative overflow-hidden rounded-2xl shadow-2xl">
                     <img
                       src={instructors[0].image}
                       alt={instructors[0].name}
-                      className="w-56 h-56 rounded-full object-cover border-4 border-primary/20 bg-white"
+                      className="w-full h-72 md:h-96 object-cover transform group-hover:scale-105 transition-transform duration-700"
                     />
+                    {/* Certification Badge */}
+                    <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg">
+                      <div className="flex items-center gap-2">
+                        <Award className="h-4 w-4 text-blue-600" />
+                        <span className="text-xs font-semibold text-slate-800 dark:text-white">
+                          CCIE #67714
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-2">{instructors[0].name}</h3>
-                    <p className="text-primary font-medium mb-3">{instructors[0].role}</p>
-                    <p className="text-muted-foreground mb-4">{instructors[0].description}</p>
-
-                    <div className="space-y-2 text-sm text-muted-foreground mb-6">
-                      <p className="flex items-center gap-2">
-                        <Award className="h-4 w-4" />
-                        {instructors[0].certification}
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <Clock className="h-4 w-4" />
-                        {instructors[0].experience} industry experience
-                      </p>
+                  {/* Floating Stats */}
+                  <div className="absolute -bottom-6 left-6 right-6 bg-white dark:bg-slate-800 rounded-xl shadow-xl p-4 border border-slate-200 dark:border-slate-700">
+                    <div className="grid gap-4 text-center">
+                      <div>
+                        <div className="text-xl lg:text-2xl font-bold text-slate-800 dark:text-white">
+                          Mr. Saif Deshmukh
+                        </div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">
+                          {instructors[0].experience} Industry Experience
+                        </div>
+                      </div>
                     </div>
-
-                    <div className="mb-6">
-                      <h4 className="font-semibold mb-3 text-foreground">Key Highlights:</h4>
-                      <ul className="space-y-2">
-                        {instructors[0].highlights.map((highlight, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm">{highlight}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <a
-                      href={instructors[0].linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg hover:bg-primary/20 transition-colors"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                      Connect on LinkedIn
-                    </a>
                   </div>
                 </div>
-              </BorderBeamWrapper>
+
+                {/* Content Section */}
+                <BorderBeamWrapper
+                  beamColor="blue"
+                  duration={8}
+                  className="md:col-span-7 pt-8 md:pt-0 border"
+                >
+                  <div className="bg-background border-border rounded-xl p-8 transition-all hover:shadow-md">
+                    {/* Header with Gradient */}
+                    <div className="mb-6">
+                      <h3 className="text-2xl font-bold text-foreground mb-2">
+                        {instructors[0].name}
+                      </h3>
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                          {instructors[0].role}
+                        </span>
+                        <span className="text-muted-foreground text-sm flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          {instructors[0].experience}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground leading-relaxed text-base">
+                        {instructors[0].description}
+                      </p>
+                    </div>
+
+                    {/* Expertise Highlights */}
+                    <div className="mb-8">
+                      <h4 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        Core Expertise & Specializations
+                      </h4>
+                      <div className="grid lg:grid-cols-2 gap-3">
+                        {instructors[0].highlights.map((highlight, index) => (
+                          <div
+                            key={index}
+                            className="flex items-start gap-3 group"
+                          >
+                            <div className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mt-0.5">
+                              <CheckCircle2 className="h-3 w-3 text-green-600 dark:text-green-400" />
+                            </div>
+                            <span className="text-sm text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">
+                              {highlight}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+
+                  </div>
+                </BorderBeamWrapper>
+              </div>
             </div>
+
           </div>
         </section>
 
