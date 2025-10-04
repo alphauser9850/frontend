@@ -38,6 +38,15 @@ async function startServer() {
   app.use("/api", router);
 
   /** ------------------------
+   * SPECIFIC ROUTE HANDLERS
+   * ------------------------ */
+  // Ensure /deploy route is properly handled
+  app.get("/deploy", (req, res, next) => {
+    // Let the SSR handle this route
+    next();
+  });
+
+  /** ------------------------
    * FRONTEND SSR HANDLING
    * ------------------------ */
   if (!isProd) {
