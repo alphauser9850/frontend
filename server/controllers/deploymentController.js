@@ -117,8 +117,26 @@ export const getCommitHistory = async (req, res) => {
   try {
     console.log('Fetching commit history...');
     
-    // Try a simpler approach first - just get basic commit info
-    const { stdout } = await execAsync('cd /var/www/berkut-cloud && git log --oneline -10');
+    // First, check if we're in a git repository
+    try {
+      await execAsync('cd /var/www/berkut-cloud && git status --porcelain', { timeout: 5000 });
+      console.log('Git repository check passed');
+    } catch (gitError) {
+      console.error('Git repository check failed:', gitError.message);
+      // Fallback: return deployment history as commit history
+      console.log('Using deployment history as fallback');
+      const history = await loadDeploymentHistory();
+      const fallbackCommits = history.deployments.slice(0, 10).map((deployment, index) => ({
+        hash: `deploy_${index + 1}`,
+        message: deployment.message.substring(0, 50) + (deployment.message.length > 50 ? '...' : ''),
+        author: 'System',
+        timestamp: deployment.timestamp.split('T')[0]
+      }));
+      return res.status(200).json(fallbackCommits);
+    }
+    
+    // Try to get commit history with timeout
+    const { stdout } = await execAsync('cd /var/www/berkut-cloud && git log --oneline -10', { timeout: 10000 });
     
     console.log('Git log output:', stdout);
     
@@ -146,8 +164,22 @@ export const getCommitHistory = async (req, res) => {
   } catch (error) {
     console.error('Failed to get commit history:', error);
     console.error('Error details:', error.message);
-    // Return empty array instead of error to prevent frontend issues
-    res.status(200).json([]);
+    
+    // Fallback: return deployment history as commit history
+    try {
+      console.log('Using deployment history as fallback due to error');
+      const history = await loadDeploymentHistory();
+      const fallbackCommits = history.deployments.slice(0, 10).map((deployment, index) => ({
+        hash: `deploy_${index + 1}`,
+        message: deployment.message.substring(0, 50) + (deployment.message.length > 50 ? '...' : ''),
+        author: 'System',
+        timestamp: deployment.timestamp.split('T')[0]
+      }));
+      res.status(200).json(fallbackCommits);
+    } catch (fallbackError) {
+      console.error('Fallback also failed:', fallbackError.message);
+      res.status(200).json([]);
+    }
   }
 };
 
