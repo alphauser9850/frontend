@@ -242,16 +242,16 @@ export default function DeploymentPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
+                <div className="space-y-4 max-h-96 overflow-y-auto">
                   {commitHistory.map((commit, index) => (
-                    <div key={index} className={`p-3 rounded-lg border ${isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <div key={index} className={`p-5 rounded-lg border ${isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className={`text-base font-semibold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {commit.message}
                       </div>
-                      <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {commit.author} • {formatCommitTime(commit.timestamp)}
+                      <div className={`text-sm mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        <span className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>{commit.author}</span> • <span className="text-green-500 font-medium">{formatCommitTime(commit.timestamp)}</span>
                       </div>
-                      <div className={`text-xs font-mono ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                      <div className={`text-sm font-mono mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                         {commit.hash.substring(0, 8)}
                       </div>
                     </div>
