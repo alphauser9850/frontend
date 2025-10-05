@@ -335,7 +335,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                     // Close modal and open Calendly
                     // setIsModalOpen(false);
                     // setIsCalendlyOpen(true);
-                    setIsSubmitted(false)
+                    setIsSubmitted(true)
                 } else {
                     const errorData = await res.json();
                     console.error("HubSpot create contact failed:", errorData);
@@ -346,7 +346,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
             console.error("API error:", err);
             alert("An error occurred. Please try again.");
         } finally {
-            setIsSubmitting(false);
+            setIsSubmitted(true);
         }
   };
 
