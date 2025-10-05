@@ -104,7 +104,7 @@ async function startServer() {
           "utf-8"
         );
 
-        const { appHtml, helmetHead } = render(req.originalUrl);
+        const { appHtml, helmetHead } = await render(req.originalUrl);
         const html = template
           .replace("<!--app-html-->", appHtml)
           .replace("<!--app-head-->", helmetHead);
