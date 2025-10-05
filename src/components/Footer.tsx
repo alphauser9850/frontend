@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'; 
 import { AuroraText } from './magicui';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faYoutube , faTumblrSquare ,faLinkedin, faInstagram,faReddit,faQuora,faTumblr,faFacebook,faTwitter,faPinterest } from '@fortawesome/free-brands-svg-icons'
+import { faYoutube  ,faLinkedin, faInstagram,faReddit,faQuora,faTumblr,faFacebook,faTwitter,faPinterest } from '@fortawesome/free-brands-svg-icons'
 
 const Footer: React.FC = () => {
   return (
@@ -47,7 +47,7 @@ const Footer: React.FC = () => {
             <p className="text-muted-foreground mb-6">
               Creating transformative online CCIE training experiences that empower network engineers to excel.
             </p>
-            <div className="flex space-x-">
+            <div className="flex socialIcon">
               <a 
                 href="https://www.youtube.com/@ccielab" 
                 target="_blank" 
@@ -86,6 +86,15 @@ const Footer: React.FC = () => {
                <FontAwesomeIcon icon={faTwitter} />
               </a>
                <a 
+                href="https://www.facebook.com/ccielab/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
+                aria-label="facebook"
+              >
+               <FontAwesomeIcon icon={faFacebook} />
+              </a>
+               <a 
                 href="https://www.reddit.com/r/ccielab/" 
                 target="_blank" 
                 rel="noopener noreferrer"
@@ -110,7 +119,7 @@ const Footer: React.FC = () => {
                 className="p-2 rounded-full bg-background hover:bg-muted transition-colors"
                 aria-label="Twitter"
               >
-               <FontAwesomeIcon icon={faTumblrSquare} />
+               <FontAwesomeIcon icon={faTumblr} />
               </a>
               <a 
                 href="https://www.pinterest.com/ccielabnet/" 

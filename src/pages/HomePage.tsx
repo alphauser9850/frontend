@@ -8,31 +8,7 @@ import { LabShowcaseSection } from "../components/LabShowcaseSection";
 import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
 import { Helmet } from "react-helmet-async";
-const Rocket3DIcon = ({ isDark }: { isDark: boolean }) => {
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
-
-  const color = mounted && isDark ? "#00D4FF" : "#0066FF";
-
-  return (
-    <svg
-      width="80"
-      height="80"
-      viewBox="0 0 80 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="drop-shadow-xl"
-    >
-      <ellipse cx="40" cy="70" rx="18" ry="6" fill={color} opacity="0.25" />
-      <path d="M40 10C45 20 60 40 40 60C20 40 35 20 40 10Z" fill={color} />
-      <circle cx="40" cy="35" r="7" fill="#fff" opacity="0.7" />
-      <path d="M40 60C38 65 42 65 40 60Z" fill="#FFA500" />
-      <path d="M40 60C42 65 38 65 40 60Z" fill="#FFA500" />
-      <ellipse cx="40" cy="60" rx="4" ry="2" fill="#FFA500" opacity="0.7" />
-    </svg>
-  );
-};
 
 const HomePage: React.FC = () => {
   const { isDarkMode } = useThemeStore();
@@ -52,7 +28,11 @@ const HomePage: React.FC = () => {
       ? "text-text-secondary"
       : "text-gray-800"
     : "text-gray-800";
-
+     const headingClass = mounted
+    ? isDarkMode
+      ? "gradient-text"
+      : ""
+    : "gradient-text";
   return (
     <main
       className={cn("min-h-screen font-roboto", themeClass)}
@@ -69,12 +49,9 @@ const HomePage: React.FC = () => {
 
       <section className="min-h-screen flex flex-col justify-center bg-gradient-section">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 md:gap-24">
-          <div className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left max-w-2xl">
-            <span className="inline-flex items-center justify-center rounded-full bg-transparent p-0 mb-6">
-              <Rocket3DIcon isDark={isDarkMode} />
-            </span>
+          <div className="flex-1 flex flex-col items-center md:items-start justify-center text-center md:text-left max-w-2xl"> 
             <h2
-              className="text-4xl md:text-5xl font-bold mb-4 gradient-text"
+              className={cn("text-4xl md:text-5xl font-bold mb-4",headingClass )}
               style={{ fontWeight: 700, letterSpacing: "-0.01em" }}
             >
               Elevate your CCIE Lab experience with our customized solution

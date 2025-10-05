@@ -5,8 +5,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
 import { checkSupabaseConnection } from './lib/supabase';
-
-
+import ScrollToTop from "./components/ScrollToTop";
+import {    Phone    } from 'lucide-react';
 // Components
 import AuthGuard from './components/AuthGuard';
 
@@ -181,6 +181,7 @@ function App() {
 
   return (
     <>
+    <ScrollToTop />
       <NavigationWrapper>
         <Routes>
           {/* Public routes */}
@@ -234,6 +235,12 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </NavigationWrapper>
+       <div className='floatingCallBtn block xl:hidden'>
+                  <a
+              href="tel:+18777072243" 
+            > <Phone /></a>
+       
+      </div>
       <FooterWrapper />
       <Toaster
         position="top-right"

@@ -11,26 +11,12 @@ import {
   Menu, 
   X, 
   Moon, 
-  Sun,
-  BookOpen,
-  FileText,
-  Info,
-  Youtube,
-  Linkedin,
-  Instagram,
-  Twitter,
+  Sun, 
   Sparkles,
   ChevronDown,
-  Network,
-  Server,
-  Layers,
-  Globe,
-  Workflow,
-  Shield,
-  Target,
-  Users,
-  Briefcase,
-  Heart
+  Phone,
+  BookOpen, Info, Mail, Rss
+
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { RainbowButton } from './ui/RainbowButton';
@@ -123,7 +109,7 @@ const Header: React.FC = () => {
         themeClass ? "dark" : "light"
       )}
     >
-      <div className="container mx-auto px-4">
+      <div className="mx-auto px-4">
         <div className="flex items-center justify-between">
           {/* Left: Logo and Nav */}
           <div className="flex items-center gap-8 flex-shrink-0">
@@ -153,7 +139,7 @@ const Header: React.FC = () => {
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-6 ml-6 text-base font-roboto">
+            <nav className="hidden xl:flex items-center gap-6 md:gap-2 ml-6 text-base font-roboto">
               <div className="relative">
                 <button 
                   onClick={() => setShowCoursesMenu(!showCoursesMenu)}
@@ -204,7 +190,10 @@ const Header: React.FC = () => {
                   ? "bg-design-primary-accent text-white"
                   : themeClass ? "text-white hover:bg-gray-700" : "text-gray-900 hover:bg-gray-100"
               )}>
+                 <span className="flex items-center gap-1.5">
+                  <Info className="h-4 w-4" />
                 About Us
+                </span>
               </Link>
                <Link 
                 to="/contact" 
@@ -216,6 +205,7 @@ const Header: React.FC = () => {
                 )}
               >
                 <span className="flex items-center gap-1.5">
+                  <Mail className="h-4 w-4" />
                   Contact Us
                 </span>
               </Link>
@@ -225,13 +215,16 @@ const Header: React.FC = () => {
                   ? "bg-design-primary-accent text-white"
                   : themeClass ? "text-white hover:bg-gray-700" : "text-gray-900 hover:bg-gray-100"
               )}>
-                Blog
+                <span className="flex items-center gap-1.5">
+                  <Rss className="h-4 w-4" />
+                 Blogs
+                </span>
               </Link>
             </nav>
           </div>
 
           {/* Right: Theme + Auth */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-3">
             <button 
               onClick={toggleTheme}
               className={cn(
@@ -259,18 +252,19 @@ const Header: React.FC = () => {
                 </a>
               </>
             )}
-             <a
-      href="tel:+18777072243"
-      className="px-10 py-2 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700"
-    >
-      Call Us
-    </a>
+          <a
+              href="tel:+18777072243"
+              className="px-6 py-1.5  hidden xl:flex items-center gap-1.5 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700"
+            >
+              <Phone  className="h-4 w-4  "/>
+              Call Us
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className={cn("md:hidden p-2 rounded-md", themeClass ? "text-white" : "text-gray-900")}
+            className={cn("xl:hidden p-2 rounded-md", themeClass ? "text-white" : "text-gray-900")}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -279,8 +273,8 @@ const Header: React.FC = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-surface/95 backdrop-blur-md border-b border-border-subtle shadow-lg">
-          <div className="container mx-auto px-4 py-4">
+        <div className="xl:hidden bg-surface/95 backdrop-blur-md border-b border-border-subtle shadow-lg">
+          <div className="mx-auto px-4 py-4">
             <nav className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <button
@@ -324,7 +318,8 @@ const Header: React.FC = () => {
                     : ""
                 )}
               >
-                <span className="flex items-center gap-1.5"> 
+                <span className="flex items-center gap-1.5">  
+                  <Info className="h-4 w-4" />
                   About Us
                 </span>
               </Link>
@@ -338,6 +333,7 @@ const Header: React.FC = () => {
                 )}
               >
                 <span className="flex items-center gap-1.5"> 
+                   <Rss className="h-4 w-4" />
                   Blogs
                 </span>
               </Link>
@@ -356,6 +352,13 @@ const Header: React.FC = () => {
                       Register
                     </span>
                   </a>
+                   <a
+              href="tel:+18777072243"
+              className="flex align-center px-4 gap-1.5 py-2 my-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700"
+            >
+              <Phone  className="  w-4"/>
+              Call Us
+            </a>
                 </div>
               )}
             </nav>
@@ -392,6 +395,7 @@ const Header: React.FC = () => {
           }}
         />
       </Modal>
+    
     </header>
   );
 };
