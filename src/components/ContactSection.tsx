@@ -330,15 +330,15 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                     }),
                 });
 
-                // if (res.ok) {
-                //     // Close modal and open Calendly
-                //     setIsModalOpen(false);
-                //     setIsCalendlyOpen(true);
-                // } else {
-                //     const errorData = await res.json();
-                //     console.error("HubSpot create contact failed:", errorData);
-                //     alert("Failed to save contact. Please try again.");
-                // }
+                if (res.ok) {
+                    // Close modal and open Calendly
+                    // setIsModalOpen(false);
+                    // setIsCalendlyOpen(true);
+                } else {
+                    const errorData = await res.json();
+                    console.error("HubSpot create contact failed:", errorData);
+                    alert("Failed to save contact. Please try again.");
+                }
             }
         } catch (err) {
             console.error("API error:", err);
