@@ -278,29 +278,74 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    try {
-      const { submitFormToN8n } = await import('../services/formService');
       const submissionData: ContactFormData = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
-        source
-      };
-      await submitFormToN8n(submissionData);
-      setIsSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        country: countryOptions[0].name,
-        message: ''
-      });
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    name: formData.name,
+    email: formData.email,
+    phone: formData.phone,
+    message: formData.message,
+    source,
+  };
+  console.log(submissionData)
+          try {
+            // Save contact to HubSpot with full phone number (country code + number)
+            const checkContactResponse = await fetch("/api/hubspot/get-contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    filterGroups: [
+                        {
+                            filters: [
+                                {
+                                    propertyName: "email",
+                                    operator: "EQ",
+                                    value: formData.email,
+                                }
+                            ]
+                        }
+                    ],
+                    properties: ["firstname", "lastname", "email", "phone", "id"]
+                }),
+            });
+
+            const checkContactData = await checkContactResponse.json();
+
+            let contactId: string | null = null;
+
+            if (checkContactData.data?.results?.length > 0) {
+                contactId = checkContactData.data.results[0].id;
+                console.log("Contact already exists with ID:", contactId);
+             
+            } else {
+                // Create new contact
+                const fullPhone = `${selectedCountryCode}${formData.phone}`;
+
+                const res = await fetch("/api/hubspot/create-contact", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        properties: {
+                            ...formData,
+                            phone: fullPhone, // Save with country code
+                        }
+                    }),
+                });
+
+                // if (res.ok) {
+                //     // Close modal and open Calendly
+                //     setIsModalOpen(false);
+                //     setIsCalendlyOpen(true);
+                // } else {
+                //     const errorData = await res.json();
+                //     console.error("HubSpot create contact failed:", errorData);
+                //     alert("Failed to save contact. Please try again.");
+                // }
+            }
+        } catch (err) {
+            console.error("API error:", err);
+            alert("An error occurred. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
   };
 
   const containsLinks = (text: string): boolean => {

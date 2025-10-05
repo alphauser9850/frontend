@@ -117,7 +117,7 @@
   
   /* Typography scale from design system */
   .text-hero {
-    font-size: clamp(2.5rem, 0.49vw + 1.24rem, 5rem);
+    font-size: 80px;
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -1178,9 +1178,15 @@ display: block;
   }
 }
 @media screen and (max-width:1200px) {
+  .text-hero {font-size:60px}
   .text-hero span{
   max-width: 100%;
     white-space: pre-wrap;
 
+}
+}
+@media screen and (max-width:1024px) {
+  .text-hero {
+  font-size: 48px;
 }
 }
