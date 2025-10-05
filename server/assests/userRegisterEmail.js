@@ -1,4 +1,4 @@
-export const userOnboardEmail = (params) => {
+export const userRegisterEmail = (params) => {
   return `<html>
 <head>
   <meta charset="UTF-8">
@@ -70,27 +70,21 @@ export const userOnboardEmail = (params) => {
           <!-- Header -->
           <tr>
             <td class="header">
-              <h1>🎉 User Onboard!</h1>
-              <p><strong>${params.name}</strong> officially onboarded for the <strong>${params.course_name}</strong> 🎓</p>
+              <h1>User Registered !</h1>
+              <p><strong>${params.name}</strong> Registered for the <strong>${params.course_name}</strong> 🎓</p>
             </td>
           </tr>
 
           <!-- Details -->
           <tr>
             <td class="content">
-              <p><strong>Enrollment Details:</strong></p>
+              <p><strong>Course Details:</strong></p>
             <ul>
                 <li> <strong>Email:</strong> ${params.email}</li>
                 <li> <strong>Phone:</strong> ${params.contact_number}</li>
                 <li><strong>Course:</strong> ${params.course_name}</li>
-                <li> <strong>Status:</strong> ${params.course_status}</li>
-                <li><strong>Lead Status:</strong> ${params.lead_status}</li>
-                <li><strong>Amount Paid:</strong> $${params.amount}</li>
-                <li><strong>Payment Status:</strong> ${params.payment_status}</li>
-                <li><strong>Payment ID:</strong> ${params.payment_id}</li>
-                <li><strong>Payment Method:</strong> ${params.payment_type}</li>
-                 <li><strong>Instructor:</strong> ${params.instructor_name || '-'}</li>
-                <li><strong>Message:</strong> ${params.message || 'N/A'}</li>
+                <li> <strong>Status:</strong> ${params.message}</li>
+
               </ul>
             </td>
           </tr>        

@@ -18,7 +18,7 @@ const features = [
                 </li>
             </ul>
         ),
-        image: "/labInf1.png"
+        image: "https://ccielab.net/labInf1.png"
     },
     {
         title: "Bootcamp: Intensive Exam Practice",
@@ -36,7 +36,7 @@ const features = [
                 </li>
             </ul>
         ),
-        image: "/labInf2.png"
+        image: "https://ccielab.net/labInf2.png"
     },
     {
         title: "Support: Expert Guidance During Lab Practice",
@@ -54,7 +54,7 @@ const features = [
                 </li>
             </ul>
         ),
-        image: "/labInf3.png"
+        image: "https://ccielab.net/labInf3.png"
     },
     {
         title: "Why Students Love Our Labs",
@@ -67,7 +67,7 @@ const features = [
                 <li>Affordable: Rack rentals as low as $15 per hour.</li>
             </ul>
         ),
-        image: "/labInf4.png"
+        image: "https://ccielab.net/labInf4.png"
     },
 ];
 

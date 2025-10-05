@@ -160,7 +160,7 @@ const PayPalButtonsWrapper: React.FC<{
     </div>
   );
 };
-const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID || "";
+const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
 const PayPalCheckout: React.FC<PayPalCheckoutProps> = ({
   amount,
   course,
@@ -169,7 +169,7 @@ const PayPalCheckout: React.FC<PayPalCheckoutProps> = ({
 }) => {
   // PayPal script provider options - memoized to prevent re-initialization
   const initialOptions = useMemo(() => ({
-    clientId: clientId,//ENV
+    clientId: clientId ?? null,//ENV
     currency: "USD",
     components: "buttons",
     intent: "capture" as const

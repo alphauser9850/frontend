@@ -13,7 +13,7 @@ import CCIeDemoMetting from './CcieDemoMetting';
 import CCIEExamDetail from './CCIEExamDetail';
 import { FAqs } from '../components/ui/Faqs';
 import { useThemeStore } from '../store/themeStore';
-import CciePricingPage from './ CciePricingPage';
+import CciePricingPage from './CciePricingPage';
 import { Helmet } from 'react-helmet-async';
 import CCIESyllabus from '../components/ui/SyllabusAccordion';
 
@@ -339,7 +339,7 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "December 2, 2025",
       instructor: "Mr. Saif Deshmukh",
-      time: "3 PM - 8 PM (PST)", 
+      time: "3 PM - 8 PM (PST)",
       duration: "4 Weeks",
       seats: "12 seats",
       type: "full-time",
@@ -347,7 +347,7 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "December 2, 2025",
       instructor: "Mr. Saif Deshmukh",
-      time: "11 PM - 4 AM (GMT)", 
+      time: "11 PM - 4 AM (GMT)",
       duration: "4 Weeks",
       seats: "12 seats",
       type: "full-time",
@@ -363,7 +363,7 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "December 16, 2025",
       instructor: "Mr. Saif Deshmukh",
-      time:" 2 PM - 6 PM (GMT)", 
+      time: " 2 PM - 6 PM (GMT)",
       duration: "4 Weeks",
       seats: "15 seats",
       type: "part-time",
@@ -379,7 +379,7 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "December 16, 2025",
       instructor: "Mr. Saif Deshmukh",
-      time:  "6 AM - 10 AM (PST)", 
+      time: "6 AM - 10 AM (PST)",
       duration: "4 Weeks",
       seats: "15 seats",
       type: "part-time",
@@ -403,7 +403,7 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "January 6, 2026",
       instructor: "Mr. Saif Deshmukh",
-      time:  "9 PM - 1 AM (EST)",
+      time: "9 PM - 1 AM (EST)",
       duration: "3 Weeks",
       seats: " 20 seats",
       type: "part-time",
@@ -411,7 +411,7 @@ const CCIEPage: React.FC = () => {
     {
       startDate: "January 6, 2026",
       instructor: "Mr. Saif Deshmukh",
-      time: "2 AM - 6 AM (GMT)", 
+      time: "2 AM - 6 AM (GMT)",
       duration: "3 Weeks",
       seats: " 20 seats",
       type: "part-time",
@@ -453,22 +453,11 @@ const CCIEPage: React.FC = () => {
     {
       tierName: "Fast Track",
       tierSubtitle: "Basic training + labs for a quick start",
-     startDate: [
-        { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
-        { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
-        {
-          date: "December 16, 2025", time: ["2 PM - 6 PM (GMT) ",
-            "9 AM - 1 PM (EST) ",
-            "6 AM - 10 AM (PST)",
-            "7:30 PM - 11:30 PM (IST)"]
-        },
-
-        {
-          date: "January 6, 2026", time: ["6 PM - 10 PM (PST)",
-            "9 PM - 1 AM (EST)",
-            "2 AM - 6 AM (GMT)",
-            "7:30 AM - 11:30 AM (IST)"]
-        }
+      startDate: [
+        { date: "November 15, 2025" },
+        { date: "December 2, 2025" },
+        {date: "December 16, 2025"},
+        {date: "January 6, 2026" }
       ],
       price: "$1,299",
       pricePeriod: "Starter Pack",
@@ -488,22 +477,11 @@ const CCIEPage: React.FC = () => {
     {
       tierName: "Pro Track",
       tierSubtitle: "Extended labs + full materials + instructor support",
-      startDate: [
-        { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
-        { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
-        {
-          date: "December 16, 2025", time: ["2 PM - 6 PM (GMT) ",
-            "9 AM - 1 PM (EST) ",
-            "6 AM - 10 AM (PST)",
-            "7:30 PM - 11:30 PM (IST)"]
-        },
-
-        {
-          date: "January 6, 2026", time: ["6 PM - 10 PM (PST)",
-            "9 PM - 1 AM (EST)",
-            "2 AM - 6 AM (GMT)",
-            "7:30 AM - 11:30 AM (IST)"]
-        }
+       startDate: [
+        { date: "November 15, 2025" },
+        { date: "December 2, 2025" },
+        {date: "December 16, 2025"},
+        {date: "January 6, 2026" }
       ],
       price: "$1,999",
       pricePeriod: "Advanced Pack (Most Popular)",
@@ -524,22 +502,11 @@ const CCIEPage: React.FC = () => {
     {
       tierName: "Master Track",
       tierSubtitle: "Intensive training + deep labs + full mentoring",
-    startDate: [
-        { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
-        { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
-        {
-          date: "December 16, 2025", time: ["2 PM - 6 PM (GMT) ",
-            "9 AM - 1 PM (EST) ",
-            "6 AM - 10 AM (PST)",
-            "7:30 PM - 11:30 PM (IST)"]
-        },
-
-        {
-          date: "January 6, 2026", time: ["6 PM - 10 PM (PST)",
-            "9 PM - 1 AM (EST)",
-            "2 AM - 6 AM (GMT)",
-            "7:30 AM - 11:30 AM (IST)"]
-        }
+      startDate: [
+        { date: "November 15, 2025" },
+        { date: "December 2, 2025" },
+        {date: "December 16, 2025"},
+        {date: "January 6, 2026" }
       ],
       price: "$2,499",
       pricePeriod: "Expert Pack",
@@ -603,84 +570,84 @@ const CCIEPage: React.FC = () => {
           />
 
           <div className="container mx-auto px-4 relative z-20">
-           <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 items-center gap-12">
-  {/* Left column (text) */}
-  <div>
-    <div className="flex items-center gap-2 mb-6">
-      <img
-        src="/ent_golden_icon.png"
-        alt="CCIE Logo"
-        className="h-16 object-contain"
-      />
-    </div>
+            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 items-center gap-12">
+              {/* Left column (text) */}
+              <div>
+                <div className="flex items-center gap-2 mb-6">
+                  <img
+                    src="/ent_golden_icon.png"
+                    alt="CCIE Logo"
+                    className="h-16 object-contain"
+                  />
+                </div>
 
-    <h1 className="text-4xl md:text-4xl font-bold mb-6 text-white max-w-5xl">
-      CCIE Enterprise Infrastructure Training v1.1
-    </h1>
+                <h1 className="text-4xl md:text-4xl font-bold mb-6 text-white max-w-5xl">
+                  CCIE Enterprise Infrastructure Training v1.1
+                </h1>
 
-    <p className="text-base md:text-lg text-white/90 mb-8 max-w-lg text-justify">
-      Become a CCIE Enterprise Infrastructure Expert. Our program is designed
-      to help you pass the CCIE Enterprise Infrastructure exam faster, smarter,
-      and with the right tools and resources.
-    </p>
+                <p className="text-base md:text-lg text-white/90 mb-8 max-w-lg text-justify">
+                  Become a CCIE Enterprise Infrastructure Expert. Our program is designed
+                  to help you pass the CCIE Enterprise Infrastructure exam faster, smarter,
+                  and with the right tools and resources.
+                </p>
 
-    <div className="space-y-3 mb-8">
-      <div className="flex items-center gap-3 text-white/90">
-        <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-        <span>24/7 access to fully equipped lab environments</span>
-      </div>
-      <div className="flex items-center gap-3 text-white/90">
-        <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-        <span>Realistic exam simulations and troubleshooting exercises</span>
-      </div>
-      <div className="flex items-center gap-3 text-white/90">
-        <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-        <span>
-          Personalised mentorship from certified experts with real-world
-          training
-        </span>
-      </div>
-    </div>
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-center gap-3 text-white/90">
+                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                    <span>24/7 access to fully equipped lab environments</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white/90">
+                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                    <span>Realistic exam simulations and troubleshooting exercises</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white/90">
+                    <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+                    <span>
+                      Personalised mentorship from certified experts with real-world
+                      training
+                    </span>
+                  </div>
+                </div>
 
-    <div className="flex flex-col sm:flex-row items-center gap-4">
-      <ShineBorder>
-        <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-medium text-lg">
-          Join Waitlist
-        </button>
-      </ShineBorder>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <ShineBorder>
+                    <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full font-medium text-lg">
+                      Join Waitlist
+                    </button>
+                  </ShineBorder>
 
-      <button
-        onClick={() => {
-          const pricingSection = document.getElementById("pricing-plans");
-          if (pricingSection) {
-            pricingSection.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        }}
-        className="px-8 py-3 rounded-full font-medium text-lg border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors"
-      >
-        Learn More
-      </button>
-    </div>
-  </div>
+                  <button
+                    onClick={() => {
+                      const pricingSection = document.getElementById("pricing-plans");
+                      if (pricingSection) {
+                        pricingSection.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        });
+                      }
+                    }}
+                    className="px-8 py-3 rounded-full font-medium text-lg border border-white/20 text-white bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-colors"
+                  >
+                    Learn More
+                  </button>
+                </div>
+              </div>
 
-  {/* Right column (video) */}
-  <div className="flex justify-center">
-    <div className="w-full max-w-lg relative z-30">
-      <div className="relative w-full h-64 aspect-video bg-black rounded-xl overflow-hidden">
-        <iframe
-          src="https://www.youtube.com/embed/kYpiyjWV3cY"
-          title="CCIE Enterprise Infrastructure Lab Demonstration"
-          className="w-full h-full relative z-30"
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
-      </div>
-    </div>
-  </div>
-</div>
+              {/* Right column (video) */}
+              <div className="flex justify-center">
+                <div className="w-full max-w-lg relative z-30">
+                  <div className="relative w-full h-64 aspect-video bg-black rounded-xl overflow-hidden">
+                    <iframe
+                      src="https://www.youtube.com/embed/kYpiyjWV3cY"
+                      title="CCIE Enterprise Infrastructure Lab Demonstration"
+                      className="w-full h-full relative z-30"
+                      frameBorder="0"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
 
           </div>
         </section>

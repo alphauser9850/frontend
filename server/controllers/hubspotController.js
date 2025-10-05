@@ -2,6 +2,8 @@ import axios from 'axios';
 import { sendWelcomeEmail } from '../utils/welcomeEmail.js';
 import { OnboardEmail } from '../utils/userOnbarded.js';
 import { HUBSPOT_TOKEN } from '../env.js';
+import { paymentSuccess } from '../utils/paymentSuccess.js';
+import { newRegisterEmail } from '../utils/userRegister.js';
 
 
 export const getContact = async (req, res) => {
@@ -24,7 +26,7 @@ export const getContact = async (req, res) => {
         console.log()
         return res.status(500).json({
             status: "Failure",
-            error: error.response.data,
+            error: error,
             message: "Internal Server Error"
         });
     }
@@ -42,16 +44,25 @@ export const createContact = async (req, res) => {
                 },
             }
         );
+        console.log(47,req.body)
+          await newRegisterEmail({
+            name: req.body.properties.firstname,
+            email: req.body.properties.email,
+            contact_number: req.body.properties.phone,
+            course_name: req.body.properties.course_name,
+            message: req.body.properties.message,
+           
+        });
+        await sendWelcomeEmail({name:req.body.properties.firstname, email: req.body.properties.email, packageName: req.body.properties.course_name});
         res.status(201).json({
             status: "Success",
             data: response.data,
             message: "Contact Created Successfully"
         });
     } catch (error) {
-        console.log()
         return res.status(500).json({
             status: "Failure",
-            error: error.response.data,
+            error: error,
             message: "Internal Server Error"
         });
     }
@@ -120,7 +131,7 @@ export const updateDetails = async (req, res) => {
         });
         const { name, email, packageName, duration } = req.body.email;
 
-        await sendWelcomeEmail(name, email, packageName, duration);
+        await paymentSuccess({name, email, packageName, duration,payment_id: req.body.hubspot.payment_id, amount: req.body.hubspot.paid_amount});
         res.status(200).json({
             status: "Success",
             data: null,
@@ -130,8 +141,7 @@ export const updateDetails = async (req, res) => {
     } catch (error) {
         return res.status(500).json({
             status: "Failure",
-            error: error.response.data,
-            error: error.response.data,
+            error: error,
             message: "Internal Server Error"
         });
     }
