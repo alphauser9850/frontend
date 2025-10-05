@@ -36,9 +36,9 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
   }, [loadUser]);
 
   // ✅ Show LoadingScreen only on client if still loading
-  if (!hydrated || isLoading) {
-    return <LoadingScreen />;
-  }
+  //  if (!hydrated || isLoading) {
+  //  return <LoadingScreen />;
+ // }
 
   if (requireAuth && !user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
