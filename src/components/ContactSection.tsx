@@ -316,8 +316,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                 console.log("Contact already exists with ID:", contactId);
              
             } else {
-                // Create new contact
-                const fullPhone = `${selectedCountryCode}${formData.phone}`;
+                // Create new contact 
 
                 const res = await fetch("/api/hubspot/create-contact", {
                     method: "POST",
@@ -326,7 +325,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                         properties: {
                           email: submissionData.email,
                           firstname: submissionData.name,  
-                          phone: fullPhone,     
+                          phone: submissionData.phone,     
                           message: submissionData.message || '',
                         }
                     }),
@@ -623,9 +622,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           name="phone"
                           value={formData.phone.startsWith(selectedCountryCode) ? formData.phone : selectedCountryCode + ' ' + formData.phone.replace(/^\+\d+\s*/, '')}
                           onChange={handleChange}
-                          onPaste={handlePaste}
-                          maxLength={10}
-                          pattern="[0-9]{8,10}"
+                          onPaste={handlePaste} 
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                             themeClass
