@@ -72,7 +72,7 @@ export const paypalCreateOrder = async (req, res) => {
 
         return res.status(500).json({
             status: "Failure",
-            data: null,
+            data: error,
             message: "Something went wrong while creating PayPal order",
         });
     }
@@ -107,7 +107,7 @@ export const paypalCaptureOrder = async (req, res) => {
 
         return res.status(500).json({
             status: "Failure",
-            data: null,
+            data: error,
             message: "Something went wrong while capturing PayPal order",
         });
     }

@@ -25,20 +25,10 @@ export const welcomeEmail = () => {
               <p>We are excited to welcome you to the <strong>CCIE Enterprise Infrastructure Course</strong> at <strong>CCIE LAB</strong>! 
               You have taken a big step toward mastering advanced networking and building a career that stands out in the industry.</p>
 
-              <p><strong>Enrollment Details:</strong></p>
+              <p><strong>Course Details:</strong></p>
               <ul style="padding-left:20px; margin:10px 0;">
-                 ✅ <strong>Package:</strong> {{ params.package }} <br>
-                 ✅ <strong>Duration:</strong> {{ params.duration }} <br>
+                 ✅ <strong>Package:</strong> {{ params.package}} <br>
               </ul>
-            </td>
-          </tr>
-          <!-- CTA Button -->
-          <tr>
-            <td align="center" style="padding:20px;">
-              <a href="https://ccielab.net/welcome-onboard" 
-                 style="background:#0a7cff; color:#ffffff; padding:12px 30px; border-radius:6px; text-decoration:none; font-weight:bold; display:inline-block;">
-                Access Course Portal
-              </a>
             </td>
           </tr>
           <!-- Footer -->

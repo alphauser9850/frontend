@@ -390,17 +390,17 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
     const fullTimeString = getFullTimeString(batch.time);
     const courseTimeZone = fullTimeString; // Use full string for both fields
     const courseStartTime = fullTimeString; // Use full string for both fields
-
+      const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
     try {
-      await fetch(`/api/hubspot/update-contact/${contactId}`, {
-        method: "PATCH",
+       await fetch(`/api/hubspot/update-details`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           hubspot: {
             contactId: contactId,
             email: formData.email,
             firstname: formData.name,
-            phone: formData.phone,
+            phone: fullPhoneNumber,
             course_name: selectedPlan?.name || formData.plan,
             message: formData.message,
             course_status: 'upcoming',
@@ -415,8 +415,14 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
             payment_id: paymentData.data.id,
             payment_type: "paypal",
           },
+          email: {
+            name: formData.name,
+            email: formData.email,
+            packageName: formData.course,
+          }
         }),
       });
+      
       // Show success dialog
       setShowSuccessDialog(true);
 
@@ -686,6 +692,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
 
     // If Stripe is selected, show only Stripe UI
     if (selectedPaymentMethod === 'stripe' && selectedPlan) {
+      const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
       return (
         <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
           <Stripe
@@ -694,7 +701,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
             course={selectedPlan.name}
             email={formData.email}
             firstname={formData.name}
-            phone={formData.phone}
+            phone={fullPhoneNumber}
             course_name={selectedPlan.name}
             course_status='upcoming'
             message={formData.message}
