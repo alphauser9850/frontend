@@ -324,13 +324,15 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         properties: {
-                            ...formData,
-                            phone: fullPhone, // Save with country code
+                          email: submissionData.email,
+                          firstname: submissionData.name,  
+                          phone: fullPhone,     
+                          message: submissionData.message || '',
                         }
                     }),
                 });
 
-                if (res.ok) {
+              if (res.ok) {
                     // Close modal and open Calendly
                     // setIsModalOpen(false);
                     // setIsCalendlyOpen(true);
