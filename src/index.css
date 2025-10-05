@@ -1078,6 +1078,14 @@ display: block;
   padding: 10px;
   border-radius: 100%;
 }
+.careerIcon{
+  padding:0;
+      width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .blog-content {
@@ -1169,7 +1177,7 @@ display: block;
     border-top-color: #4b5563;
   }
 }
-@media screen and (max-width:768px) {
+@media screen and (max-width:1200px) {
   .text-hero span{
   max-width: 100%;
     white-space: pre-wrap;
