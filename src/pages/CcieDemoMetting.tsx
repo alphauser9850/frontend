@@ -50,7 +50,6 @@ const CCIeDemoMeeting = () => {
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const [availableTimes, setAvailableTimes] = useState<string[]>([]);
 
     useEffect(() => {
         // ✅ Runs only on client (avoids SSR crash)
@@ -65,7 +64,6 @@ const CCIeDemoMeeting = () => {
         if (!formData.phone.trim()) newErrors.phone = "Phone is required";
         if (!formData.course_name) newErrors.course_name = "Course selection is required";
         if (!formData.course_start_date) newErrors.course_start_date = "Date selection is required";
-        if (!formData.course_start_time) newErrors.course_start_time = "Time selection is required";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -79,13 +77,6 @@ const CCIeDemoMeeting = () => {
         if (errors[name]) {
             setErrors({ ...errors, [name]: "" });
         }
-    };
-
-    const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const date = e.target.value;
-        setFormData({ ...formData, course_start_date: date, course_start_time: "" });
-        const slot = startDates.find((s) => s.date === date);
-        setAvailableTimes(slot ? slot.time : []);
     };
 
     const handleScheduleClick = async (e: React.FormEvent) => {
@@ -125,6 +116,10 @@ const CCIeDemoMeeting = () => {
             if (checkContactData.data?.results?.length > 0) {
                 contactId = checkContactData.data.results[0].id;
                 console.log("Contact already exists with ID:", contactId);
+                
+                // Close modal and open Calendly for existing contact
+                setIsModalOpen(false);
+                setIsCalendlyOpen(true);
             } else {
                 // Create new contact
                 const fullPhone = `${selectedCountryCode}${formData.phone}`;
@@ -175,7 +170,6 @@ const CCIeDemoMeeting = () => {
         });
         setErrors({});
         setSelectedCountryCode(countryOptions[0].code);
-        setAvailableTimes([]);
     };
 
     const handleCalendlyClose = () => {
@@ -246,16 +240,16 @@ const CCIeDemoMeeting = () => {
                             isDarkMode ? "bg-gray-800 border border-gray-600" : "bg-gray-100 border-gray-400"
                         )}
                     >
-                       
-                            <h3
-                                className={cn(
-                                    "text-lg font-semibold mb-4 pb-2 border-b flex justify-between",
-                                    isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
-                                )}
-                            >
-                                Schedule a Demo Session
-                               
-                             <button
+
+                        <h3
+                            className={cn(
+                                "text-lg font-semibold mb-4 pb-2 border-b flex justify-between",
+                                isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
+                            )}
+                        >
+                            Schedule a Demo Session
+
+                            <button
                                 type="button"
                                 onClick={handleModalClose}
                                 disabled={isProcessing}
@@ -263,10 +257,10 @@ const CCIeDemoMeeting = () => {
                             >
                                 X
                             </button>
-                            </h3>
-                
-                            
-                
+                        </h3>
+
+
+
 
                         <form onSubmit={handleScheduleClick} className="flex flex-col gap-4">
                             {/* Show info banner only when all required fields are filled */}
@@ -420,7 +414,7 @@ const CCIeDemoMeeting = () => {
                                 <select
                                     name="course_start_date"
                                     value={formData.course_start_date}
-                                    onChange={handleDateChange}
+                                    onChange={handleChange}
                                     required
                                     className={cn(
                                         "w-full p-2 rounded border",
@@ -439,33 +433,6 @@ const CCIeDemoMeeting = () => {
                                     <p className="text-red-500 text-sm mt-1">{errors.course_start_date}</p>
                                 )}
                             </div>
-
-                            {/* Time dropdown */}
-                            {availableTimes.length > 0 && (
-                                <div>
-                                    <select
-                                        name="course_start_time"
-                                        value={formData.course_start_time}
-                                        onChange={handleChange}
-                                        required
-                                        className={cn(
-                                            "w-full p-2 rounded border",
-                                            errors.course_start_time ? "border-red-500" : "",
-                                            isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                        )}
-                                    >
-                                        <option value="">Select Time *</option>
-                                        {availableTimes.map((time) => (
-                                            <option key={time} value={time}>
-                                                {time}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.course_start_time && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.course_start_time}</p>
-                                    )}
-                                </div>
-                            )}
 
                             <div>
                                 <textarea
@@ -519,7 +486,6 @@ const CCIeDemoMeeting = () => {
                             a2: formData.course_name,
                             a3: formData.message,
                             a4: `${formData.course_start_date}`,
-                            a5: `${formData.course_start_time}`
                         },
                     }}
                 />

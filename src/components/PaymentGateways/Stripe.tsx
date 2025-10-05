@@ -10,9 +10,8 @@ import { useNavigate } from "react-router-dom";
 
 // Load your Stripe publishable key
 
-const stripeKey = import.meta.env.VITE_STRPE_PUBLIHED_KEY || "";
-
-const stripePromise = loadStripe(stripeKey);
+const stripeKey = import.meta.env.VITE_STRPE_PUBLIHED_KEY;
+const stripePromise = stripeKey ? loadStripe(stripeKey):null;
 
 // Success Dialog Component
 const SuccessDialog: React.FC<{
@@ -322,13 +321,13 @@ const Stripe: React.FC<StripeProps> = ({
   return (
     <div className="p-4">
       {/* Order Summary */}
-      <div className="bg-gray-50 rounded-lg p-4 mb-6">
+      {/* <div className="bg-gray-50 rounded-lg p-4 mb-6">
         <h3 className="font-semibold text-gray-800 mb-2">Order Summary</h3>
         <div className="flex justify-between items-center">
           <span className="text-gray-600">{course}</span>
           <span className="font-bold text-gray-800">${amount}</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Stripe Elements */}
       <Elements

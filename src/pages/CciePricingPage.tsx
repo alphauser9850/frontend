@@ -3,18 +3,25 @@ import { useThemeStore } from '../store/themeStore';
 import { cn } from '../lib/utils';
 import { ChevronDown, ChevronUp, Loader, CheckCircle, X } from 'lucide-react';
 import PayPalCheckout from '../components/PaymentGateways/Paypal';
+import Stripe from '../components/PaymentGateways/Stripe';
+import { useNavigate } from 'react-router-dom';
+import LabAccessPage from './CCiePriceLAB';
 
 interface PricingPlan {
   tierName: string;
   tierSubtitle: string;
+  startDate: {
+    date: string;
+    time: string[];
+  }[];
   price: string;
   pricePeriod: string;
   durationBadge: string;
   features: string[];
   buttonText: string;
   buttonClass: string;
-  paymentOptions: string;
   popular?: boolean;
+  duration?: string;
 }
 
 interface PricingPageProps {
@@ -22,10 +29,16 @@ interface PricingPageProps {
 }
 
 interface PricingCardProps extends PricingPlan {
-  onPlanSelect: (planName: string, planPrice: string) => void;
+  onPlanSelect: (planName: string, planPrice: string, duration?: string) => void;
 }
 
-const countryOptions = [
+interface CountryOption {
+  code: string;
+  name: string;
+  short: string;
+}
+
+const countryOptions: CountryOption[] = [
   { code: "+1", name: "United States", short: "US" },
   { code: "+91", name: "India", short: "IN" },
   { code: "+44", name: "United Kingdom", short: "GB" },
@@ -41,8 +54,10 @@ const countryOptions = [
 interface EnrollModalProps {
   selectedPlan: string;
   selectedPlanPrice: string;
+  selectedPlanDuration?: string;
   onClose: () => void;
   isDarkMode: boolean;
+  pricingPlans: PricingPlan[];
 }
 
 interface SuccessDialogProps {
@@ -53,9 +68,26 @@ interface SuccessDialogProps {
   planPrice: string;
 }
 
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  course: string;
+  message?: string;
+  price: string;
+  course_start_date: string;
+  course_start_time: string;
+  course_time_zone: string;
+}
+
 // Success Dialog Component
 function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: SuccessDialogProps) {
   if (!isOpen) return null;
+  const navigate = useNavigate();
+  const handleContinue = () => {
+    navigate("/welcome-onboard"); // Then navigate
+    onClose(); // Close the dialog first
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-[60]">
@@ -98,7 +130,7 @@ function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: Suc
         </div>
 
         <button
-          onClick={onClose}
+          onClick={handleContinue}
           className="w-full py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition"
         >
           Continue
@@ -110,16 +142,21 @@ function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: Suc
 
 type ModalStep = 'form' | 'payment' | 'processing';
 
-function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: EnrollModalProps) {
-  const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
-  const [isOpen, setIsOpen] = useState(false);
+function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, onClose, isDarkMode, pricingPlans }: EnrollModalProps) {
+  const [selectedCountryCode, setSelectedCountryCode] = useState<string>(countryOptions[0].code);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>('form');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'paypal' | 'stripe' | null>(null);
-  const [formData, setFormData] = useState<any>(null);
+  const [formData, setFormData] = useState<FormData | null>(null);
   const [contactId, setContactId] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-  const [stripePaymentUrl, setStripePaymentUrl] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState<boolean>(false);
+
+  // Date selection state
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -128,21 +165,51 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
     };
   }, []);
 
+  const validateForm = (formValues: any): boolean => {
+    const errors: { [key: string]: string } = {};
+
+    if (!formValues.name?.trim()) errors.name = 'Name is required';
+    if (!formValues.email?.trim()) errors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formValues.email)) errors.email = 'Email is invalid';
+
+    if (!formValues.phone?.trim()) errors.phone = 'Phone is required';
+    else if (!/^\d{8,10}$/.test(formValues.phone)) errors.phone = 'Phone must be 8-10 digits';
+
+    if (!selectedDate) errors.date = 'Start date is required';
+    if (!formValues.message?.trim()) errors.message = 'Message is required';
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProcessing(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const formValues = Object.fromEntries(formData.entries());
+    const formValues = Object.fromEntries(formData.entries()) as unknown as FormData;
 
-    const submissionData: any = {
+    // Validate form
+    if (!validateForm(formValues)) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    // FIX: Use the complete selected time string instead of splitting it
+    const submissionData: FormData & {
+      countryCode: string;
+      selectedPlan: string;
+      payment_status: string;
+    } = {
       ...formValues,
       countryCode: selectedCountryCode,
       selectedPlan: selectedPlan,
       payment_status: "pending",
+      course_start_date: selectedDate,
     };
 
     setFormData(submissionData);
+    const fullPhoneNumber = `${selectedCountryCode}${submissionData.phone}`;
 
     try {
       // Step 1: Check if contact already exists using your existing get-contact endpoint
@@ -165,6 +232,9 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
         }),
       });
 
+      if (!checkContactResponse.ok) {
+        throw new Error(`HTTP error! status: ${checkContactResponse.status}`);
+      }
       const checkContactData = await checkContactResponse.json();
 
       let contactId: string;
@@ -182,16 +252,21 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
             properties: {
               email: submissionData.email,
               firstname: submissionData.name,
-              phone: submissionData.phone,
+              phone: fullPhoneNumber,
               course_name: submissionData.course,
-              message: submissionData.message,
+              message: submissionData.message || '',
+              course_start_date: submissionData.course_start_date,
               leads_status: 'NEW',
               hs_lead_status: "NEW",
-              course_status: 'onGoing',
+              course_status: 'ongoing',
               payment_status: 'Pending'
             },
           }),
         });
+
+        if (!createContactResponse.ok) {
+          throw new Error(`HTTP error! status: ${createContactResponse.status}`);
+        }
 
         const createContactData = await createContactResponse.json();
         contactId = createContactData?.data?.id;
@@ -207,27 +282,44 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
 
     } catch (err) {
       console.error("Error processing contact:", err);
-      alert('Error submitting form. Please try again.');
+      setFormErrors({ submit: 'Error submitting form. Please try again.' });
     } finally {
       setIsProcessing(false);
     }
   };
+
   const handlePaymentSuccess = useCallback(async (paymentData: any) => {
-    if (!contactId) return;
+    if (!contactId || !formData) return;
 
     try {
-      await fetch(`/api/hubspot/update-contact/${contactId}`, {
-        method: "PATCH",
+      const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
+
+      await fetch(`/api/hubspot/update-details`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          properties: {
+          hubspot: {
+            contactId: contactId,
+            email: formData.email,
+            firstname: formData.name,
+            phone: fullPhoneNumber,
+            course_name: formData.course,
+            message: formData.message || '',
+            course_start_date: formData.course_start_date,
+            course_status: 'ongoing',
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: selectedPlanPrice.replace(/[^0-9.]/g, ""),
             payment_status: "Completed",
-            payment_id: paymentData.data.id,
-            payment_type: "paypal",
+            payment_id: paymentData.data?.id || paymentData.id,
+            payment_type: selectedPaymentMethod,
           },
+          email: {
+            name: formData.name,
+            email: formData.email,
+            packageName: formData.course,
+            duration: selectedPlanDuration,
+          }
         }),
       });
       // Show success dialog
@@ -235,163 +327,200 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
 
     } catch (err) {
       console.error("Error updating enrollment:", err);
-      alert('Payment successful but there was an error updating your enrollment. Please contact support.');
+      setFormErrors({ payment: 'Payment successful but there was an error updating your enrollment. Please contact support.' });
     }
-  }, [contactId, selectedPlanPrice]);
-
-
+  }, [contactId, selectedPlanPrice, selectedPlanDuration, formData, selectedPaymentMethod, selectedCountryCode]);
 
   const handlePaymentError = useCallback((error: any) => {
     console.error('Payment error:', error);
-    alert(`Payment failed ❌ Please try again.`);
+    setFormErrors({ payment: 'Payment failed. Please try again.' });
   }, []);
 
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);
-    onClose(); // Close the main enrollment modal
+    navigate("/welcome-onboard");
+    onClose();
   };
 
-
-  const handleStripePayment = useCallback(async () => {
-    try {
-      setIsProcessing(true);
-
-      const stripeResponse = await fetch("/api/payment/generateStripePaymentLink", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: parseInt(selectedPlanPrice.replace(/[^0-9.]/g, ""), 10),
-          course: selectedPlan,
-          url: window.location.href,
-        }),
-      });
-
-      const data = await stripeResponse.json();
-
-      console.log("API Response:", data);
-
-      // Corrected condition - check status and nested url
-      if (data.status === "Success" && data.data?.url) {
-        setStripePaymentUrl(data.data.url);
-        // Redirect to Stripe checkout
-        window.location.href = data.data.url;
-      } else {
-        throw new Error(data.message || 'Failed to generate payment link');
-      }
-    } catch (err) {
-      console.error("Error generating Stripe payment link:", err);
-      alert('Error generating payment link. Please try again.');
-    } finally {
-      setIsProcessing(false);
+  const handleInputChange = (field: string) => {
+    // Clear error when user starts typing
+    if (formErrors[field]) {
+      setFormErrors(prev => ({ ...prev, [field]: '' }));
     }
-  }, [selectedPlanPrice, selectedPlan]);
+  };
 
-
+  const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedDate(e.target.value);
+    if (formErrors.date) {
+      setFormErrors(prev => ({ ...prev, date: '' }));
+    }
+  };
 
   const renderFormStep = () => (
-    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white text-gray-800 border-gray-300"
+    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4" noValidate>
+      {/* Name Field */}
+      <div>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name *"
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-gray-800 border-gray-300",
+            formErrors.name && "border-red-500"
+          )}
+          required
+          onChange={() => handleInputChange('name')}
+        />
+        {formErrors.name && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
         )}
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white border-gray-300 text-gray-800"
+      </div>
+
+      {/* Email Field */}
+      <div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email *"
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white border-gray-300 text-gray-800",
+            formErrors.email && "border-red-500"
+          )}
+          required
+          onChange={() => handleInputChange('email')}
+        />
+        {formErrors.email && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
         )}
-        required
-      />
+      </div>
 
       {/* Phone with country code */}
-      <div className="flex items-center rounded-lg overflow-hidden w-full max-w-sm shadow-sm">
-        <div className="relative w-1/2">
-          <select
+      <div>
+        <div className="flex items-center rounded-lg overflow-hidden w-full shadow-sm">
+          <div className="relative w-1/2">
+            <select
+              className={cn(
+                "block w-full p-2 appearance-none outline-none cursor-pointer border",
+                isDarkMode ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-white text-gray-800 border-gray-300"
+              )}
+              required
+              value={selectedCountryCode}
+              onChange={(e) => setSelectedCountryCode(e.target.value)}
+              onFocus={() => setIsOpen(true)}
+              onBlur={() => setIsOpen(false)}
+            >
+              {countryOptions.map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.code} ({country.short})
+                </option>
+              ))}
+            </select>
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+              {isOpen ? (
+                <ChevronUp className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
+              ) : (
+                <ChevronDown className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
+              )}
+            </span>
+          </div>
+          <div className={cn("h-6 border-l", isDarkMode ? "border-gray-600" : "border-gray-300")}></div>
+          <input
+            type="tel"
+            name="phone"
+            placeholder="91234 56789 *"
             className={cn(
-              "block w-full p-2 appearance-none outline-none cursor-pointer border",
+              "flex-1 px-3 py-2 outline-none border border-l-0",
               isDarkMode ? "bg-gray-700 text-white border-gray-600"
-                : "bg-white text-gray-800 border-gray-300"
+                : "bg-white text-gray-800 border-gray-300",
+              formErrors.phone && "border-red-500"
             )}
+            maxLength={10}
+            pattern="[0-9]{8,10}"
             required
-            value={selectedCountryCode}
-            onChange={(e) => setSelectedCountryCode(e.target.value)}
-            onClick={() => setIsOpen(!isOpen)}
-            onBlur={() => setIsOpen(false)}
-          >
-            {countryOptions.map((country) => (
-              <option key={country.code} value={country.code}>
-                {country.code} ({country.short})
+            onChange={() => handleInputChange('phone')}
+          />
+        </div>
+        {formErrors.phone && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>
+        )}
+      </div>
+      {/* Start Date Selection */}
+
+      <div>
+        <select
+          name="course_start_date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-gray-800 border-gray-300",
+            formErrors.date && "border-red-500"
+          )}
+          required
+        >
+          <option value="">Select Start Date *</option>
+          {pricingPlans
+            .find(plan => plan.tierName === selectedPlan)
+            ?.startDate.map((dateOption, index) => (
+              <option key={index} value={dateOption.date}>
+                {dateOption.date}
               </option>
             ))}
-          </select>
-          <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-            {isOpen ? (
-              <ChevronUp className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
-            ) : (
-              <ChevronDown className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
-            )}
-          </span>
-        </div>
-        <div className={cn("h-6 border-l", isDarkMode ? "border-gray-600" : "border-gray-300")}></div>
-        <input
-          type="tel"
-          name="phone"
-          placeholder="91234 56789"
-          className={cn(
-            "flex-1 px-3 py-2 outline-none border border-l-0",
-            isDarkMode ? "bg-gray-700 text-white border-gray-600"
-              : "bg-white text-gray-800 border-gray-300"
-          )}
-          maxLength={10}
-          pattern="[0-9]{8,10}"
-          required
-        />
+        </select>
+        {formErrors.date && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.date}</p>
+        )}
       </div>
 
       {/* Selected course */}
-      <input
-        type="text"
-        name="course"
-        value={selectedPlan}
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white text-gray-800 border-gray-300"
-        )}
-        readOnly
-      />
+      <div>
+        <input
+          type="text"
+          name="course"
+          value={selectedPlan}
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-gray-800 border-gray-300"
+          )}
+          readOnly
+        />
+      </div>
+
 
       <input type="hidden" name="price" value={selectedPlanPrice} />
-
-      <textarea
-        name="message"
-        placeholder="Message"
-        className={cn(
-          "p-2 rounded border",
-          isDarkMode ? "bg-gray-700 text-white border-gray-600"
-            : "bg-white text-gray-800 border-gray-300"
+      <input type="hidden" name="course_start_date" value={selectedDate} />
+      {/* Message Field */}
+      <div>
+        <textarea
+          name="message"
+          placeholder="Message *"
+          className={cn(
+            "p-2 rounded border w-full",
+            isDarkMode ? "bg-gray-700 text-white border-gray-600"
+              : "bg-white text-gray-800 border-gray-300",
+            formErrors.message && "border-red-500"
+          )}
+          required
+          onChange={() => handleInputChange('message')}
+        />
+        {formErrors.message && (
+          <p className="text-red-500 text-sm mt-1">{formErrors.message}</p>
         )}
-      ></textarea>
+      </div>
 
-      <div className="flex justify-between pt-4">
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition"
-          disabled={isProcessing}
-        >
-          Cancel
-        </button>
+      {/* Submit error */}
+      {formErrors.submit && (
+        <p className="text-red-500 text-sm">{formErrors.submit}</p>
+      )}
+
+      <div className="flex justify-end pt-4">
         <button
           type="submit"
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition flex items-center gap-2"
@@ -403,7 +532,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
               Processing...
             </>
           ) : (
-            'Proceed to Payment'
+            'Proceed to Pay'
           )}
         </button>
       </div>
@@ -422,6 +551,12 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
               <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan}</span>
               <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlanPrice}</span>
             </div>
+            {selectedDate && (
+              <div className="flex justify-between items-center mt-2">
+                <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>Start Date:</span>
+                <span className={cn("font-medium", isDarkMode ? "text-white" : "text-gray-800")}>{selectedDate}</span>
+              </div>
+            )}
           </div>
 
           {/* Payment Method Selection */}
@@ -455,6 +590,11 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
               </label>
             </div>
           </div>
+
+          {/* Payment error */}
+          {formErrors.payment && (
+            <p className="text-red-500 text-sm">{formErrors.payment}</p>
+          )}
         </div>
       );
     }
@@ -474,62 +614,31 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
     }
 
     // If Stripe is selected, show only Stripe UI
-    if (selectedPaymentMethod === 'stripe') {
+    if (selectedPaymentMethod === 'stripe' && formData) {
+      const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
+
       return (
-        <div className="flex flex-col gap-6">
-          {/* Order Summary */}
-          <div className={cn("p-4 rounded-lg border", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <h4 className={cn("font-semibold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>Order Summary</h4>
-            <div className="flex justify-between items-center">
-              <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{selectedPlan}</span>
-              <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlanPrice}</span>
-            </div>
-          </div>
-
-          {/* Stripe Payment */}
-          <div className={cn("p-6 text-center border rounded-lg", isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-50 border-gray-300")}>
-            <div className="mb-4">
-              <h4 className={cn("font-medium text-lg", isDarkMode ? "text-white" : "text-gray-800")}>
-                💳 Pay with Stripe
-              </h4>
-              <p className={cn("text-sm mt-1", isDarkMode ? "text-gray-400" : "text-gray-600")}>
-                Secure payment with credit/debit card
-              </p>
-            </div>
-
-            <button
-              onClick={handleStripePayment}
-              disabled={isProcessing}
-              className={cn(
-                "w-full py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2",
-                isProcessing
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
-              )}
-            >
-              {isProcessing ? (
-                <>
-                  <Loader className="w-4 h-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                'Proceed to Stripe Checkout'
-              )}
-            </button>
-
-            {stripePaymentUrl && (
-              <div className="mt-4">
-                <p className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>
-                  Redirecting to secure payment page...
-                </p>
-              </div>
-            )}
-          </div>
+        <div className="flex flex-col gap-6 max-h-[30rem] overflow-y-auto p-2 rounded-lg">
+          <Stripe
+            contactId={Number(contactId)}
+            amount={Number(selectedPlanPrice.replace(/[^0-9.]/g, ""))}
+            course={selectedPlan}
+            course_status='ongoing'
+            email={formData.email}
+            firstname={formData.name}
+            phone={fullPhoneNumber}
+            course_name={formData.course}
+            message={formData.message || ''}
+            onClick={onClose}
+            duration={selectedPlanDuration}
+            course_start_date={selectedDate}
+          />
         </div>
       );
     }
-  };
 
+    return null;
+  };
 
   return (
     <>
@@ -541,7 +650,7 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
       >
         <div
           className={cn(
-            "p-6 rounded-lg w-full max-w-md mx-4",
+            "p-6 rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto",
             isDarkMode ? "bg-gray-800 border border-gray-600" : "bg-gray-100 border-gray-400"
           )}
         >
@@ -552,13 +661,14 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
             )}
           >
             {currentStep === 'form' ? `Enroll in ${selectedPlan}` : 'Complete Payment'}
-            {currentStep === "payment" && !selectedPaymentMethod && (
+
+            {!selectedPaymentMethod && (
               <button
                 type="button"
                 onClick={onClose}
-                className="px-2 py-0 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
+                className="px-2 -py-0.5 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
               >
-                Cancel
+                X
               </button>
             )}
             {currentStep === 'payment' && selectedPaymentMethod && (
@@ -589,24 +699,85 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, onClose, isDarkMode }: E
   );
 }
 
-// Rest of the component remains the same...
+// Pricing Card Component
+const PricingCard: React.FC<PricingCardProps> = ({
+  tierName,
+  tierSubtitle,
+  price,
+  pricePeriod,
+  durationBadge,
+  features,
+  buttonText,
+  buttonClass,
+  popular = false,
+  duration,
+  onPlanSelect
+}) => {
+  const { isDarkMode } = useThemeStore();
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  return (
+    <div
+      className={cn(
+        "rounded-2xl p-8 md:p-10 shadow-xl relative transition-all duration-300 ease-in-out border",
+        isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-gray-900"
+      )}
+      style={{
+        transform: isHovered ? 'translateY(-10px)' : 'translateY(0)',
+        boxShadow: isHovered ? '0 30px 60px rgba(0,0,0,0.15)' : '0 20px 40px rgba(0,0,0,0.1)'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {popular && (
+        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#ff6b6b] to-[#ee5a24] text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+          Most Popular
+        </div>
+      )}
+
+      <div className="text-center mb-8">
+        <h3 className={cn("text-2xl font-bold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>{tierName}</h3>
+        <p className={cn("mb-4", isDarkMode ? "text-gray-300" : "text-gray-600")}>{tierSubtitle}</p>
+        <div className={cn("text-4xl font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{price}</div>
+        <div className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>{pricePeriod}</div>
+        <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold inline-block mt-5">
+          {durationBadge}
+        </div>
+      </div>
+
+      <ul className="my-8 space-y-4">
+        {features.map((feature: string, index: number) => (
+          <li key={index} className={cn("flex items-start py-3 border-b last:border-b-0", isDarkMode ? "border-gray-600" : "border-gray-100")}>
+            <span className="text-green-500 font-bold mr-3 text-lg">✓</span>
+            <span className={cn(isDarkMode ? "text-gray-300" : "text-gray-700")} dangerouslySetInnerHTML={{ __html: feature }} />
+          </li>
+        ))}
+      </ul>
+
+      <button
+        className={`w-full py-4 rounded-xl font-semibold text-white uppercase tracking-wider transition-all duration-300 ${buttonClass} hover:shadow-xl hover:-translate-y-1`}
+        onClick={() => onPlanSelect(tierName, price, duration)}
+      >
+        {buttonText}
+      </button>
+    </div>
+  );
+};
+
+// CciePricingPage component
 const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricingPlans }) => {
   const { isDarkMode } = useThemeStore();
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [selectedPlanPrice, setSelectedPlanPrice] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [selectedPlanDuration, setSelectedPlanDuration] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const pricingPlans = propPricingPlans || [];
 
-  const handlePlanSelect = (planName: string, planPrice: string) => {
+  const handlePlanSelect = (planName: string, planPrice: string, duration?: string) => {
     setSelectedPlan(planName);
     setSelectedPlanPrice(planPrice);
-    setShowModal(true);
-  };
-
-  const handleLabAccessSelect = (hours: number, price: string) => {
-    setSelectedPlan(`Lab Access only - ${hours}h`);
-    setSelectedPlanPrice(price);
+    setSelectedPlanDuration(duration || "Not specified");
     setShowModal(true);
   };
 
@@ -614,92 +785,27 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
     setShowModal(false);
     setSelectedPlan(null);
     setSelectedPlanPrice(null);
-  };
-
-  // Pricing Card Component (unchanged)
-  const PricingCard: React.FC<PricingCardProps> = ({
-    tierName,
-    tierSubtitle,
-    price,
-    pricePeriod,
-    durationBadge,
-    features,
-    buttonText,
-    buttonClass,
-    popular = false,
-    paymentOptions,
-    onPlanSelect
-  }) => {
-    const [isHovered, setIsHovered] = useState<boolean>(false);
-
-    return (
-      <div
-        className={cn(
-          "rounded-2xl p-8 md:p-10 shadow-xl relative transition-all duration-300 ease-in-out border",
-          isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-gray-900"
-        )}
-        style={{
-          transform: isHovered ? 'translateY(-10px)' : 'translateY(0)',
-          boxShadow: isHovered ? '0 30px 60px rgba(0,0,0,0.15)' : '0 20px 40px rgba(0,0,0,0.1)'
-        }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {popular && (
-          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-[#ff6b6b] to-[#ee5a24] text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-            Most Popular
-          </div>
-        )}
-
-        <div className="text-center mb-8">
-          <h3 className={cn("text-2xl font-bold mb-2", isDarkMode ? "text-white" : "text-gray-800")}>{tierName}</h3>
-          <p className={cn("mb-4", isDarkMode ? "text-gray-300" : "text-gray-600")}>{tierSubtitle}</p>
-          <div className={cn("text-4xl font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{price}</div>
-          <div className={cn("text-sm", isDarkMode ? "text-gray-300" : "text-gray-600")}>{pricePeriod}</div>
-          <div className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold inline-block mt-5">
-            {durationBadge}
-          </div>
-        </div>
-
-        <ul className="my-8 space-y-4">
-          {features.map((feature: string, index: number) => (
-            <li key={index} className={cn("flex items-start py-3 border-b last:border-b-0", isDarkMode ? "border-gray-600" : "border-gray-100")}>
-              <span className="text-green-500 font-bold mr-3 text-lg">✓</span>
-              <span className={cn(isDarkMode ? "text-gray-300" : "text-gray-700")} dangerouslySetInnerHTML={{ __html: feature }} />
-            </li>
-          ))}
-        </ul>
-
-        <button
-          className={`w-full py-4 rounded-xl font-semibold text-white uppercase tracking-wider transition-all duration-300 ${buttonClass} hover:shadow-xl hover:-translate-y-1`}
-          onClick={() => onPlanSelect(tierName, price)}
-        >
-          {buttonText}
-        </button>
-
-        <div className={cn("text-center text-sm mt-4", isDarkMode ? "text-gray-400" : "text-gray-600")} dangerouslySetInnerHTML={{ __html: paymentOptions }} />
-      </div>
-    );
+    setSelectedPlanDuration(null);
   };
 
   return (
-    <div className={cn("min-h-screen p-4")}>
+    <div className={cn("min-h-screen p-4", isDarkMode ? "bg-gray-900" : "bg-gray-50")}>
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
-        <div className="text-center text-white mb-12 ">
+        <div className="text-center mb-12">
           {/* Success Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border ", isDarkMode ? "bg-black text-white border-gray-100/20 " : "bg-white text-blue-600")}>
+            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-blue-600")}>
               <div className="text-2xl font-bold">Highest</div>
-              <div className={cn("text-sm opacity-80 ", isDarkMode ? " text-white" : " text-gray-600")}>Pass Rate</div>
+              <div className={cn("text-sm opacity-80", isDarkMode ? "text-white" : "text-gray-600")}>Pass Rate</div>
             </div>
-            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border ", isDarkMode ? "bg-black text-white border-gray-100/20 " : "bg-white text-blue-600")}>
+            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-blue-600")}>
               <div className="text-2xl font-bold">500+</div>
-              <div className={cn("text-sm opacity-80 ", isDarkMode ? " text-white" : " text-gray-600")}>Certified Students</div>
+              <div className={cn("text-sm opacity-80", isDarkMode ? "text-white" : "text-gray-600")}>Certified Students</div>
             </div>
-            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border ", isDarkMode ? "bg-black text-white border-gray-100/20 " : "bg-white text-blue-600")}>
+            <div className={cn("backdrop-blur-sm rounded-xl p-6 shadow-xl border", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-blue-600")}>
               <div className="text-2xl font-bold">24/7</div>
-              <div className={cn("text-sm opacity-80 ", isDarkMode ? " text-white" : " text-gray-600")}>Expert Support</div>
+              <div className={cn("text-sm opacity-80", isDarkMode ? "text-white" : "text-gray-600")}>Expert Support</div>
             </div>
           </div>
         </div>
@@ -710,96 +816,16 @@ const CciePricingPage: React.FC<PricingPageProps> = ({ pricingPlans: propPricing
             <PricingCard key={index} {...plan} onPlanSelect={handlePlanSelect} />
           ))}
         </div>
-
-        {/* Lab Access Card */}
-        <div
-          className={cn(
-            "rounded-2xl p-8 text-center shadow-xl border",
-            isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-gray-900"
-          )}
-        >
-          <h3
-            className={cn(
-              "text-3xl font-bold mb-2",
-              isDarkMode ? "text-white" : "text-gray-800"
-            )}
-          >
-            Lab Access Only
-          </h3>
-          <p
-            className={cn(
-              "text-base mb-8",
-              isDarkMode ? "text-gray-400" : "text-gray-600"
-            )}
-          >
-            Flexible hours — pay only for what you need
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div
-              className={cn(
-                "p-6 rounded-xl border shadow-md hover:shadow-lg transition flex flex-col items-center cursor-pointer",
-                isDarkMode
-                  ? "bg-gray-900 border-gray-700 hover:border-blue-500"
-                  : "bg-gray-50 border-gray-200 hover:border-blue-600"
-              )}
-              onClick={() => handleLabAccessSelect(10, "200")}
-            >
-              <span className='bg-blue-100 text-blue-700 px-1 rounded'>Duration: 10 hours</span>
-              <div
-                className={cn(
-                  "text-3xl font-bold mt-2",
-                  isDarkMode ? "text-white" : "text-blue-600"
-                )}
-              >
-                $199
-              </div>
-              <button className="mt-4 w-full py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
-                Choose Plan
-              </button>
-            </div>
-
-            <div
-              className={cn(
-                "p-6 rounded-xl border shadow-md hover:shadow-lg transition flex flex-col items-center cursor-pointer",
-                isDarkMode
-                  ? "bg-gray-900 border-gray-700 hover:border-blue-500"
-                  : "bg-gray-50 border-gray-200 hover:border-blue-600"
-              )}
-              onClick={() => handleLabAccessSelect(25, "450")}
-            >
-              <span className='bg-blue-100 text-blue-700 px-1 rounded'>Duration: 30 hours</span>
-              <div
-                className={cn(
-                  "text-3xl font-bold mt-2",
-                  isDarkMode ? "text-white" : "text-blue-600"
-                )}
-              >
-                $499
-              </div>
-              <button className="mt-4 w-full py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition">
-                Choose plan
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Guarantee Section */}
-        {/* <div className={cn("rounded-2xl p-8 text-center shadow-xl mt-12", isDarkMode ? "bg-black text-white border-gray-100/20" : "bg-white text-gray-900")}>
-          <h3 className={cn("text-2xl font-bold mb-4", isDarkMode ? "text-white" : "text-gray-800")}>🛡️ 1-Week Money-Back Guarantee</h3>
-          <p className={cn(isDarkMode ? "text-gray-300" : "text-gray-600")}>
-            Not satisfied with your training? Get a full refund within 1-Week, no questions asked.
-            We're confident in our training quality and your success.
-          </p>
-        </div> */}
       </div>
-
+      <LabAccessPage />
       {showModal && selectedPlan && selectedPlanPrice && (
         <EnrollModal
           selectedPlan={selectedPlan}
           selectedPlanPrice={selectedPlanPrice}
+          selectedPlanDuration={selectedPlanDuration || undefined}
           onClose={handleCloseModal}
           isDarkMode={isDarkMode}
+          pricingPlans={pricingPlans}
         />
       )}
     </div>

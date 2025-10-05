@@ -20,12 +20,12 @@ const countryOptions = [
     { code: "+60", short: "MY" },
 ];
 
-// Start dates with time slots
+// Start dates
 const startDates = [
-    { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
-    { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
-    { date: "December 16, 2025", time: ["2 PM - 6 PM (GMT)", "9 AM - 1 PM (EST)", "6 AM - 10 AM (PST)", "7:30 PM - 11:30 PM (IST)"] },
-    { date: "January 6, 2026", time: ["6 PM - 10 PM (PST)", "9 PM - 1 AM (EST)", "2 AM - 6 AM (GMT)", "7:30 AM - 11:30 AM (IST)"] }
+    { date: "November 15, 2025" },
+    { date: "December 2, 2025" },
+    { date: "December 16, 2025" },
+    { date: "January 6, 2026" }
 ];
 
 const PaymentSuccessful = () => {
@@ -38,7 +38,6 @@ const PaymentSuccessful = () => {
     const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [videoPlaying, setVideoPlaying] = useState(false);
-    const [availableTimes, setAvailableTimes] = useState<string[]>([]);
     const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
 
     useEffect(() => {
@@ -55,7 +54,6 @@ const PaymentSuccessful = () => {
         message: "",
         course_name: "",
         course_start_date: "",
-        course_start_time: "",
         leads_status: "NEW",
         hs_lead_status: "NEW",
     });
@@ -71,7 +69,6 @@ const PaymentSuccessful = () => {
         if (!formData.phone.trim()) newErrors.phone = "Phone is required";
         if (!formData.course_name) newErrors.course_name = "Course selection is required";
         if (!formData.course_start_date) newErrors.course_start_date = "Date selection is required";
-        if (!formData.course_start_time) newErrors.course_start_time = "Time selection is required";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -85,13 +82,6 @@ const PaymentSuccessful = () => {
         if (errors[name]) {
             setErrors({ ...errors, [name]: "" });
         }
-    };
-
-    const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const date = e.target.value;
-        setFormData({ ...formData, course_start_date: date, course_start_time: "" });
-        const slot = startDates.find((s) => s.date === date);
-        setAvailableTimes(slot ? slot.time : []);
     };
 
     const handleScheduleClick = async (e: React.FormEvent) => {
@@ -177,13 +167,11 @@ const PaymentSuccessful = () => {
             message: "",
             course_name: "",
             course_start_date: "",
-            course_start_time: "",
             leads_status: "NEW",
             hs_lead_status: "NEW",
         });
         setErrors({});
         setSelectedCountryCode(countryOptions[0].code);
-        setAvailableTimes([]);
     };
 
     const handleCalendlyClose = () => {
@@ -197,7 +185,6 @@ const PaymentSuccessful = () => {
             message: "",
             course_name: "",
             course_start_date: "",
-            course_start_time: "",
             leads_status: "NEW",
             hs_lead_status: "NEW",
         });
@@ -763,7 +750,7 @@ const PaymentSuccessful = () => {
                                 <select
                                     name="course_start_date"
                                     value={formData.course_start_date}
-                                    onChange={handleDateChange}
+                                    onChange={handleChange}
                                     required
                                     className={cn(
                                         "w-full p-2 rounded border",
@@ -782,33 +769,6 @@ const PaymentSuccessful = () => {
                                     <p className="text-red-500 text-sm mt-1">{errors.course_start_date}</p>
                                 )}
                             </div>
-
-                            {/* Time dropdown */}
-                            {availableTimes.length > 0 && (
-                                <div>
-                                    <select
-                                        name="course_start_time"
-                                        value={formData.course_start_time}
-                                        onChange={handleChange}
-                                        required
-                                        className={cn(
-                                            "w-full p-2 rounded border",
-                                            errors.course_start_time ? "border-red-500" : "",
-                                            isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                        )}
-                                    >
-                                        <option value="">Select Time *</option>
-                                        {availableTimes.map((time) => (
-                                            <option key={time} value={time}>
-                                                {time}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.course_start_time && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.course_start_time}</p>
-                                    )}
-                                </div>
-                            )}
 
                             <div>
                                 <textarea
@@ -860,7 +820,6 @@ const PaymentSuccessful = () => {
                             a2: formData.course_name,
                             a3: formData.message,
                             a4: `${formData.course_start_date}`,
-                            a5: `${formData.course_start_time}`
                         },
                     }}
                 />
