@@ -16,7 +16,7 @@ export const newRegisterEmail = async (params) => {
         sendSmtpEmail.htmlContent = userRegisterEmail(params);
         sendSmtpEmail.sender = { name: "CCIE Lab", email: "ccielab.net@gmail.com" };
         // Admin email
-        sendSmtpEmail.to = [{ email: "sales@ccielab.net", name: "CCIE New Registration" }, { email: "nrai5154@gmail.com", name: "CCIE New Registration" }];
+        sendSmtpEmail.to = [{ email: "sales@ccielab.net", name: "CCIE New Registration" }, { email: "vishnu.bharath@berkut.cloud", name: "CCIE New Registration" }];
         const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
         console.log("Admin email sent successfully:", response.body);
         return response;

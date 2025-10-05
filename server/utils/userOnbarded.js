@@ -17,7 +17,7 @@ export const OnboardEmail = async (params) => {
     sendSmtpEmail.sender = { name: "CCIE Lab", email: "ccielab.net@gmail.com" };
 
     // Admin email
-    sendSmtpEmail.to = [{ email: "sales@ccielab.net", name: "CCIE New Onboarded" },{ email: "nrai5154@gmail.com", name: "CCIE New Onboarded" }];
+    sendSmtpEmail.to = [{ email: "sales@ccielab.net", name: "CCIE New Onboarded" },{ email: "vishnu.bharath@berkut.cloud", name: "CCIE New Onboarded" }];
 
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log("Admin email sent successfully:", response.body);
