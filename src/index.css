@@ -1086,6 +1086,7 @@ display: block;
     align-items: center;
     justify-content: center;
 }
+ 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .blog-content {

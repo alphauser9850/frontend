@@ -336,6 +336,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                     // Close modal and open Calendly
                     // setIsModalOpen(false);
                     // setIsCalendlyOpen(true);
+                    setIsSubmitted(false)
                 } else {
                     const errorData = await res.json();
                     console.error("HubSpot create contact failed:", errorData);
@@ -623,6 +624,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           value={formData.phone.startsWith(selectedCountryCode) ? formData.phone : selectedCountryCode + ' ' + formData.phone.replace(/^\+\d+\s*/, '')}
                           onChange={handleChange}
                           onPaste={handlePaste}
+                          maxLength={10}
+                          pattern="[0-9]{8,10}"
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                             themeClass
