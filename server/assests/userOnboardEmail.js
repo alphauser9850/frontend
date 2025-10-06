@@ -80,9 +80,11 @@ export const userOnboardEmail = (params) => {
             <td class="content">
               <p><strong>Enrollment Details:</strong></p>
             <ul>
+                <li> <strong>Name:</strong> ${params.name}</li>
                 <li> <strong>Email:</strong> ${params.email}</li>
                 <li> <strong>Phone:</strong> ${params.contact_number}</li>
                 <li><strong>Course:</strong> ${params.course_name}</li>
+                <li><strong>course_plan:</strong> ${params.course_plan || 'N/A'}</li>
                 <li> <strong>Status:</strong> ${params.course_status}</li>
                 <li><strong>Lead Status:</strong> ${params.lead_status}</li>
                 <li><strong>Amount Paid:</strong> $${params.amount}</li>
@@ -90,6 +92,8 @@ export const userOnboardEmail = (params) => {
                 <li><strong>Payment ID:</strong> ${params.payment_id}</li>
                 <li><strong>Payment Method:</strong> ${params.payment_type}</li>
                  <li><strong>Instructor:</strong> ${params.instructor_name || '-'}</li>
+                 <li><strong>Page url:</strong> ${params.utm_url || 'N/A'}</li>
+                 <li><strong>Form Name:</strong> ${params.form_name || 'N/A'}</li>
                 <li><strong>Message:</strong> ${params.message || 'N/A'}</li>
               </ul>
             </td>
