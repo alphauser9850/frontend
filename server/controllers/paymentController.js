@@ -113,43 +113,85 @@ export const paypalCaptureOrder = async (req, res) => {
     }
 };
 
+// export const createStripeIntent = async (req, res) => {
+//     try {
+//         const { amount, course } = req.body;
+
+//         // Validate required fields
+//         if (!amount || !course) {
+//             return res.status(400).json({
+//                 status: "Failure",
+//                 message: "Amount and course are required"
+//             });
+//         }
+
+//         const paymentIntent = await stripeGateway.paymentIntents.create({
+//             amount: Math.round(amount * 100), // Convert to cents and ensure integer
+//             currency: "usd",
+//             automatic_payment_methods: { enabled: true }, // Remove duplicate line
+//             description: course,
+//             metadata: {
+//                 course: course
+//             }
+//         });
+
+//         res.status(200).json({
+//             status: "Success",
+//             data: {
+//                 clientSecret: paymentIntent.client_secret,
+//                 paymentIntentId: paymentIntent.id
+//             },
+//             message: "PaymentIntent created successfully"
+//         });
+
+//     } catch (error) {
+//         console.error("Stripe Error:", error);
+//         res.status(500).json({
+//             status: "Failure",
+//             error: error,
+//             message: "Internal Server Error",
+//         });
+//     }
+// };
+
 export const createStripeIntent = async (req, res) => {
-    try {
-        const { amount, course } = req.body;
+  try {
+    const { amount, course } = req.body;
 
-        // Validate required fields
-        if (!amount || !course) {
-            return res.status(400).json({
-                status: "Failure",
-                message: "Amount and course are required"
-            });
-        }
-
-        const paymentIntent = await stripeGateway.paymentIntents.create({
-            amount: Math.round(amount * 100), // Convert to cents and ensure integer
-            currency: "usd",
-            automatic_payment_methods: { enabled: true }, // Remove duplicate line
-            description: course,
-            metadata: {
-                course: course
-            }
-        });
-
-        res.status(200).json({
-            status: "Success",
-            data: {
-                clientSecret: paymentIntent.client_secret,
-                paymentIntentId: paymentIntent.id
-            },
-            message: "PaymentIntent created successfully"
-        });
-
-    } catch (error) {
-        console.error("Stripe Error:", error);
-        res.status(500).json({
-            status: "Failure",
-            error: error,
-            message: "Internal Server Error",
-        });
+    // Validate required fields
+    if (!amount || !course) {
+      return res.status(400).json({
+        status: "Failure",
+        message: "Amount and course are required",
+      });
     }
+
+    // ✅ Create PaymentIntent (NO return_url here)
+    const paymentIntent = await stripeGateway.paymentIntents.create({
+      amount: Math.round(amount * 100), // Convert dollars to cents
+      currency: "usd",
+      automatic_payment_methods: {
+        enabled: true, // Let Stripe manage allowed payment methods
+      },
+      description: course,
+      metadata: { course },
+    });
+
+    // ✅ Respond to frontend
+    res.status(200).json({
+      status: "Success",
+      data: {
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+      },
+      message: "PaymentIntent created successfully",
+    });
+  } catch (error) {
+    console.error("Stripe Error:", error);
+    res.status(500).json({
+      status: "Failure",
+      error: error.message || error,
+      message: "Internal Server Error",
+    });
+  }
 };

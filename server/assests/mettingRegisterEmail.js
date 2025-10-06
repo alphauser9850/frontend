@@ -1,4 +1,4 @@
-export const userRegisterEmail = (params) => {
+export const userMettitngEmail = (params) => {
   return `<html>
 <head>
   <meta charset="UTF-8">
@@ -70,21 +70,21 @@ export const userRegisterEmail = (params) => {
           <!-- Header -->
           <tr>
             <td class="header">
-              <h1>User Registered !</h1>
-              <p><strong>${params.name}</strong> Registered for the <strong>${params.course_name}</strong> 🎓</p>
+              <h1>Metting Registered !</h1>
+              <p><strong>${params.name}</strong> Registered for the <strong>Metting</strong></p>
             </td>
           </tr>
 
           <!-- Details -->
           <tr>
             <td class="content">
-              <p><strong>Course Details:</strong></p>
+              <p><strong>Details:</strong></p>
             <ul>
                 <li> <strong>Name:</strong> ${params.name}</li>
                 <li> <strong>Email:</strong> ${params.email}</li>
                 <li> <strong>Phone:</strong> ${params.contact_number}</li>
                 <li><strong>Course Name:</strong> ${params.course_name}</li>
-                <li> <strong>course Plan:</strong> ${params.course_plan}</li>
+                <li> <strong>Course Plan:</strong> ${params.course_plan}</li>
                 <li><strong>Page url:</strong> ${params.utm_url || 'N/A'}</li>
                 <li><strong>Form Name:</strong> ${params.form_name || 'N/A'}</li>
                 <li> <strong>Status:</strong> ${params.message}</li>

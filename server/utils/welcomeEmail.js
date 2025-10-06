@@ -7,7 +7,7 @@ import {
 import { welcomeEmail } from "../assests/welcomeEmail.js";
 import { BREVO_KEY } from '../env.js';
 
-export const sendWelcomeEmail = async ({name, email, packageName}) => {
+export const sendWelcomeEmail = async ({ name, email, packageName, package_plan }) => {
   try {
     const apiInstance = new TransactionalEmailsApi();
     // Set API key
@@ -18,7 +18,7 @@ export const sendWelcomeEmail = async ({name, email, packageName}) => {
     sendSmtpEmail.htmlContent = welcomeEmail();
     sendSmtpEmail.sender = { name: "CCIE Lab", email: "ccielab.net@gmail.com" };
     sendSmtpEmail.to = [{ email, name }];
-    sendSmtpEmail.params = { name, package: packageName };
+    sendSmtpEmail.params = { name, package: packageName, package_plan };
 
     const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log("Email sent successfully:", response.body);

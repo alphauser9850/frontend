@@ -46,6 +46,7 @@ import BlogPage from './pages/BlogPage';
 import BlogDetailPage from './pages/BlogDetailPage';
 import PaymentSuccessful from './components/ui/PaymentSuccessful';
 import DeploymentPage from './pages/DeploymentPage';
+import PaymentSuccess from './components/PaymentGateways/PaymentSuccess';
 
 // Add notification sound
 const addNotificationSound = () => {
@@ -197,6 +198,7 @@ function App() {
             <Route path="/courses/ccnp" element={<CCNPPage />} />
             <Route path="/training/ccie-enterprise-infrastructure" element={<CCIEPage />} />
             <Route path="/welcome-onboard" element={<PaymentSuccessful />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
 
             <Route path="/courses/ccie" element={<Navigate to="/training/ccie-enterprise-infrastructure" replace />} />
             <Route path="/courses/ccie-wireless" element={<CCIEWirelessPage />} />
