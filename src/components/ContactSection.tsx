@@ -317,8 +317,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
              
             } else {
                 // Create new contact 
-
-                const res = await fetch("/api/hubspot/create-contact", {
+                const currentUrl = window.location.href;
+                const res = await fetch("/api/hubspot/enquiry-details", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -327,6 +327,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           firstname: submissionData.name,  
                           phone: submissionData.phone,     
                           message: submissionData.message || '',
+                          form_name: "homepage form",   //or //aboutUs Form                     
+                        utm_url: currentUrl,      
                         }
                     }),
                 });
@@ -337,16 +339,18 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                     // setIsCalendlyOpen(true);
                     setIsSubmitted(true)
                 } else {
+                   setIsSubmitting(false);
                     const errorData = await res.json();
                     console.error("HubSpot create contact failed:", errorData);
                     alert("Failed to save contact. Please try again.");
                 }
             }
         } catch (err) {
+          setIsSubmitting(false);
             console.error("API error:", err);
             alert("An error occurred. Please try again.");
         } finally {
-            setIsSubmitted(true);
+            setIsSubmitting(false);
         }
   };
 

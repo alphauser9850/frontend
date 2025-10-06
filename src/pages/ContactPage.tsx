@@ -235,40 +235,72 @@ const ContactPage: React.FC = () => {
     
     setIsSubmitting(true);
     
-    try {
-      const submissionData: ContactFormData = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        subject: formData.subject,
-        message: formData.message,
-        countryCode: formData.countryCode,
-        source: 'contact-page'
-      };
-      
-      const result = await submitFormToN8n(submissionData);
-      
-      if (result.success) {
-        setFormSubmitted(true);
-        // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          subject: '',
-          message: '',
-          countryCode: '+1'
-        });
-        setErrors({});
-      } else {
-        setErrors({ submit: 'Failed to send message. Please try again.' });
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setErrors({ submit: 'An error occurred. Please try again.' });
-    } finally {
-      setIsSubmitting(false);
-    }
+          try {
+            // Save contact to HubSpot with full phone number (country code + number)
+            const checkContactResponse = await fetch("/api/hubspot/get-contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    filterGroups: [
+                        {
+                            filters: [
+                                {
+                                    propertyName: "email",
+                                    operator: "EQ",
+                                    value: formData.email,
+                                }
+                            ]
+                        }
+                    ],
+                    properties: ["firstname", "lastname", "email", "phone", "id"]
+                }),
+            });
+
+            const checkContactData = await checkContactResponse.json();
+
+            let contactId: string | null = null;
+
+            if (checkContactData.data?.results?.length > 0) {
+                contactId = checkContactData.data.results[0].id;
+                console.log("Contact already exists with ID:", contactId);
+             
+            } else {
+                // Create new contact 
+                const currentUrl = window.location.href;
+                const res = await fetch("/api/hubspot/enquiry-details", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        properties: {
+                          email: formData.email,
+                          firstname: formData.name,  
+                          phone: formData.phone,     
+                          message: formData.message || '',
+                          form_name: "contact page form",   //or //aboutUs Form                     
+                        utm_url: currentUrl,      
+                        }
+                    }),
+                });
+
+              if (res.ok) {
+                    // Close modal and open Calendly
+                    // setIsModalOpen(false);
+                    // setIsCalendlyOpen(true);
+                    setFormSubmitted(true)
+                } else {
+                   setIsSubmitting(false);
+                    const errorData = await res.json();
+                    console.error("HubSpot create contact failed:", errorData);
+                    alert("Failed to save contact. Please try again.");
+                }
+            }
+        } catch (err) {
+          setIsSubmitting(false);
+            console.error("API error:", err);
+            alert("An error occurred. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
   };
 
   return (
