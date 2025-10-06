@@ -27,7 +27,9 @@ export const welcomeEmail = () => {
 
               <p><strong>Course Details:</strong></p>
               <ul style="padding-left:20px; margin:10px 0;">
-                 ✅ <strong>Package:</strong> {{ params.package}} <br>
+                 ✅ <strong>course Name:</strong> {{ params.package}} <br>
+                 ✅ <strong>Plan Name:</strong> {{ params.package_plan}} <br>
+
               </ul>
             </td>
           </tr>

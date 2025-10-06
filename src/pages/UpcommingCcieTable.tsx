@@ -212,6 +212,7 @@ function BatchTable({ data, onEnroll, isDarkMode }: TableProps) {
 }
 
 function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: EnrollModalProps) {
+  const currentUrl = window.location.href;
   const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedStartDate, setSelectedStartDate] = useState(batch.startDate);
@@ -242,7 +243,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
     if (timeRangeMatch) {
       return timeRangeMatch[1]; // Returns "9 AM - 1 PM" or "7:30 PM - 11:30 PM"
     }
-    
+
     // Fallback: try to extract just the time part if format is different
     const fallbackMatch = timeString.match(/^([0-9:]+ [AP]M)/);
     return fallbackMatch ? fallbackMatch[1] : '6:00 PM - 10:00 PM'; // default fallback
@@ -262,7 +263,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
     if (fullTimeMatch) {
       return timeString; // Return the full string as is
     }
-    
+
     // If format is different, construct it from parts
     const timeRange = extractTimeRange(timeString);
     const timeZone = extractTimeZone(timeString);
@@ -349,7 +350,10 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
               email: submissionData.email,
               firstname: submissionData.name,
               phone: fullPhoneNumber,
-              course_name: selectedPlan?.name || submissionData.plan,
+              course_plan: selectedPlan?.name || submissionData.plan,
+              course_name: "CCIE Enterprise Infrastructure",
+              form_name: "Upcoming CCIE EI Classes",
+              utm_url: currentUrl,
               message: submissionData.message,
               leads_status: 'NEW',
               hs_lead_status: "NEW",
@@ -390,9 +394,9 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
     const fullTimeString = getFullTimeString(batch.time);
     const courseTimeZone = fullTimeString; // Use full string for both fields
     const courseStartTime = fullTimeString; // Use full string for both fields
-      const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
+    const fullPhoneNumber = `${selectedCountryCode}${formData.phone}`;
     try {
-       await fetch(`/api/hubspot/update-details`, {
+      await fetch(`/api/hubspot/update-details`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -401,7 +405,10 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
             email: formData.email,
             firstname: formData.name,
             phone: fullPhoneNumber,
-            course_name: selectedPlan?.name || formData.plan,
+            course_plan: selectedPlan?.name || formData.plan,
+            course_name: "CCIE Enterprise Infrastructure",
+            form_name: "Upcoming CCIE EI Classes",
+            utm_url: { currentUrl },
             message: formData.message,
             course_status: 'upcoming',
             course_start_date: selectedStartDate,
@@ -422,7 +429,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
           }
         }),
       });
-      
+
       // Show success dialog
       setShowSuccessDialog(true);
 
@@ -637,7 +644,7 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
               <div className="flex justify-between items-center">
                 <span className={isDarkMode ? "text-gray-300" : "text-gray-600"}>Price:</span>
                 <span className={cn("font-bold", isDarkMode ? "text-white" : "text-gray-800")}>{selectedPlan?.price}</span>
-              </div>      
+              </div>
             </div>
           </div>
 
@@ -702,7 +709,10 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
             email={formData.email}
             firstname={formData.name}
             phone={fullPhoneNumber}
-            course_name={selectedPlan.name}
+            course_plan={selectedPlan.name}
+            course_name="CCIE Enterprise Infrastructure"
+            form_name="Upcoming CCIE EI Classes"
+            utm_url={currentUrl}
             course_status='upcoming'
             message={formData.message}
             duration={batch.duration}
@@ -738,15 +748,15 @@ function EnrollModal({ batch, batches, onClose, isDarkMode, selectedTimeZone }: 
             )}
           >
             {currentStep === 'form' ? `Enroll for ${selectedStartDate}` : 'Complete Payment'}
-            
+
             {!selectedPaymentMethod && (
-             <button
-              type="button"
-              onClick={onClose}
-              className="px-2 -py-0.5 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
-            >
-              X
-            </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-2 -py-0.5 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
+              >
+                X
+              </button>
             )}
             {currentStep === 'payment' && selectedPaymentMethod && (
               <button

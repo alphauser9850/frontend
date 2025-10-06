@@ -143,6 +143,7 @@ function SuccessDialog({ isOpen, onClose, isDarkMode, planName, planPrice }: Suc
 type ModalStep = 'form' | 'payment' | 'processing';
 
 function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, onClose, isDarkMode, pricingPlans }: EnrollModalProps) {
+  const currentUrl = window.location.href;
   const [selectedCountryCode, setSelectedCountryCode] = useState<string>(countryOptions[0].code);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<ModalStep>('form');
@@ -253,7 +254,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
               email: submissionData.email,
               firstname: submissionData.name,
               phone: fullPhoneNumber,
-              course_name: submissionData.course,
+              course_name: "CCIE Enterprise Infrastructure",
+              course_plan: submissionData.course,
+              form_name: "CCIE Training Program",
+              utm_url: currentUrl,
               message: submissionData.message || '',
               course_start_date: submissionData.course_start_date,
               leads_status: 'NEW',
@@ -303,7 +307,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             email: formData.email,
             firstname: formData.name,
             phone: fullPhoneNumber,
-            course_name: formData.course,
+            course_plan: formData.course,
+            course_name: "CCIE Enterprise Infrastructure",
+            form_name: "CCIE Training Program",
+            utm_url: currentUrl,
             message: formData.message || '',
             course_start_date: formData.course_start_date,
             course_status: 'ongoing',
@@ -627,7 +634,10 @@ function EnrollModal({ selectedPlan, selectedPlanPrice, selectedPlanDuration, on
             email={formData.email}
             firstname={formData.name}
             phone={fullPhoneNumber}
-            course_name={formData.course}
+            course_plan={formData.course}
+            course_name= "CCIE Enterprise Infrastructure"
+            form_name= "CCIE Training Program"
+            utm_url= {currentUrl}
             message={formData.message || ''}
             onClick={onClose}
             duration={selectedPlanDuration}

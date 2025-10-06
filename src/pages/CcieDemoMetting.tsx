@@ -34,6 +34,7 @@ const CCIeDemoMeeting = () => {
     const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
     const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [currentUrl, setCurrentUrl] = useState("");
     const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
 
     const [formData, setFormData] = useState({
@@ -42,18 +43,24 @@ const CCIeDemoMeeting = () => {
         email: "",
         phone: "",
         message: "",
-        course_name: "",
+        course_plan: "",
         course_start_date: "",
         course_start_time: "",
         leads_status: "NEW",
         hs_lead_status: "NEW",
+        course_name: "CCIE Enterprise Infrastructure",
+        form_name: "calendly Meeting Form",
+        utm_url: "",
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        // ✅ Runs only on client (avoids SSR crash)
+        // Set both root element and current URL on client side only
         setRootElement(document.getElementById("root"));
+        const url = window.location.href;
+        setCurrentUrl(url);
+        setFormData(prev => ({ ...prev, utm_url: url }));
     }, []);
 
     const validateForm = () => {
@@ -62,7 +69,7 @@ const CCIeDemoMeeting = () => {
         if (!formData.lastname.trim()) newErrors.lastname = "Last name is required";
         if (!formData.email.trim()) newErrors.email = "Email is required";
         if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-        if (!formData.course_name) newErrors.course_name = "Course selection is required";
+        if (!formData.course_plan) newErrors.course_plan = "Course selection is required";
         if (!formData.course_start_date) newErrors.course_start_date = "Date selection is required";
 
         setErrors(newErrors);
@@ -116,7 +123,6 @@ const CCIeDemoMeeting = () => {
             if (checkContactData.data?.results?.length > 0) {
                 contactId = checkContactData.data.results[0].id;
                 console.log("Contact already exists with ID:", contactId);
-                
                 // Close modal and open Calendly for existing contact
                 setIsModalOpen(false);
                 setIsCalendlyOpen(true);
@@ -124,13 +130,24 @@ const CCIeDemoMeeting = () => {
                 // Create new contact
                 const fullPhone = `${selectedCountryCode}${formData.phone}`;
 
-                const res = await fetch("/api/hubspot/create-contact", {
+                const res = await fetch("/api/hubspot/metting-details", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         properties: {
-                            ...formData,
-                            phone: fullPhone, // Save with country code
+                            firstname: formData.firstname,
+                            lastname: formData.lastname,
+                            email: formData.email,
+                            phone: fullPhone,
+                            message: formData.message,
+                            course_plan: formData.course_plan,
+                            course_start_date: formData.course_start_date,
+                            course_start_time: formData.course_start_time,
+                            leads_status: formData.leads_status,
+                            hs_lead_status: formData.hs_lead_status,
+                            course_name: "CCIE Enterprise Infrastructure",
+                            form_name: "calendly Meeting Form",
+                            utm_url: currentUrl,
                         }
                     }),
                 });
@@ -162,11 +179,14 @@ const CCIeDemoMeeting = () => {
             email: "",
             phone: "",
             message: "",
-            course_name: "",
+            course_plan: "",
             course_start_date: "",
             course_start_time: "",
             leads_status: "NEW",
             hs_lead_status: "NEW",
+            course_name: "CCIE Enterprise Infrastructure",
+            form_name: "calendly Meeting Form",
+            utm_url: currentUrl,
         });
         setErrors({});
         setSelectedCountryCode(countryOptions[0].code);
@@ -181,11 +201,14 @@ const CCIeDemoMeeting = () => {
             email: "",
             phone: "",
             message: "",
-            course_name: "",
+            course_plan: "",
             course_start_date: "",
             course_start_time: "",
             leads_status: "NEW",
             hs_lead_status: "NEW",
+            course_name: "CCIE Enterprise Infrastructure",
+            form_name: "calendly Meeting Form",
+            utm_url: currentUrl,
         });
     };
 
@@ -268,7 +291,7 @@ const CCIeDemoMeeting = () => {
                                 formData.lastname &&
                                 formData.email &&
                                 formData.phone &&
-                                formData.course_name && (
+                                formData.course_plan && (
                                     <div className={cn(
                                         "p-3 rounded-lg mb-2 text-sm",
                                         isDarkMode ? "bg-blue-900/30 border border-blue-700 text-blue-300" : "bg-blue-50 border border-blue-200 text-blue-800"
@@ -389,13 +412,13 @@ const CCIeDemoMeeting = () => {
                             {/* Course selection */}
                             <div>
                                 <select
-                                    name="course_name"
-                                    value={formData.course_name}
+                                    name="course_plan"
+                                    value={formData.course_plan}
                                     onChange={handleChange}
                                     required
                                     className={cn(
                                         "w-full p-2 rounded border",
-                                        errors.course_name ? "border-red-500" : "",
+                                        errors.course_plan ? "border-red-500" : "",
                                         isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
                                     )}
                                 >
@@ -404,8 +427,8 @@ const CCIeDemoMeeting = () => {
                                     <option value="CCIE-Pro Track">CCIE-Pro Track</option>
                                     <option value="CCIE-Master Track">CCIE-Master Track</option>
                                 </select>
-                                {errors.course_name && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.course_name}</p>
+                                {errors.course_plan && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.course_plan}</p>
                                 )}
                             </div>
 
@@ -483,7 +506,7 @@ const CCIeDemoMeeting = () => {
                         email: formData.email,
                         customAnswers: {
                             a1: `${selectedCountryCode}${formData.phone}`,
-                            a2: formData.course_name,
+                            a2: formData.course_plan,
                             a3: formData.message,
                             a4: `${formData.course_start_date}`,
                         },

@@ -38,7 +38,10 @@ export const paymentSuccessEmail = () => {
                   <h3 style="color:#0a2540; font-size:18px; margin-bottom:10px;">Enrollment Details:</h3>
                   <table cellpadding="0" cellspacing="0" style="width:100%; background:#f9fafb; border-radius:8px; padding:15px;">
                     <tr>
-                      <td style="padding:8px 0;">✅ <strong>Package:</strong> {{ params.package }}</td>
+                      <td style="padding:8px 0;">✅ <strong>Course Name:</strong> {{ params.package }}</td>
+                    </tr>
+                     <tr>
+                      <td style="padding:8px 0;">✅ <strong>Course Plan:</strong> {{ params.package_plan }}</td>
                     </tr>
                     <tr>
                       <td style="padding:8px 0;">✅ <strong>Duration:</strong> {{ params.duration }}</td>

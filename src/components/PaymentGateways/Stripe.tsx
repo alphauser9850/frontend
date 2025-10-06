@@ -8,12 +8,10 @@ import {
 } from "@stripe/react-stripe-js";
 import { useNavigate } from "react-router-dom";
 
-// Load your Stripe publishable key
-
 const stripeKey = import.meta.env.VITE_STRPE_PUBLIHED_KEY;
-const stripePromise = stripeKey ? loadStripe(stripeKey):null;
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
-// Success Dialog Component
+// ✅ Success Dialog Component
 const SuccessDialog: React.FC<{
   isOpen: boolean;
   onClose: () => void;
@@ -23,14 +21,13 @@ const SuccessDialog: React.FC<{
   const navigate = useNavigate();
 
   const handleContinue = () => {
-    navigate("/welcome-onboard"); // Then navigate
-    onClose(); // Close the dialog first
+    navigate("/welcome-onboard");
+    onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-black/70 flex justify-center items-center z-50">
       <div className="bg-white rounded-2xl p-8 max-w-md w-11/12 text-center shadow-lg border border-gray-200">
-        {/* Success Icon */}
         <div className="w-16 h-16 bg-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
           <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
             <path
@@ -43,20 +40,15 @@ const SuccessDialog: React.FC<{
             />
           </svg>
         </div>
-
-        {/* Success Message */}
         <h2 className="text-gray-800 text-2xl font-bold mb-2">🎉 Congratulations!</h2>
         <p className="text-green-500 text-lg font-semibold mb-6">Payment Successful!</p>
 
-        {/* Payment Details */}
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 text-left">
           <h3 className="text-gray-700 font-semibold mb-3 text-base">Transaction Details</h3>
           <div className="text-gray-500 text-sm">
-
             <div className="mb-2">
               <strong>Amount:</strong> ${(paymentIntent.amount / 100).toFixed(2)}
             </div>
-
             {paymentIntent.description && (
               <div>
                 <strong>Course:</strong> {paymentIntent.description}
@@ -65,7 +57,6 @@ const SuccessDialog: React.FC<{
           </div>
         </div>
 
-        {/* Close Button */}
         <button
           onClick={handleContinue}
           className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-3 px-8 font-semibold w-full transition-colors"
@@ -77,7 +68,7 @@ const SuccessDialog: React.FC<{
   );
 };
 
-// Payment form component
+// ✅ Checkout Form
 const CheckoutForm: React.FC<{
   clientSecret: string;
   email: string;
@@ -91,46 +82,54 @@ const CheckoutForm: React.FC<{
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!stripe || !elements) {
-      return;
-    }
+    if (!stripe || !elements) return;
 
     setIsLoading(true);
     setMessage("");
 
     try {
+      // ✅ Construct return URL for redirect-based payment methods
+      const baseUrl = window.location.origin;
+      const returnUrl = `${baseUrl}/payment-success`;
+
+      // ✅ Allow redirects for Amazon Pay, Cash App Pay, etc.
       const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
-        redirect: 'if_required',
-        // confirmParams: {
-        //   receipt_email: email,
-        // },
+        confirmParams: {
+          return_url: returnUrl,
+        },
+        redirect: "if_required", // This allows card payments to work inline
       });
 
       if (error) {
         setMessage(error.message || "An error occurred");
-      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        setIsLoading(false);
+      } else if (paymentIntent && paymentIntent.status === "succeeded") {
+        // For non-redirect payments (like cards)
         onPaymentSuccess(paymentIntent);
+        setIsLoading(false);
       }
+      // For redirect payments, user will be redirected automatically
     } catch (error) {
-      setMessage("An unexpected error occurred");
       console.error("Payment error:", error);
+      setMessage("An unexpected error occurred");
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto">
       <PaymentElement />
-
       {message && <div className="text-red-500 mt-4 text-sm">{message}</div>}
 
       <button
         type="submit"
         disabled={!stripe || isLoading}
-        className={`mt-6 py-3 px-4 rounded-lg text-white w-full font-semibold transition-colors ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+        className={`mt-6 py-3 px-4 rounded-lg text-white w-full font-semibold transition-colors ${
+          isLoading
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
       >
         {isLoading ? "Processing Payment..." : "Pay Now"}
       </button>
@@ -138,67 +137,69 @@ const CheckoutForm: React.FC<{
   );
 };
 
-interface StripeProps {
-  contactId?: number;
-  amount?: number;
-  course?: string;
-  email?: string;
-  firstname?: string;
-  course_name?: string;
-  phone?: string;
-  message?: string;
-  course_start_date?: string;
-  instructor_name?: string;
-  duration?: string;
-  course_status?: string;
-  course_start_time?: string;
-  course_time_zone?: string;
-  onClick?: () => void; // Added onClick prop
-}
-
-// Main Stripe component
-const Stripe: React.FC<StripeProps> = ({
-  course_time_zone,
-  course_start_time,
+// ✅ Main Stripe Component
+const Stripe: React.FC<any> = ({
   contactId,
-  duration,
   amount,
-  course_status,
   course,
   email,
   firstname,
   course_name,
-  instructor_name,
-  course_start_date,
+  course_plan,
+  form_name,
+  utm_url,
   phone,
   message,
-  onClick // Added onClick prop
+  instructor_name,
+  course_start_date,
+  course_status,
+  duration,
+  course_start_time,
+  course_time_zone,
+  onClick
 }) => {
   const [clientSecret, setClientSecret] = useState<string>("");
-  const [loading, setLoading] = useState(true); // Start as loading
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [paymentIntentData, setPaymentIntentData] = useState<any>(null);
 
-  // Auto-create payment intent when component mounts
   useEffect(() => {
     const createPaymentIntent = async () => {
       setLoading(true);
       setError("");
 
       try {
+        // Store enrollment data for use after redirect
+        const enrollmentData = {
+          contactId,
+          email,
+          firstname,
+          phone,
+          course_name,
+          course_plan,
+          form_name,
+          utm_url,
+          message,
+          course_status,
+          course_time_zone,
+          course_start_time,
+          instructor_name,
+          course_start_date,
+          duration,
+        };
+        sessionStorage.setItem("enrollmentData", JSON.stringify(enrollmentData));
+
         const response = await fetch("/api/payment/create-payment-intent", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            amount: amount,
-            course: course,
+            amount,
+            course,
           }),
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
 
@@ -215,67 +216,68 @@ const Stripe: React.FC<StripeProps> = ({
       }
     };
 
-    if (amount && course) {
-      createPaymentIntent();
-    }
-  }, [amount, course]);
+    if (amount && course) createPaymentIntent();
+  }, [amount, course, contactId, email, firstname, phone, course_name, course_plan, form_name, utm_url, message, course_status, course_time_zone, course_start_time, instructor_name, course_start_date, duration]);
 
   const handlePaymentSuccess = useCallback(async (paymentIntent: any) => {
     setPaymentIntentData(paymentIntent);
     setShowSuccessDialog(true);
     if (!contactId) return;
+
     try {
       await fetch(`/api/hubspot/update-details`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           hubspot: {
-            contactId: contactId,
-            email: email,
-            firstname: firstname,
-            phone: phone,
-            course_name: course_name,
-            message: message,
-            course_status: course_status,
-            course_time_zone: course_time_zone,
-            course_start_time: course_start_time,
+            contactId,
+            email,
+            firstname,
+            phone,
+            course_name,
+            course_plan,
+            form_name,
+            utm_url,
+            message,
+            course_status,
+            course_time_zone,
+            course_start_time,
             leads_status: "ENROLLED",
             hs_lead_status: "Enroll",
             paid_amount: amount,
             payment_status: "Completed",
             payment_id: paymentIntent.id,
             payment_type: "stripe",
-            instructor_name: instructor_name,
-            course_start_date
-
-
+            instructor_name,
+            course_start_date,
           },
           email: {
             name: firstname,
-            email: email,
+            email,
             packageName: course_name,
-            duration: duration
-          }
+            utm_url,
+            course_plan,
+            form_name,
+            duration,
+          },
         }),
       });
     } catch (err) {
       console.error("Error updating enrollment:", err);
-      alert('Payment successful but there was an error updating your enrollment. Please contact support.');
+      alert(
+        "Payment successful but there was an error updating your enrollment. Please contact support."
+      );
     }
-  }, [contactId, amount, firstname, email, course_name, duration]);
+  }, [contactId, amount, firstname, email, course_name, duration, utm_url, form_name, course_plan, phone, message, course_status, course_time_zone, course_start_time, instructor_name, course_start_date]);
 
   const handleCloseDialog = () => {
     setShowSuccessDialog(false);
     setPaymentIntentData(null);
     setClientSecret("");
-
-    // Call the parent onClose function if provided
-    if (onClick) {
-      onClick();
-    }
+    if (onClick) onClick();
   };
 
-  if (loading) {
+  if (loading)
     return (
       <div className="flex items-center justify-center p-8">
         <div className="flex items-center gap-3">
@@ -284,9 +286,8 @@ const Stripe: React.FC<StripeProps> = ({
         </div>
       </div>
     );
-  }
 
-  if (error) {
+  if (error)
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -306,39 +307,23 @@ const Stripe: React.FC<StripeProps> = ({
         </div>
       </div>
     );
-  }
 
-  if (!clientSecret) {
+  if (!clientSecret)
     return (
-      <div className="p-6">
-        <div className="text-center text-gray-600">
-          Unable to setup payment. Please try again.
-        </div>
+      <div className="p-6 text-center text-gray-600">
+        Unable to setup payment. Please try again.
       </div>
     );
-  }
 
   return (
     <div className="p-4">
-      {/* Order Summary */}
-      {/* <div className="bg-gray-50 rounded-lg p-4 mb-6">
-        <h3 className="font-semibold text-gray-800 mb-2">Order Summary</h3>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600">{course}</span>
-          <span className="font-bold text-gray-800">${amount}</span>
-        </div>
-      </div> */}
-
-      {/* Stripe Elements */}
       <Elements
         stripe={stripePromise}
         options={{
           clientSecret,
           appearance: {
-            theme: 'stripe',
-            variables: {
-              colorPrimary: '#2563eb',
-            }
+            theme: "stripe",
+            variables: { colorPrimary: "#2563eb" },
           },
         }}
       >
@@ -349,7 +334,6 @@ const Stripe: React.FC<StripeProps> = ({
         />
       </Elements>
 
-      {/* Success Dialog */}
       <SuccessDialog
         isOpen={showSuccessDialog}
         onClose={handleCloseDialog}
