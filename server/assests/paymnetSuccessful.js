@@ -23,7 +23,7 @@ export const paymentSuccessEmail = () => {
             <!-- Hero -->
             <tr>
               <td align="center" style="padding:40px 30px 10px 30px;">
-                <h1 style="color:#0a2540; font-size:24px; margin:0; font-weight:700;">Welcome to Your CCIE Journey 🎉</h1>
+                <h1 style="color:#0a2540; font-size:24px; margin:0; font-weight:700;">Welcome to Your CCIE Journey</h1>
                 <p style="color:#555555; font-size:16px; margin:10px 0 0 0;">Hi <strong>{{params.name}}</strong>,</p>
               </td>
             </tr>
@@ -31,13 +31,16 @@ export const paymentSuccessEmail = () => {
             <!-- Body -->
             <tr>
               <td style="padding:10px 30px 30px 30px; color:#333333; font-size:15px; line-height:1.7;">
-                <p>We’re thrilled to have you enrolled in the <strong>CCIE Enterprise Infrastructure Course</strong> at <strong>CCIE LAB</strong>! 
+                <p>Thank you for your payment! We’re thrilled to have you enrolled in the <strong>CCIE Enterprise Infrastructure Course</strong> at <strong>CCIE LAB</strong>! 
                 You’ve taken a big step toward mastering advanced networking and elevating your career.</p>
 
                 <div style="margin:25px 0;">
                   <h3 style="color:#0a2540; font-size:18px; margin-bottom:10px;">Enrollment Details:</h3>
                   <table cellpadding="0" cellspacing="0" style="width:100%; background:#f9fafb; border-radius:8px; padding:15px;">
-                    <tr>
+                   <tr>
+                      <td style="padding:8px 0;">✅ <strong>Transaction ID:</strong> {{ params.payment_id }}</td>
+                    </tr>
+                  <tr>
                       <td style="padding:8px 0;">✅ <strong>Course Name:</strong> {{ params.package }}</td>
                     </tr>
                      <tr>
@@ -48,9 +51,6 @@ export const paymentSuccessEmail = () => {
                     </tr>
                     <tr>
                       <td style="padding:8px 0;">✅ <strong>Amount Paid:</strong> $ {{ params.amount }}</td>
-                    </tr>
-                    <tr>
-                      <td style="padding:8px 0;">✅ <strong>Transaction ID:</strong> {{ params.payment_id }}</td>
                     </tr>
                   </table>
                 </div>

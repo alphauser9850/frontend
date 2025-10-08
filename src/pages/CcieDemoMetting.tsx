@@ -1,215 +1,59 @@
 import { useThemeStore } from "../store/themeStore";
 import { cn } from "../lib/utils";
-import { PopupModal } from "react-calendly";
-import { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, Loader } from "lucide-react";
-
-// Country code options
-const countryOptions = [
-    { code: "+1", short: "US" },
-    { code: "+91", short: "IN" },
-    { code: "+44", short: "UK" },
-    { code: "+81", short: "JP" },
-    { code: "+86", short: "CN" },
-    { code: "+49", short: "DE" },
-    { code: "+61", short: "AU" },
-    { code: "+971", short: "AE" },
-    { code: "+65", short: "SG" },
-    { code: "+60", short: "MY" },
-];
-
-// Start dates with time slots
-const startDates = [
-    { date: "November 15, 2025", time: ["9 AM - 1 PM (IST)", "7:30 PM -11:30 PM (PST)", "3:30 AM -7:30 AM (GMT)", "10:30 PM - 2:30 AM(EST)"] },
-    { date: "December 2, 2025", time: ["6 PM - 11 PM (EST)", "3 PM - 8 PM (PST)", "11 PM - 4 AM (GMT)", "4:30 AM - 9:30 AM (IST)"] },
-    { date: "December 16, 2025", time: ["2 PM - 6 PM (GMT)", "9 AM - 1 PM (EST)", "6 AM - 10 AM (PST)", "7:30 PM - 11:30 PM (IST)"] },
-    { date: "January 6, 2026", time: ["6 PM - 10 PM (PST)", "9 PM - 1 AM (EST)", "2 AM - 6 AM (GMT)", "7:30 AM - 11:30 AM (IST)"] }
-];
+import { useState, useEffect, useRef } from "react";
+import { X } from "lucide-react";
 
 const CCIeDemoMeeting = () => {
     const { isDarkMode } = useThemeStore();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [rootElement, setRootElement] = useState<HTMLElement | null>(null);
-    const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
-    const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
-    const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
-    const [currentUrl, setCurrentUrl] = useState("");
-    const clendely_id = import.meta.env.VITE_CLENDELY_ID || "";
+    const [isHubSpotOpen, setIsHubSpotOpen] = useState(false);
+    const [iframeKey, setIframeKey] = useState(0);
+    const [isIframeLoading, setIsIframeLoading] = useState(false);
+    const hubspotScriptLoaded = useRef(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    const [formData, setFormData] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        phone: "",
-        message: "",
-        course_plan: "",
-        course_start_date: "",
-        course_start_time: "",
-        leads_status: "NEW",
-        hs_lead_status: "NEW",
-        course_name: "CCIE Enterprise Infrastructure",
-        form_name: "calendly Meeting Form",
-        utm_url: "",
-    });
+    // HubSpot meetings URL
+    const hubspotMeetingsUrl = `${import.meta.env.VITE_HUBSPOT_MEETING_ID}?embed=true`;
 
-    const [errors, setErrors] = useState<Record<string, string>>({});
-
+    // Load HubSpot script when modal opens
     useEffect(() => {
-        // Set both root element and current URL on client side only
-        setRootElement(document.getElementById("root"));
-        const url = window.location.href;
-        setCurrentUrl(url);
-        setFormData(prev => ({ ...prev, utm_url: url }));
-    }, []);
+        if (isHubSpotOpen && !hubspotScriptLoaded.current) {
+            const existingScript = document.querySelector(
+                'script[src="https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"]'
+            );
 
-    const validateForm = () => {
-        const newErrors: Record<string, string> = {};
-        if (!formData.firstname.trim()) newErrors.firstname = "First name is required";
-        if (!formData.lastname.trim()) newErrors.lastname = "Last name is required";
-        if (!formData.email.trim()) newErrors.email = "Email is required";
-        if (!formData.phone.trim()) newErrors.phone = "Phone is required";
-        if (!formData.course_plan) newErrors.course_plan = "Course selection is required";
-        if (!formData.course_start_date) newErrors.course_start_date = "Date selection is required";
+            if (!existingScript) {
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js';
+                script.async = true;
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
+                script.onload = () => {
+                    hubspotScriptLoaded.current = true;
+                };
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-    ) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-        if (errors[name]) {
-            setErrors({ ...errors, [name]: "" });
-        }
-    };
+                script.onerror = () => {
+                    console.error('Failed to load HubSpot Meetings script');
+                };
 
-    const handleScheduleClick = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (!validateForm()) {
-            return;
-        }
-
-        setIsProcessing(true);
-
-        try {
-            // Save contact to HubSpot with full phone number (country code + number)
-            const checkContactResponse = await fetch("/api/hubspot/get-contact", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    filterGroups: [
-                        {
-                            filters: [
-                                {
-                                    propertyName: "email",
-                                    operator: "EQ",
-                                    value: formData.email,
-                                }
-                            ]
-                        }
-                    ],
-                    properties: ["firstname", "lastname", "email", "phone", "id"]
-                }),
-            });
-
-            const checkContactData = await checkContactResponse.json();
-
-            let contactId: string | null = null;
-
-            if (checkContactData.data?.results?.length > 0) {
-                contactId = checkContactData.data.results[0].id;
-                console.log("Contact already exists with ID:", contactId);
-                // Close modal and open Calendly for existing contact
-                setIsModalOpen(false);
-                setIsCalendlyOpen(true);
+                document.body.appendChild(script);
             } else {
-                // Create new contact
-                const fullPhone = `${selectedCountryCode}${formData.phone}`;
-
-                const res = await fetch("/api/hubspot/metting-details", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        properties: {
-                            firstname: formData.firstname,
-                            lastname: formData.lastname,
-                            email: formData.email,
-                            phone: fullPhone,
-                            message: formData.message,
-                            course_plan: formData.course_plan,
-                            course_start_date: formData.course_start_date,
-                            course_start_time: formData.course_start_time,
-                            leads_status: formData.leads_status,
-                            hs_lead_status: formData.hs_lead_status,
-                            course_name: "CCIE Enterprise Infrastructure",
-                            form_name: "calendly Meeting Form",
-                            utm_url: currentUrl,
-                        }
-                    }),
-                });
-
-                if (res.ok) {
-                    // Close modal and open Calendly
-                    setIsModalOpen(false);
-                    setIsCalendlyOpen(true);
-                } else {
-                    const errorData = await res.json();
-                    console.error("HubSpot create contact failed:", errorData);
-                    alert("Failed to save contact. Please try again.");
-                }
+                hubspotScriptLoaded.current = true;
             }
-        } catch (err) {
-            console.error("API error:", err);
-            alert("An error occurred. Please try again.");
-        } finally {
-            setIsProcessing(false);
         }
+    }, [isHubSpotOpen]);
+
+    const handleHubSpotOpen = () => {
+        setIsIframeLoading(true);
+        setIframeKey(prevKey => prevKey + 1);
+        setIsHubSpotOpen(true);
     };
 
-    const handleModalClose = () => {
-        setIsModalOpen(false);
-        // Reset form
-        setFormData({
-            firstname: "",
-            lastname: "",
-            email: "",
-            phone: "",
-            message: "",
-            course_plan: "",
-            course_start_date: "",
-            course_start_time: "",
-            leads_status: "NEW",
-            hs_lead_status: "NEW",
-            course_name: "CCIE Enterprise Infrastructure",
-            form_name: "calendly Meeting Form",
-            utm_url: currentUrl,
-        });
-        setErrors({});
-        setSelectedCountryCode(countryOptions[0].code);
+    const handleHubSpotClose = () => {
+        setIsHubSpotOpen(false);
     };
 
-    const handleCalendlyClose = () => {
-        setIsCalendlyOpen(false);
-        // Reset form data after Calendly closes
-        setFormData({
-            firstname: "",
-            lastname: "",
-            email: "",
-            phone: "",
-            message: "",
-            course_plan: "",
-            course_start_date: "",
-            course_start_time: "",
-            leads_status: "NEW",
-            hs_lead_status: "NEW",
-            course_name: "CCIE Enterprise Infrastructure",
-            form_name: "calendly Meeting Form",
-            utm_url: currentUrl,
-        });
+    const handleIframeLoad = () => {
+        setIsIframeLoading(false);
     };
 
     return (
@@ -241,7 +85,7 @@ const CCIeDemoMeeting = () => {
                     </p>
 
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={handleHubSpotOpen}
                         className="px-8 py-3 rounded-lg font-medium bg-purple-600 hover:bg-purple-700 text-white transition-colors"
                     >
                         Schedule Demo
@@ -249,272 +93,75 @@ const CCIeDemoMeeting = () => {
                 </div>
             </section>
 
-            {/* Demo Booking Modal */}
-            {isModalOpen && (
+            {/* HubSpot Meetings Modal */}
+            {isHubSpotOpen && (
                 <div
                     className={cn(
-                        "fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50",
+                        "fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4",
                         isDarkMode ? "bg-opacity-50" : "bg-opacity-40"
                     )}
+                    onClick={handleHubSpotClose}
                 >
                     <div
                         className={cn(
-                            "p-6 rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto",
-                            isDarkMode ? "bg-gray-800 border border-gray-600" : "bg-gray-100 border-gray-400"
+                            "p-4 sm:p-6 rounded-lg w-full max-w-4xl max-h-[90vh] sm:max-h-[85vh] flex flex-col",
+                            isDarkMode ? "bg-gray-800 border border-gray-600" : "bg-white border-gray-400"
                         )}
+                        onClick={(e) => e.stopPropagation()}
                     >
-
-                        <h3
-                            className={cn(
-                                "text-lg font-semibold mb-4 pb-2 border-b flex justify-between",
-                                isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
-                            )}
-                        >
-                            Schedule a Demo Session
-
+                        <div className="flex justify-between items-center mb-3 sm:mb-4 pb-2 border-b flex-shrink-0">
+                            <h3
+                                className={cn(
+                                    "text-base sm:text-lg font-semibold",
+                                    isDarkMode ? "text-white border-gray-600" : "text-blue-600 border-gray-300"
+                                )}
+                            >
+                                Schedule Your Meeting
+                            </h3>
                             <button
                                 type="button"
-                                onClick={handleModalClose}
-                                disabled={isProcessing}
-                                className="px-2 -py-0.5 text-base rounded bg-red-500 text-white hover:bg-red-600 transition"
+                                onClick={handleHubSpotClose}
+                                className={cn(
+                                    "p-2 rounded-full transition-colors flex-shrink-0",
+                                    isDarkMode
+                                        ? "hover:bg-gray-700 text-gray-300 hover:text-white"
+                                        : "hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+                                )}
+                                aria-label="Close modal"
                             >
-                                X
+                                <X className="w-5 h-5 sm:w-6 sm:h-6" />
                             </button>
-                        </h3>
+                        </div>
 
-
-
-
-                        <form onSubmit={handleScheduleClick} className="flex flex-col gap-4">
-                            {/* Show info banner only when all required fields are filled */}
-                            {formData.firstname &&
-                                formData.lastname &&
-                                formData.email &&
-                                formData.phone &&
-                                formData.course_plan && (
-                                    <div className={cn(
-                                        "p-3 rounded-lg mb-2 text-sm",
-                                        isDarkMode ? "bg-blue-900/30 border border-blue-700 text-blue-300" : "bg-blue-50 border border-blue-200 text-blue-800"
-                                    )}>
-                                        ℹ️ Your details will be prefilled in the scheduling form. Please do not modify them.
+                        <div className="relative flex-1 overflow-y-auto overflow-x-hidden">
+                            {/* Loading indicator */}
+                            {isIframeLoading && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-10">
+                                    <div className="text-center">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
+                                        <p className="mt-2 text-gray-600">Loading scheduling calendar...</p>
                                     </div>
-                                )}
-
-                            <div>
-                                <input
-                                    type="text"
-                                    name="firstname"
-                                    placeholder="First Name *"
-                                    value={formData.firstname}
-                                    onChange={handleChange}
-                                    required
-                                    className={cn(
-                                        "w-full p-2 rounded border",
-                                        errors.firstname ? "border-red-500" : "",
-                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                    )}
-                                />
-                                {errors.firstname && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.firstname}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <input
-                                    type="text"
-                                    name="lastname"
-                                    placeholder="Last Name *"
-                                    value={formData.lastname}
-                                    onChange={handleChange}
-                                    required
-                                    className={cn(
-                                        "w-full p-2 rounded border",
-                                        errors.lastname ? "border-red-500" : "",
-                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                    )}
-                                />
-                                {errors.lastname && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Email *"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                    className={cn(
-                                        "w-full p-2 rounded border",
-                                        errors.email ? "border-red-500" : "",
-                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                    )}
-                                />
-                                {errors.email && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-                                )}
-                            </div>
-
-                            {/* Phone with Country Code */}
-                            <div>
-                                <div className="flex items-center rounded-lg overflow-hidden w-full shadow-sm">
-                                    <div className="relative w-1/3">
-                                        <select
-                                            className={cn(
-                                                "block w-full p-2 appearance-none outline-none cursor-pointer border",
-                                                isDarkMode ? "bg-gray-700 text-white border-gray-600"
-                                                    : "bg-white text-gray-800 border-gray-300"
-                                            )}
-                                            value={selectedCountryCode}
-                                            onChange={(e) => setSelectedCountryCode(e.target.value)}
-                                            onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
-                                            onBlur={() => setIsCountryDropdownOpen(false)}
-                                        >
-                                            {countryOptions.map((country) => (
-                                                <option key={country.code} value={country.code}>
-                                                    {country.code} ({country.short})
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                                            {isCountryDropdownOpen ? (
-                                                <ChevronUp className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
-                                            ) : (
-                                                <ChevronDown className={cn("w-4 h-4", isDarkMode ? "text-gray-300" : "text-gray-800")} />
-                                            )}
-                                        </span>
-                                    </div>
-                                    <div className={cn("h-6 border-l", isDarkMode ? "border-gray-600" : "border-gray-300")}></div>
-                                    <input
-                                        type="tel"
-                                        name="phone"
-                                        placeholder="91234 56789"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className={cn(
-                                            "flex-1 px-3 py-2 outline-none border border-l-0",
-                                            errors.phone ? "border-red-500" : "",
-                                            isDarkMode ? "bg-gray-700 text-white border-gray-600"
-                                                : "bg-white text-gray-800 border-gray-300"
-                                        )}
-                                        maxLength={10}
-                                        pattern="[0-9]{8,10}"
-                                        required
-                                    />
                                 </div>
-                                {errors.phone && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
-                                )}
-                            </div>
+                            )}
 
-                            {/* Course selection */}
-                            <div>
-                                <select
-                                    name="course_plan"
-                                    value={formData.course_plan}
-                                    onChange={handleChange}
-                                    required
-                                    className={cn(
-                                        "w-full p-2 rounded border",
-                                        errors.course_plan ? "border-red-500" : "",
-                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                    )}
-                                >
-                                    <option value="">Select Course *</option>
-                                    <option value="CCIE-Fast Track">CCIE-Fast Track</option>
-                                    <option value="CCIE-Pro Track">CCIE-Pro Track</option>
-                                    <option value="CCIE-Master Track">CCIE-Master Track</option>
-                                </select>
-                                {errors.course_plan && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.course_plan}</p>
-                                )}
-                            </div>
-
-                            {/* Date dropdown */}
-                            <div>
-                                <select
-                                    name="course_start_date"
-                                    value={formData.course_start_date}
-                                    onChange={handleChange}
-                                    required
-                                    className={cn(
-                                        "w-full p-2 rounded border",
-                                        errors.course_start_date ? "border-red-500" : "",
-                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                    )}
-                                >
-                                    <option value="">Select Date *</option>
-                                    {startDates.map((slot) => (
-                                        <option key={slot.date} value={slot.date}>
-                                            {slot.date}
-                                        </option>
-                                    ))}
-                                </select>
-                                {errors.course_start_date && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.course_start_date}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <textarea
-                                    name="message"
-                                    placeholder="Message"
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    rows={4}
-                                    required
-                                    className={cn(
-                                        "w-full p-2 rounded border resize-none",
-                                        isDarkMode ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-800 border-gray-300"
-                                    )}
-                                />
-                            </div>
-
-                            <div className="flex justify-end pt-4">
-
-                                <button
-                                    type="submit"
-                                    className="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition flex items-center gap-2"
-                                    disabled={isProcessing}
-                                >
-                                    {isProcessing ? (
-                                        <>
-                                            <Loader className="w-4 h-4 animate-spin" />
-                                            Processing...
-                                        </>
-                                    ) : (
-                                        'Schedule Demo'
-                                    )}
-                                </button>
-                            </div>
-                        </form>
+                            {/* Iframe with key to force reload and onLoad handler */}
+                            <iframe
+                                key={iframeKey}
+                                src={hubspotMeetingsUrl}
+                                width="100%"
+                                height="100%"
+                                style={{ minHeight: '700px' }}
+                                onLoad={handleIframeLoad}
+                                frameBorder="0"
+                                title="HubSpot Meetings Scheduler"
+                            />
+                        </div>
                     </div>
                 </div>
-            )}
-
-            {/* Calendly Modal */}
-            {isCalendlyOpen && (
-                <PopupModal
-                    url={clendely_id}
-                    open={isCalendlyOpen}
-                    onModalClose={handleCalendlyClose}
-                    rootElement={rootElement}
-                    prefill={{
-                        name: `${formData.firstname} ${formData.lastname}`,
-                        email: formData.email,
-                        customAnswers: {
-                            a1: `${selectedCountryCode}${formData.phone}`,
-                            a2: formData.course_plan,
-                            a3: formData.message,
-                            a4: `${formData.course_start_date}`,
-                        },
-                    }}
-                />
             )}
         </>
     );
 };
+
 
 export default CCIeDemoMeeting;
