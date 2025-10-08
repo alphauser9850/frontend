@@ -11,17 +11,17 @@ export const newMettingEmail = async (params) => {
         const apiInstance = new TransactionalEmailsApi();
         apiInstance.setApiKey(TransactionalEmailsApiApiKeys.apiKey, BREVO_KEY);
         const sendSmtpEmail = new SendSmtpEmail();
-        sendSmtpEmail.subject = `New Mettning Registered: ${params.name}`;
+        sendSmtpEmail.subject = `New Meeting Registered: ${params.name}`;
         sendSmtpEmail.htmlContent = userMettitngEmail(params);
         sendSmtpEmail.sender = { name: "CCIE Lab", email: "ccielab.net@gmail.com" };
         // Admin email
-        sendSmtpEmail.to = [{ email: "sales@ccielab.net", name: "CCIE New Metting Registration" },{ email: "vishnu.bharath@berkut.cloud", name: "CCIE New Metting Registration" }];
+        sendSmtpEmail.to = [{ email: "sales@ccielab.net", name: "CCIE New Meeting Registration" },{ email: "vishnu.bharath@berkut.cloud", name: "CCIE New Meeting Registration" }];
 
         const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
-        console.log("Admin email sent successfully:", response.body);
+        console.log("Meeting email sent successfully:", response.body);
         return response;
     } catch (error) {
-        console.error("Error sending admin email:", JSON.stringify(error, null, 2));
+        console.error("Error sending Meeting email:", JSON.stringify(error, null, 2));
         throw error;
     }
 };
