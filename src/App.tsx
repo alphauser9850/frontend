@@ -5,8 +5,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
 import { checkSupabaseConnection } from './lib/supabase';
-
-
+import ScrollToTop from "./components/ScrollToTop";
+import {    Phone    } from 'lucide-react';
 // Components
 import AuthGuard from './components/AuthGuard';
 
@@ -46,6 +46,7 @@ import BlogPage from './pages/BlogPage';
 import BlogDetailPage from './pages/BlogDetailPage';
 import PaymentSuccessful from './components/ui/PaymentSuccessful';
 import DeploymentPage from './pages/DeploymentPage';
+import PaymentSuccess from './components/PaymentGateways/PaymentSuccess';
 
 // Add notification sound
 const addNotificationSound = () => {
@@ -181,6 +182,7 @@ function App() {
 
   return (
     <>
+    <ScrollToTop />
       <NavigationWrapper>
         <Routes>
           {/* Public routes */}
@@ -196,6 +198,7 @@ function App() {
             <Route path="/courses/ccnp" element={<CCNPPage />} />
             <Route path="/training/ccie-enterprise-infrastructure" element={<CCIEPage />} />
             <Route path="/welcome-onboard" element={<PaymentSuccessful />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
 
             <Route path="/courses/ccie" element={<Navigate to="/training/ccie-enterprise-infrastructure" replace />} />
             <Route path="/courses/ccie-wireless" element={<CCIEWirelessPage />} />
@@ -234,6 +237,12 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </NavigationWrapper>
+       <div className='floatingCallBtn block xl:hidden'>
+                  <a
+              href="tel:+18777072243" 
+            > <Phone /></a>
+       
+      </div>
       <FooterWrapper />
       <Toaster
         position="top-right"

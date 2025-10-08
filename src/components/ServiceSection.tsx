@@ -3,17 +3,17 @@ import { Briefcase, UserCheck, Server } from 'lucide-react';
 
 const services = [
   {
-    icon: <Briefcase size={40} strokeWidth={2.5} className="mx-auto mb-4 text-design-primary-accent" />,
+    icon: <Briefcase size={40} strokeWidth={2.5} className="text-design-primary-accent" />,
     title: 'Real-World Production Scenarios',
     description: 'Gain hands-on experience by working on labs and challenges based on real enterprise network environments.'
   },
   {
-    icon: <UserCheck size={40} strokeWidth={2.5} className="mx-auto mb-4 text-design-primary-accent" />,
+    icon: <UserCheck size={40} strokeWidth={2.5} className="text-design-primary-accent" />,
     title: 'Expert CCIE-Certified Trainers',
     description: 'Learn directly from industry experts. All our trainers are CCIE certified and bring years of real-world expertise.'
   },
   {
-    icon: <Server size={40} strokeWidth={2.5} className="mx-auto mb-4 text-design-primary-accent" />,
+    icon: <Server size={40} strokeWidth={2.5} className="text-design-primary-accent" />,
     title: '24/7 Customized Lab Access',
     description: 'Practice anytime with our always-on, custom-built labs—accessible 24/7 through our own secure platform.'
   }
@@ -45,7 +45,7 @@ const ServiceSection: React.FC = () => (
             style={{ animationDelay: `${idx * 0.1}s` }}
           >
             <div className="flex flex-col items-center">
-              <div className="p-4 rounded-full bg-design-primary-accent/10 mb-6">
+              <div className="p-4 rounded-full bg-design-primary-accent/10 mb-6 careerIcon">
             {service.icon}
               </div>
               <h3 className="text-heading-2 font-bold mb-4 text-text-primary">{service.title}</h3>

@@ -18,7 +18,7 @@ export const paymentSuccess = async (params) => {
         sendSmtpEmail.sender = { name: "CCIE Lab", email: "ccielab.net@gmail.com" };
 
         sendSmtpEmail.to = [{ email: params.email, name: params.name ,}];
-        sendSmtpEmail.params = { name: params.name , package: params.packageName, duration:params.duration,amount:params.amount,payment_id:params.payment_id };
+        sendSmtpEmail.params = { name: params.name , package: params.packageName, duration:params.duration,amount:params.amount,payment_id:params.payment_id,package_plan:params.package_plan };
 
         const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
         console.log("Admin email sent successfully:", response.body);

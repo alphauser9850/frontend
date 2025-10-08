@@ -103,7 +103,7 @@ function BlogDetailPage() {
                     { label: 'Blogs', href: '/blog' },
                     { label: post.title, }
                 ]} />
-            </div>
+            
 
             <div className="blogWrapper">
                 <div className="blogInner">
@@ -145,6 +145,7 @@ function BlogDetailPage() {
 
 
                 </div>
+            </div>
             </div>
         </div>
     );
