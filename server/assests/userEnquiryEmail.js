@@ -88,8 +88,6 @@ export const userEnquiryEmail = (params) => {
                 <li> <strong>Page url:</strong> ${params.utm_url}</li>
                 <li><strong>Form Name:</strong> ${params.form_name || 'N/A'}</li>
                 <li> <strong>Message:</strong> ${params.message}</li>
-
-
               </ul>
             </td>
           </tr>        

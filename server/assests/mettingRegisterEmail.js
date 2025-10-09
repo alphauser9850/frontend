@@ -70,8 +70,8 @@ export const userMettitngEmail = (params) => {
           <!-- Header -->
           <tr>
             <td class="header">
-              <h1>Metting Registered !</h1>
-              <p><strong>${params.name}</strong> Registered for the <strong>Metting</strong></p>
+              <h1>Meeting Registered!</h1>
+              <p><strong>${params.name}</strong> Registered for the <strong>Meeting</strong></p>
             </td>
           </tr>
 
