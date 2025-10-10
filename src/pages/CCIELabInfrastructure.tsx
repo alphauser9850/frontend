@@ -38,24 +38,24 @@ const features = [
         ),
         image: "https://ccielab.net/labInf2.png"
     },
-    {
-        title: "Support: Expert Guidance During Lab Practice",
-        content: (
-            <ul className="list-disc pl-5 text-sm md:text-base">
-                <li>
-                    Lab instructors are available during all practice hours to guide, troubleshoot, and clarify
-                    doubts.
-                </li>
-                <li>
-                    Receive personalized tips and corrections while working on advanced scenarios.
-                </li>
-                <li>
-                    This ensures no student is left behind and every concept is reinforced practically.
-                </li>
-            </ul>
-        ),
-        image: "https://ccielab.net/labInf3.png"
-    },
+    // {
+    //     title: "Support: Expert Guidance During Lab Practice",
+    //     content: (
+    //         <ul className="list-disc pl-5 text-sm md:text-base">
+    //             <li>
+    //                 Lab instructors are available during all practice hours to guide, troubleshoot, and clarify
+    //                 doubts.
+    //             </li>
+    //             <li>
+    //                 Receive personalized tips and corrections while working on advanced scenarios.
+    //             </li>
+    //             <li>
+    //                 This ensures no student is left behind and every concept is reinforced practically.
+    //             </li>
+    //         </ul>
+    //     ),
+    //     image: "https://ccielab.net/labInf3.png"
+    // },
     {
         title: "Why Students Love Our Labs",
         content: (
@@ -85,7 +85,7 @@ const CCIELabInfrastructure = () => {
             <div className="max-w-7xl mx-auto">
 
                 {/* Top Row - Feature Boxes */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 mb-8">
                     {features.map((feature, index) => (
                         <div
                             key={index}
