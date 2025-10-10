@@ -54,7 +54,7 @@ const features = [
                 </li>
             </ul>
         ),
-        image: "https://ccielab.net/labInf3.png"
+        image: "https://ccielab.net/labInf3.jpg"
     },
     {
         title: "Why Students Love Our Labs",
