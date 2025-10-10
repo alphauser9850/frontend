@@ -527,7 +527,7 @@ const CCIEPage: React.FC = () => {
   const faqData = [
     {
       question: "What prerequisites do I need?",
-      answer: "Basic networking knowledge (CCNA level) is recommended. We provide a pre-assessment to help determine your readiness."
+      answer: "Basic networking knowledge (CCNA level) is recommended."
     },
     {
       question: "Can I upgrade my plan later?",
@@ -543,7 +543,7 @@ const CCIEPage: React.FC = () => {
     },
     {
       question: "What equipment do I need?",
-      answer: "All lab equipment is provided remotely. You only need a reliable internet connection and a computer capable of running remote desktop sessions."
+      answer: "All lab equipment access is provided remotely. You only need a reliable internet connection, a large screen, and a web browser."
     }
   ];
 
