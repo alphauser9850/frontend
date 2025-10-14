@@ -264,7 +264,8 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
     email: '',
     phone: '',
     country: countryOptions[0].name,
-    message: ''
+    message: '',
+    course_name: ''
   });
 
   const [selectedCountryCode, setSelectedCountryCode] = useState(countryOptions[0].code);
@@ -278,80 +279,80 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-      const submissionData: ContactFormData = {
-    name: formData.name,
-    email: formData.email,
-    phone: formData.phone,
-    message: formData.message,
-    source,
-  };
-  console.log(submissionData)
-          try {
-            // Save contact to HubSpot with full phone number (country code + number)
-            const checkContactResponse = await fetch("/api/hubspot/get-contact", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    filterGroups: [
-                        {
-                            filters: [
-                                {
-                                    propertyName: "email",
-                                    operator: "EQ",
-                                    value: formData.email,
-                                }
-                            ]
-                        }
-                    ],
-                    properties: ["firstname", "lastname", "email", "phone", "id"]
-                }),
-            });
-
-            const checkContactData = await checkContactResponse.json();
-
-            let contactId: string | null = null;
-
-            if (checkContactData.data?.results?.length > 0) {
-                contactId = checkContactData.data.results[0].id;
-                console.log("Contact already exists with ID:", contactId);
-             
-            } else {
-                // Create new contact 
-                const currentUrl = window.location.href;
-                const res = await fetch("/api/hubspot/enquiry-details", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        properties: {
-                          email: submissionData.email,
-                          firstname: submissionData.name,  
-                          phone: submissionData.phone,     
-                          message: submissionData.message || '',
-                          form_name: "homepage form",   //or //aboutUs Form                     
-                        utm_url: currentUrl,      
-                        }
-                    }),
-                });
-
-              if (res.ok) {
-                    // Close modal and open Calendly
-                    // setIsModalOpen(false);
-                    // setIsCalendlyOpen(true);
-                    setIsSubmitted(true)
-                } else {
-                   setIsSubmitting(false);
-                    const errorData = await res.json();
-                    console.error("HubSpot create contact failed:", errorData);
-                    alert("Failed to save contact. Please try again.");
+    const submissionData: ContactFormData = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      message: formData.message,
+      source,
+    };
+    console.log(submissionData)
+    try {
+      // Save contact to HubSpot with full phone number (country code + number)
+      const checkContactResponse = await fetch("/api/hubspot/get-contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filterGroups: [
+            {
+              filters: [
+                {
+                  propertyName: "email",
+                  operator: "EQ",
+                  value: formData.email,
                 }
+              ]
             }
-        } catch (err) {
+          ],
+          properties: ["firstname", "lastname", "email", "phone", "id"]
+        }),
+      });
+
+      const checkContactData = await checkContactResponse.json();
+
+      let contactId: string | null = null;
+
+      if (checkContactData.data?.results?.length > 0) {
+        contactId = checkContactData.data.results[0].id;
+        console.log("Contact already exists with ID:", contactId);
+
+      } else {
+        // Create new contact 
+        const currentUrl = window.location.href;
+        const res = await fetch("/api/hubspot/enquiry-details", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            properties: {
+              email: submissionData.email,
+              firstname: submissionData.name,
+              phone: submissionData.phone,
+              message: submissionData.message || '',
+              form_name: "homepage form",   //or //aboutUs Form                     
+              utm_url: currentUrl,
+            }
+          }),
+        });
+
+        if (res.ok) {
+          // Close modal and open Calendly
+          // setIsModalOpen(false);
+          // setIsCalendlyOpen(true);
+          setIsSubmitted(true)
+        } else {
           setIsSubmitting(false);
-            console.error("API error:", err);
-            alert("An error occurred. Please try again.");
-        } finally {
-            setIsSubmitting(false);
+          const errorData = await res.json();
+          console.error("HubSpot create contact failed:", errorData);
+          alert("Failed to save contact. Please try again.");
         }
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      console.error("API error:", err);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const containsLinks = (text: string): boolean => {
@@ -373,30 +374,30 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
       /tel:[^\s]+/gi,                   // Tel links
       /file:\/\/[^\s]+/gi               // File links
     ];
-    
+
     return linkPatterns.some(pattern => pattern.test(text));
   };
-    // Function to prevent link input
+  // Function to prevent link input
   const preventLinks = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    
+
     // Check if the new value contains links
     if (containsLinks(value)) {
       e.preventDefault();
       // Remove the link and show warning
       const cleanValue = value.replace(/https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.[a-z]{2,}|bit\.ly\/[^\s]+|t\.co\/[^\s]+|goo\.gl\/[^\s]+|tinyurl\.com\/[^\s]+|[^\s]+\.(com|org|net|io|co)\/[^\s]*|ftp:\/\/[^\s]+|mailto:[^\s]+|tel:[^\s]+|file:\/\/[^\s]+/gi, '');
-      
+
       setFormData(prev => ({ ...prev, [name]: cleanValue }));
-      
+
       // Show error message
       setFormErrors(prev => ({
         ...prev,
         [name]: 'Links are not allowed in this field'
       }));
-      
+
       return false;
     }
-    
+
     return true;
   };
 
@@ -626,7 +627,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                           name="phone"
                           value={formData.phone.startsWith(selectedCountryCode) ? formData.phone : selectedCountryCode + ' ' + formData.phone.replace(/^\+\d+\s*/, '')}
                           onChange={handleChange}
-                          onPaste={handlePaste} 
+                          onPaste={handlePaste}
                           className={cn(
                             "rounded-lg block w-full pl-10 p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200",
                             themeClass
@@ -637,7 +638,33 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                       </div>
                     </div>
                   </div>
-
+                  <div>
+                    <label htmlFor="course_name" className={cn(
+                      "block text-sm font-medium mb-2",
+                      themeClass ? "text-white/70" : "text-gray-700"
+                    )}>
+                      Select Course
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="course_name"
+                        name="course_name"
+                        // value={formData.course}
+                        // onChange={handleCountryChange}
+                        className={cn(
+                          "rounded-lg block w-full p-2.5 focus:ring-primary focus:border-primary/50 outline-none transition-colors duration-200 appearance-none",
+                          themeClass
+                            ? "bg-white/5 border border-white/10 text-white"
+                            : "bg-white border border-gray-200 text-gray-900"
+                        )}
+                      >
+                        <option value="">Select Course *</option>
+                           <option value="CCIE-Fast Track">CCIE-Fast Track</option>
+                           <option value="CCIE-Pro Track">CCIE-Pro Track</option>
+                           <option value="CCIE-Master Track">CCIE-Master Track</option>
+                      </select>
+                    </div>
+                  </div>
                   <div>
                     <label htmlFor="contact-message" className={cn(
                       "block text-sm font-medium mb-2",
@@ -692,11 +719,11 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
 
           <div className={cn("rounded-xl p-8 border h-full relative", themeClass ? "bg-white/5 backdrop-blur-sm border-white/10" : "bg-white shadow-lg border-gray-100")}>
             <h3 className={cn("text-2xl font-bold mb-6", themeClass ? "text-white" : "text-gray-900")}>Contact Information</h3>
-                        <div className="flex items-start">
-                <div className="p-3 rounded-full bg-primary/10 text-primary">
-                  <MapPin className="h-6 w-6" />
-                </div>
-                <div className="ml-4">
+            <div className="flex items-start">
+              <div className="p-3 rounded-full bg-primary/10 text-primary">
+                <MapPin className="h-6 w-6" />
+              </div>
+              <div className="ml-4">
                 <h4 className={cn(
                   "text-xl font-bold mb-2",
                   themeClass ? "text-white" : "text-gray-900"
@@ -704,17 +731,17 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                 <p className={cn(
                   "text-gray-700",
                   themeClass ? "text-white/70" : "text-gray-600"
-                )}> 
+                )}>
                   2175 Goodyear Ave. Ste 110 Ventura CA 93003
                 </p>
               </div>
-            </div><br/>
-            
-              <div className="flex items-start">
-                <div className="p-3 rounded-full bg-primary/10 text-primary">
-                  <Mail className="h-6 w-6" />
-                </div>
-                <div className="ml-4">
+            </div><br />
+
+            <div className="flex items-start">
+              <div className="p-3 rounded-full bg-primary/10 text-primary">
+                <Mail className="h-6 w-6" />
+              </div>
+              <div className="ml-4">
                 <h4 className={cn(
                   "text-xl font-bold mb-2",
                   themeClass ? "text-white" : "text-gray-900"
@@ -723,16 +750,16 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                   "text-gray-700",
                   themeClass ? "text-white/70" : "text-gray-600"
                 )}>
-                    support@ccielab.net
-                  </p>
+                  support@ccielab.net
+                </p>
               </div>
-            </div><br/>
-            
-              <div className="flex items-start">
-                <div className="p-3 rounded-full bg-primary/10 text-primary">
-                  <Phone className="h-6 w-6" />
-                </div>
-                <div className="ml-4">
+            </div><br />
+
+            <div className="flex items-start">
+              <div className="p-3 rounded-full bg-primary/10 text-primary">
+                <Phone className="h-6 w-6" />
+              </div>
+              <div className="ml-4">
                 <h4 className={cn(
                   "text-xl font-bold mb-2",
                   themeClass ? "text-white" : "text-gray-900"
@@ -741,11 +768,11 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                   "text-gray-700",
                   themeClass ? "text-white/70" : "text-gray-600"
                 )}>
-                    +1 760 858 0505
+                  +1 760 858 0505
                 </p>
               </div>
             </div>
-            
+
             <div className="mt-8 p-6 bg-gradient-to-r from-primary/20 to-indigo-600/20 rounded-xl border border-white/10">
               <h4 className={cn(
                 "text-xl font-bold mb-3",

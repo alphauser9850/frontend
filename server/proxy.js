@@ -2,7 +2,7 @@ import express from "express";
 import compression from "compression";
 import cors from "cors";
 import fs from "fs/promises";
-import fssync from "fs"; // 👈 sync version for https certs
+import fssync from "fs"; // for HTTPS certs in prod
 import path from "path";
 import https from "https";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -14,12 +14,6 @@ const __dirname = path.dirname(__filename);
 const isProd = process.env.NODE_ENV === "production";
 const PORT = process.env.PORT || 3001;
 
-// Load HTTPS certs
-const httpsOptions = {
-  key: fssync.readFileSync(path.resolve(__dirname, "../certs/key.pem")),
-  cert: fssync.readFileSync(path.resolve(__dirname, "../certs/cert.pem")),
-};
-
 async function startServer() {
   const app = express();
 
@@ -29,7 +23,7 @@ async function startServer() {
   app.use(express.json());
 
   /** ------------------------
-   * API ROUTES (Backend only)
+   * API ROUTES
    * ------------------------ */
   app.get("/api/health", (req, res) => {
     res.status(200).json({ status: "ok" });
@@ -41,7 +35,7 @@ async function startServer() {
    * FRONTEND SSR HANDLING
    * ------------------------ */
   if (!isProd) {
-    // Development mode with Vite middleware
+    // 🧩 Development mode with Vite middleware (HTTP)
     const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -72,7 +66,7 @@ async function startServer() {
       }
     });
   } else {
-    // Production mode: serve prebuilt assets
+    // 🏗️ Production mode: serve prebuilt assets + HTTPS
     const clientDist = path.resolve(__dirname, "../dist/client");
     const ssrDist = path.resolve(__dirname, "../dist/server/entry-server.js");
 
@@ -88,16 +82,15 @@ async function startServer() {
           `Did you forget to run "npm run build:server"?`
       );
       console.error(err);
-      render = () => ({ appHtml: "", helmetHead: "" }); // fallback
+      render = () => ({ appHtml: "", helmetHead: "" });
     }
 
-    // Handle all other routes with SSR
+    // SSR route handling
     app.use(async (req, res) => {
-      // Skip API routes - let them be handled by the API router
-      if (req.path.startsWith('/api/')) {
-        return res.status(404).json({ error: 'API endpoint not found' });
+      if (req.path.startsWith("/api/")) {
+        return res.status(404).json({ error: "API endpoint not found" });
       }
-      
+
       try {
         const template = await fs.readFile(
           path.resolve(clientDist, "index.html"),
@@ -118,13 +111,26 @@ async function startServer() {
   }
 
   /** ------------------------
-   * START SERVER (HTTPS)
+   * START SERVER
    * ------------------------ */
-  https.createServer(httpsOptions, app).listen(PORT, () => {
-    console.log(
-      `✅ HTTPS server running in ${isProd ? "production" : "development"} mode at https://localhost:${PORT}`
-    );
-  });
+  if (isProd) {
+    // ✅ Use HTTPS in production
+    const httpsOptions = {
+      key: fssync.readFileSync(path.resolve(__dirname, "../certs/key.pem")),
+      cert: fssync.readFileSync(path.resolve(__dirname, "../certs/cert.pem")),
+    };
+
+    https.createServer(httpsOptions, app).listen(PORT, () => {
+      console.log(
+        `✅ HTTPS server running in production at https://localhost:${PORT}`
+      );
+    });
+  } else {
+    // 🧑‍💻 Use HTTP in dev
+    app.listen(PORT, () => {
+      console.log(`🧩 Dev server running at http://localhost:${PORT}`);
+    });
+  }
 }
 
 startServer();

@@ -511,7 +511,22 @@ const ContactPage: React.FC = () => {
                           />
                         </div>
                       </div>
-
+                        <div>
+                          <label htmlFor="course_name" className="block text-sm font-medium mb-2">
+                            Select Course
+                          </label>
+                          <select
+                            id="course_name"
+                            name="course_name"
+                            
+                            className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                          >
+                            <option value="">Select Course *</option>
+                           <option value="CCIE-Fast Track">CCIE-Fast Track</option>
+                           <option value="CCIE-Pro Track">CCIE-Pro Track</option>
+                           <option value="CCIE-Master Track">CCIE-Master Track</option> 
+                          </select>
+                        </div>
                       <div>
                         <label htmlFor="subject" className="block text-sm font-medium mb-2">
                           Subject *
