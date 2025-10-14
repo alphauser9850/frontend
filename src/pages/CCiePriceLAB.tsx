@@ -9,7 +9,7 @@ const plans = [
   },
   {
     duration: "30 hours",
-    price: "$410",
+    price: "$449",
   },
 ];
 
