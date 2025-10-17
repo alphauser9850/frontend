@@ -333,10 +333,8 @@ const ContactPage: React.FC = () => {
           />
           
           <div className="container mx-auto px-4 relative z-20">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                <AuroraText>Contact Us</AuroraText>
-              </h1>
+            <div className="max-w-3xl mx-auto text-center"> 
+                <AuroraText as='h1' fontClass='text-4xl md:text-5xl font-bold mb-6'>Contact Us</AuroraText> 
               
               <p className="text-xl text-white/80 mb-8">
                 Get in touch with our CCIE-certified instructors for personalized guidance and support.
@@ -388,12 +386,10 @@ const ContactPage: React.FC = () => {
                 {/* Contact Form */}
                 <div className="space-y-8">
                   <div>
-                    <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+                    <span className="inline-block bg-primary/20 text-primary  py-1 rounded-full text-sm font-medium mb-3">
                       Get In Touch
-                    </span>
-                    <h2 className="text-3xl font-bold mb-4">
-                      <AuroraText>Send Us a Message</AuroraText>
-                    </h2>
+                    </span> 
+                      <AuroraText as="h2" fontClass="text-3xl font-bold mb-4 block">Send Us a Message</AuroraText> 
                     <p className="text-muted-foreground">
                       Have questions about our training programs? Need guidance on your certification journey? 
                       We're here to help you succeed.
@@ -522,9 +518,7 @@ const ContactPage: React.FC = () => {
                             className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                           >
                             <option value="">Select Course *</option>
-                           <option value="CCIE-Fast Track">CCIE-Fast Track</option>
-                           <option value="CCIE-Pro Track">CCIE-Pro Track</option>
-                           <option value="CCIE-Master Track">CCIE-Master Track</option> 
+                           <option value="CCIE Enterprise Infrastructure">CCIE Enterprise Infrastructure</option> 
                           </select>
                         </div>
                       <div>
@@ -610,12 +604,10 @@ const ContactPage: React.FC = () => {
                 {/* FAQ Section */}
                 <div className="space-y-8">
                   <div>
-                    <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+                    <span className="inline-block bg-primary/20 text-primary py-1 rounded-full text-sm font-medium mb-3">
                       FAQ
                     </span>
-                    <h2 className="text-3xl font-bold mb-4">
-                      <AuroraText>Frequently Asked Questions</AuroraText>
-                    </h2>
+                     <AuroraText as='h2' fontClass="text-3xl font-bold mb-6 block">Frequently Asked Questions</AuroraText> 
                     <p className="text-muted-foreground">
                       Find quick answers to common questions about contacting our team.
                     </p>
@@ -645,9 +637,7 @@ const ContactPage: React.FC = () => {
         <section className="py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-8">
-                <AuroraText>Ready to Start Your Journey?</AuroraText>
-              </h2>
+               <AuroraText as='h2' fontClass="text-3xl font-bold mb-6 block">Ready to Start Your Journey?</AuroraText> 
               <p className="text-xl text-muted-foreground mb-8">
                 Join thousands of network professionals who have transformed their careers with our expert training.
               </p>

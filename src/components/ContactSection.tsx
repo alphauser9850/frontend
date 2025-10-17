@@ -659,9 +659,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ source = 'home-page' })
                         )}
                       >
                         <option value="">Select Course *</option>
-                           <option value="CCIE-Fast Track">CCIE-Fast Track</option>
-                           <option value="CCIE-Pro Track">CCIE-Pro Track</option>
-                           <option value="CCIE-Master Track">CCIE-Master Track</option>
+                           <option value="CCIE Enterprise Infrastructure">CCIE Enterprise Infrastructure</option> 
                       </select>
                     </div>
                   </div>

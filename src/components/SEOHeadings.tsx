@@ -29,7 +29,7 @@ const SEOHeadings: React.FC<SEOHeadingsProps> = ({
   h1Text,
   h1ClassName = "sr-only",
   keywords,
-  image = "/ccielab.net logo.jpeg",
+  image = "/logo.png",
   type = "website",
   publishedTime,
   modifiedTime,
@@ -52,7 +52,7 @@ const SEOHeadings: React.FC<SEOHeadingsProps> = ({
       "url": "https://www.ccielab.net",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.ccielab.net/ccielab.net logo.jpeg"
+        "url": "https://www.ccielab.net/logo.png"
       }
     }
   };

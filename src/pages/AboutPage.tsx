@@ -181,10 +181,9 @@ const AboutPage: React.FC = () => {
          
           {/* Hero Section */}
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-              <AuroraText>About CCIE LAB</AuroraText>
-            </h1>
-            <p className="text-xl text-white/80 mb-8">
+            
+              <AuroraText as="h1" fontClass="text-4xl md:text-5xl font-bold mb-6 ">About CCIE LAB</AuroraText>  
+            <p className="text-xl text-white/80 text-about mb-8">
               Empowering network professionals with world-class training and certification preparation since 2015.
             </p>
           </div>
@@ -193,12 +192,11 @@ const AboutPage: React.FC = () => {
             <div className="container mx-auto px-4">
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div>
-                  <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+                  <span className="inline-block bg-primary/20 text-primary   py-1 rounded-full text-sm font-medium mb-3">
                     Our Story
                   </span>
-                  <h2 className="text-3xl font-bold mb-6">
-                    <AuroraText>From Passion to Purpose</AuroraText>
-                  </h2>
+                 
+                    <AuroraText as="h2" fontClass='text-3xl font-bold mb-6 block'>From Passion to Purpose</AuroraText> 
 
                   <div className="space-y-4 text-muted-foreground">
                     <p>
@@ -232,10 +230,8 @@ const AboutPage: React.FC = () => {
               <div className="max-w-3xl mx-auto text-center mb-16">
                 <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
                   Our Mission
-                </span>
-                <h2 className="text-3xl font-bold mb-6">
-                  <AuroraText>Why We Do What We Do</AuroraText>
-                </h2>
+                </span> 
+                  <AuroraText as="h2" fontClass='text-3xl font-bold mb-6 block' >Why We Do What We Do</AuroraText> 
               </div>
 
               <div className="max-w-4xl mx-auto">
@@ -288,10 +284,8 @@ const AboutPage: React.FC = () => {
               <div className="max-w-3xl mx-auto text-center mb-16">
                 <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
                   Our Values
-                </span>
-                <h2 className="text-3xl font-bold mb-6">
-                  <AuroraText>Principles That Guide Us</AuroraText>
-                </h2>
+                </span> 
+                  <AuroraText as="h2" fontClass="text-3xl font-bold mb-6 block">Principles That Guide Us</AuroraText> 
                 <p className="text-muted-foreground">
                   These core values shape our approach to education and define our company culture.
                 </p>
@@ -329,12 +323,10 @@ const AboutPage: React.FC = () => {
               <div className="max-w-5xl mx-auto">
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm font-medium mb-3">
+                    <span className="inline-block bg-primary/20 text-primary  py-1 rounded-full text-sm font-medium mb-3">
                       Get in Touch
-                    </span>
-                    <h2 className="text-3xl font-bold mb-6">
-                      <AuroraText>Contact Us</AuroraText>
-                    </h2>
+                    </span> 
+                      <AuroraText as='h2' fontClass="text-3xl font-bold mb-6 block">Contact Us</AuroraText> 
                     <p className="text-muted-foreground mb-8">
                       Have questions about our training programs or need more information? We'd love to hear from you.
                     </p>

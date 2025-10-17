@@ -115,22 +115,20 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-8 flex-shrink-0">
             <Link to="/" className="flex items-center gap-4 group logo">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-purple-600/25 to-blue-600/25 rounded-xl blur-lg scale-110 group-hover:scale-125 transition-all duration-500"></div>
-                <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/20 via-pink-500/20 to-yellow-400/20 rounded-xl blur-xl scale-115 group-hover:scale-130 transition-all duration-700"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-purple-600/25 to-blue-600/25 rounded-xl blur-lg scale-110 group-hover:scale-125 transition-all duration-500"></div> 
                 <div className={cn(
-                  "relative h-24 w-24 rounded-xl border flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300",
-                  themeClass ? "bg-gray-800 border-gray-700" : "bg-gradient-to-br from-primary/10 to-purple-600/10 border-primary/25"
+                  "logo-bg relative h-24 w-24 rounded-xl border flex items-center justify-center  transition-all duration-300",
                 )}>
                   <img 
-                    src="/ccielab.net logo.jpeg" 
+                    src="/logo.png" 
                     alt="CCIELAB.NET Logo" 
-                    className="h-20 w-20 object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-300" 
+                    className="h-20 w-20 object-contain filter group-hover:scale-105 transition-transform duration-300" 
                   />
                 </div>
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-2xl">
-                  <AuroraText>CCIELAB.NET</AuroraText>
+                  <AuroraText as="span" >CCIELAB.NET</AuroraText>
                 </span>
                 <span className="text-xs font-medium text-primary/70 uppercase tracking-wider">
                   Advanced CCIE Training

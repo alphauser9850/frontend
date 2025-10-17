@@ -32,9 +32,9 @@ const HeroSection: React.FC = () => {
       <div className="container mx-auto px-4 relative z-20 flex flex-col items-center justify-center min-h-[500px] h-full">
         {/* Centered: Text Content */}
         <div className="flex flex-col items-center justify-center text-center max-w-5xl z-30">
-          <h1 className="text-hero font-extrabold text-text-primary leading-tight mb-8 whitespace-nowrap overflow-x-auto" style={{whiteSpace: 'nowrap'}}>
-              <AuroraText>Advanced CCIE Training & Lab</AuroraText>
-            </h1>
+            <div className='auroratext'>
+              <AuroraText as='h1'>Advanced CCIE Training & Lab</AuroraText> 
+              </div>
           <p className="text-body text-text-secondary font-medium mb-10 max-w-2xl">
               Master Network Engineering Excellence
             </p>

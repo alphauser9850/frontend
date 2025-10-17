@@ -170,7 +170,7 @@ const Navbar: React.FC = () => {
         <Link to="/dashboard" className="flex items-center gap-3 group">
           <div className="relative h-20 w-20">
             <img
-              src="/ccielab.net logo.jpeg"
+              src="/logo.png"
               alt="CCIELAB.NET Logo"
               className="h-16 w-16 object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-300"
             />

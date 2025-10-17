@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
                 <div className="relative h-16 w-16 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-primary/25 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                   {/* Logo image - natural square */}
                   <img 
-                    src="/ccielab.net logo.jpeg" 
+                    src="/logo.png" 
                     alt="CCIELAB.NET Logo" 
                     className="h-12 w-12 object-contain filter drop-shadow-lg group-hover:scale-105 transition-transform duration-300" 
                   />
@@ -37,7 +37,7 @@ const Footer: React.FC = () => {
               {/* Enhanced text */}
               <div className="flex flex-col">
                 <span className="font-bold text-xl group-hover:text-primary transition-colors duration-300">
-                  <AuroraText>CCIELAB.NET</AuroraText>
+                  <AuroraText as="span">CCIELAB.NET</AuroraText>
                 </span>
                 <span className="text-xs font-medium text-primary/70 uppercase tracking-wider">
                   Advanced CCIE Training

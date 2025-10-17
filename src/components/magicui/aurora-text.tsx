@@ -3,15 +3,21 @@
 import React, { useEffect, useRef } from "react";
 import { cn } from "../../lib/utils";
 
-interface AuroraTextProps {
+type AuroraTag = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "span" | "p" | "div";
+
+interface AuroraTextProps extends React.HTMLAttributes<HTMLElement> {
+  as?: AuroraTag;
   children: React.ReactNode;
   className?: string;
   gradientColors?: string[];
   animationDuration?: number;
   animationDelay?: number;
+  fontClass?:string
 }
 
 export function AuroraText({
+  as = "span",
+  fontClass,
   children,
   className,
   gradientColors = [
@@ -24,15 +30,17 @@ export function AuroraText({
   ],
   animationDuration = 8,
   animationDelay = 0,
+  ...rest
 }: AuroraTextProps) {
-  const textRef = useRef<HTMLSpanElement>(null);
-  const gradientId = useRef(`aurora-gradient-${Math.random().toString(36).substring(2, 9)}`);
+  const textRef = useRef<HTMLElement>(null);
+  const gradientId = useRef(
+    `aurora-gradient-${Math.random().toString(36).substring(2, 9)}`
+  );
 
   useEffect(() => {
     const textElement = textRef.current;
     if (!textElement) return;
 
-    // Add a small delay before starting the animation
     const timeoutId = setTimeout(() => {
       textElement.style.opacity = "1";
     }, animationDelay);
@@ -40,39 +48,30 @@ export function AuroraText({
     return () => clearTimeout(timeoutId);
   }, [animationDelay]);
 
-  const colorStops = gradientColors.map((color, index) => {
-    const percentage = (index / (gradientColors.length - 1)) * 100;
-    return `${color} ${percentage}%`;
-  }).join(", ");
+  const colorStops = gradientColors
+    .map((color, index) => {
+      const percentage = (index / (gradientColors.length - 1)) * 100;
+      return `${color} ${percentage}%`;
+    })
+    .join(", ");
+
+  const Tag = as as keyof JSX.IntrinsicElements;
 
   return (
-    <>
-      <style>
-        {`
-          @keyframes aurora-text-animation {
-            0% {
-              background-position: 0% 50%;
-            }
-            100% {
-              background-position: 100% 50%;
-            }
-          }
-        `}
-      </style>
-      <span
-        ref={textRef}
-        className={cn(
-          "relative inline-block bg-clip-text text-transparent transition-opacity",
-          className
-        )}
-        style={{
-          backgroundImage: `linear-gradient(to right, ${colorStops})`,
-          backgroundSize: `${gradientColors.length * 200}% 100%`,
-          animation: `aurora-text-animation ${animationDuration}s linear infinite`,
-        }}
-      >
-        {children}
-      </span>
-    </>
+    <Tag
+      ref={textRef}
+      className={cn(
+        "relative inline-block bg-clip-text text-transparent transition-opacity",
+        className , fontClass
+      )}
+      style={{
+        backgroundImage: `linear-gradient(to right, ${colorStops})`,
+        backgroundSize: `${gradientColors.length * 200}% 100%`,
+        animation: `aurora-text-animation ${animationDuration}s linear infinite`,
+      }}
+      {...rest}
+    >
+      {children}
+    </Tag>
   );
 }

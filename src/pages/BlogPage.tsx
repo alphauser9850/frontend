@@ -60,9 +60,8 @@ const BlogPage: React.FC = () => {
 
         <section className="container mx-auto px-4 md:px-8 lg:px-16">
 
-          <h1 className=" blogTitle text-4xl md:text-5xl font-bold text-center mb-10">
-            <AuroraText>Blogs</AuroraText>
-          </h1>
+          
+            <AuroraText as="h1" fontClass='blogTitle text-4xl md:text-5xl font-bold text-center mb-10'>Blogs</AuroraText> 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             {blogPosts.map((post) => (
               <Link

@@ -760,7 +760,7 @@ const CCIEPage: React.FC = () => {
               <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
                 CCIE Training Pricing Plans
               </span>
-              <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Training Program</AuroraText></h2>
+               <AuroraText as="h2" fontClass="text-3xl font-bold mb-4 block">CCIE Training Program</AuroraText> 
               <p className="text-muted-foreground">
                 Choose the perfect training plan to achieve your CCIE certification goals
               </p>
@@ -776,7 +776,7 @@ const CCIEPage: React.FC = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center mb-16">
 
-              <h2 className="text-3xl font-bold mb-4"><AuroraText> Upcoming CCIE EI Classes</AuroraText></h2>
+              <AuroraText as='h2' fontClass="text-3xl font-bold mb-4"> Upcoming CCIE EI Classes</AuroraText>
             </div>
             <UpecommingCcieTable batches={batches} />
           </div>
@@ -789,7 +789,7 @@ const CCIEPage: React.FC = () => {
               <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
                 Meet Your Instructor
               </span>
-              <h2 className="text-3xl font-bold mb-4"><AuroraText>Instructor Details:</AuroraText></h2>
+               <AuroraText as="h2" className="text-3xl font-bold mb-4 block">Instructor Details:</AuroraText>
               <p className="text-muted-foreground">
                 Your instructor is an active CCIE professional with years of real-world experience.
               </p>
@@ -897,7 +897,7 @@ const CCIEPage: React.FC = () => {
               <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
                 Core CCIE Enterprise Infrastructure Topics
               </span>
-              <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Enterprise Infrastructure Syllabus Overview</AuroraText></h2>
+              <AuroraText as="h2" className="text-3xl font-bold mb-4 block">CCIE Enterprise Infrastructure Syllabus Overview</AuroraText> 
               <p className="text-muted-foreground">
                 Our curriculum covers all exam domains with in-depth practical labs and theory.
 
@@ -927,7 +927,7 @@ const CCIEPage: React.FC = () => {
               </span>
               <div className="flex items-center justify-center gap-3 mb-4">
                 <img src="/ent_golden_icon.png" alt="CCIE Enterprise Logo" className="h-10 w-auto" />
-                <h2 className="text-3xl font-bold"><AuroraText>Your CCIE Enterprise Infrastructure Journey </AuroraText></h2>
+                <AuroraText as="h2" className="text-3xl font-bold mb-4 block">Your CCIE Enterprise Infrastructure Journey </AuroraText> 
               </div>
               <p className="text-muted-foreground">
                 Follow this structured path to achieve your CCIE Enterprise Infrastructure certification.
@@ -945,7 +945,7 @@ const CCIEPage: React.FC = () => {
               <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
                 Sample Topologies
               </span>
-              <h2 className="text-3xl font-bold mb-4"><AuroraText>Explore Our CCIE Lab Topologies</AuroraText></h2>
+             <AuroraText as="h2" className="text-3xl font-bold mb-4 block">Explore Our CCIE Lab Topologies</AuroraText> 
               <p className="text-muted-foreground">
                 Get familiar with the diverse network topologies you'll work with during your CCIE Enterprise Infrastructure training.
               </p>
@@ -1026,7 +1026,7 @@ const CCIEPage: React.FC = () => {
               <span className="inline-block bg-primary/20 text-primary px-3 py-1 rounded-full text-sm md:text-lg font-medium mb-3">
                 Comprehensive Curriculum
               </span>
-              <h2 className="text-3xl font-bold mb-4"><AuroraText>CCIE Lab Infrastructure</AuroraText></h2>
+              <AuroraText as="h2" className="text-3xl font-bold mb-4 block">CCIE Lab Infrastructure</AuroraText> 
               <p className="text-muted-foreground">
                 At our CCIE Enterprise Infrastructure program, hands-on practice is key.
               </p>
@@ -1039,9 +1039,7 @@ const CCIEPage: React.FC = () => {
         <section className="py-16 bg-gradient-to-b from-muted/20 via-muted/30 to-muted/40">
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">
-                <AuroraText>Who Should Take This Course?</AuroraText>
-              </h2>
+              <AuroraText as="h2" className="text-3xl font-bold mb-4 block">Who Should Take This Course?</AuroraText> 
             </div>
 
             <div className="grid gap-6 md:gap-8 ">
@@ -1075,9 +1073,7 @@ const CCIEPage: React.FC = () => {
         <section className="py-16 bg-gradient-to-b from-muted/20 via-muted/30 to-muted/40 ">
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center mb-12 ">
-              <h2 className="text-3xl font-bold mb-6 pb-2">
-                <AuroraText>Learning Outcomes</AuroraText>
-              </h2>
+              <AuroraText as="h2" className="text-3xl font-bold mb-4 block">Learning Outcomes</AuroraText> 
             </div>
             <div className="grid gap-6 md:gap-8 ">
               {[
@@ -1141,8 +1137,7 @@ const CCIEPage: React.FC = () => {
         <section className="py-12 bg-muted/30">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center mb-16">
-
-              <h2 className="text-3xl font-bold mb-4"><AuroraText>Frequently Asked Questions</AuroraText></h2>
+<AuroraText as="h2" className="text-3xl font-bold mb-4 block">Frequently Asked Questions</AuroraText> 
             </div>
             <FAqs>
               {faqData.map((faq, index) => (
